@@ -38,16 +38,16 @@ button{appearance:none;border:0;border-radius:20px;padding:18px 10px;font-size:2
 <body>
 <div class="app" id="app">
 <h1>🎭 ジェスチャーゲーム</h1>
-<div class="hint">声を出さずに、からだだけで伝えてね！</div>
+<div class="hint">こえをださずに、からだだけでつたえてね！</div>
 <div class="card">
-<div class="category" id="category">ボタンを押してね</div>
+<div class="category" id="category">ボタンをおしてね</div>
 <div class="emoji" id="emoji">👇</div>
 <div class="prompt" id="prompt">おだい</div>
 <div class="mode" id="mode">こどもモード</div>
 </div>
 
 <div class="buttons normal">
-<button id="next" type="button">🎲 次のお題！</button>
+<button id="next" type="button">🎲 つぎのおだい！</button>
 <button id="startPlay" type="button">▶️ やる！</button>
 <button id="kids" type="button">🧒 こども</button>
 <button id="adult" type="button">👩‍👨 ママ・パパ</button>
@@ -62,7 +62,7 @@ button{appearance:none;border:0;border-radius:20px;padding:18px 10px;font-size:2
   </div>
 </div>
 
-<div class="small" id="help">お題を見たら「やる！」を押してスタート！</div>
+<div class="small" id="help">おだいをみたら「やる！」をおしてスタート！</div>
 <a class="home" href="index.html">← ゲームいちらん</a>
 </div>
 
@@ -150,7 +150,7 @@ function setMode(m){
  startPlayBtn.style.display="none";
  modeEl.textContent=m==="adult"?"ママ・パパモード":"こどもモード";
  kidsBtn.style.opacity=m==="kids"?"1":".55";adultBtn.style.opacity=m==="adult"?"1":".55";
- category.textContent="ボタンを押してね";emoji.textContent=m==="adult"?"👩‍👨":"👇";promptEl.textContent="おだい";
+ category.textContent="ボタンをおしてね";emoji.textContent=m==="adult"?"👩‍👨":"👇";promptEl.textContent="おだい";
 }
 nextBtn.addEventListener("click",showPrompt);
 kidsBtn.addEventListener("click",()=>setMode("kids"));
