@@ -4,121 +4,141 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <title>ジェスチャーゲーム</title>
 <style>
-:root{--bg1:#fff7e8;--bg2:#eef8ff;--card:#ffffffee;--text:#222;--accent:#ff8a65;--adult:#8e7cc3}
+:root{--bg1:#fff7e8;--bg2:#eef8ff;--card:#ffffffee;--text:#222;--accent:#ff8a65;--adult:#7d6be8;--ok:#43b581;--ng:#ef5b5b}
 *{box-sizing:border-box}
 body{margin:0;min-height:100svh;font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic",sans-serif;color:var(--text);background:linear-gradient(160deg,var(--bg1),var(--bg2));display:flex;align-items:center;justify-content:center;padding:18px}
 .app{width:min(680px,100%);text-align:center}
-h1{font-size:clamp(28px,8vw,46px);margin:0 0 12px}
+h1{font-size:clamp(28px,8vw,46px);margin:0 0 10px}
 .hint{font-size:15px;opacity:.7;margin-bottom:14px}
-.card{min-height:330px;background:var(--card);border-radius:28px;box-shadow:0 12px 30px #0002;padding:28px 22px;display:flex;flex-direction:column;justify-content:center;margin-bottom:18px}
-.category{font-size:18px;font-weight:700;color:#777;margin-bottom:10px}
-.emoji{font-size:clamp(64px,20vw,110px);line-height:1.05;min-height:1.05em;margin-bottom:8px}
-.prompt{font-size:clamp(40px,12vw,72px);font-weight:900;line-height:1.2;word-break:keep-all}
-.buttons{display:grid;gap:12px}
-button{appearance:none;border:0;border-radius:22px;padding:18px 16px;font-size:23px;font-weight:800;box-shadow:0 6px 14px #0002;touch-action:manipulation}
-#next{background:var(--accent);color:#fff}
-#easy{background:#fff;color:#444}
-#adult{background:#fff;color:#5e4d8c}
-#adult.on{background:var(--adult);color:#fff}
-.small{margin-top:14px;font-size:13px;opacity:.58}
+.card{min-height:320px;background:var(--card);border-radius:28px;box-shadow:0 12px 30px #0002;padding:28px 20px;display:flex;flex-direction:column;justify-content:center;margin-bottom:18px}
+.category{font-size:18px;font-weight:700;color:#777;margin-bottom:8px}
+.emoji{font-size:clamp(52px,15vw,88px);line-height:1;margin-bottom:8px;min-height:1em}
+.prompt{font-size:clamp(38px,12vw,72px);font-weight:900;line-height:1.15;word-break:keep-all}
+.mode{font-size:14px;font-weight:700;margin-top:12px;opacity:.65}
+.buttons{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+button{appearance:none;border:0;border-radius:20px;padding:18px 10px;font-size:20px;font-weight:900;box-shadow:0 6px 14px #0002;touch-action:manipulation}
+#next{background:var(--accent);color:#fff;grid-column:1/-1}
+#kids{background:#fff;color:#444}
+#adult{background:var(--adult);color:#fff}
+#wrong{background:var(--ng);color:#fff;font-size:32px}
+#correct{background:var(--ok);color:#fff;font-size:32px}
+.judge{display:none;grid-template-columns:1fr 1fr;gap:12px}
+.thinking .normal{display:none}
+.thinking .judge{display:grid}
+.thinking .card{outline:6px solid #ffb34733}
+.small{margin-top:14px;font-size:13px;opacity:.55}
+.home{display:inline-block;margin-top:15px;color:#555;text-decoration:none;font-weight:700}
 </style>
 </head>
 <body>
-<div class="app">
+<div class="app" id="app">
 <h1>🎭 ジェスチャーゲーム</h1>
-<div class="hint">こえをださずに、からだだけでつたえてね！</div>
+<div class="hint">声を出さずに、からだだけで伝えてね！</div>
 <div class="card">
-<div class="category" id="category">ボタンをおしてね</div>
+<div class="category" id="category">ボタンを押してね</div>
 <div class="emoji" id="emoji">👇</div>
-<div class="prompt" id="prompt"></div>
+<div class="prompt" id="prompt">おだい</div>
+<div class="mode" id="mode">こどもモード</div>
 </div>
-<div class="buttons">
-<button id="next" type="button">🎲 つぎのおだい！</button>
-<button id="easy" type="button">🌱 かんたんだけ</button>
-<button id="adult" type="button">👨‍👩‍👧 ママ・パパもさんか</button>
+
+<div class="buttons normal">
+<button id="next" type="button">🎲 次のお題！</button>
+<button id="kids" type="button">🧒 こども</button>
+<button id="adult" type="button">👩‍👨 ママ・パパ</button>
 </div>
-<div class="small" id="modeText">こどもむけのおだいです</div>
+
+<div class="judge">
+<button id="wrong" type="button">❌ ブブー</button>
+<button id="correct" type="button">⭕ ピンポーン</button>
 </div>
+
+<div class="small" id="help">お題が出るとシンキングタイム開始！</div>
+<a class="home" href="index.html">← ゲームいちらん</a>
+</div>
+
 <script>
 const kidsPrompts=[
-["どうぶつ","ねこ","🐱"],["どうぶつ","いぬ","🐶"],["どうぶつ","うさぎ","🐰"],["どうぶつ","ぞう","🐘"],
-["どうぶつ","さる","🐵"],["どうぶつ","きりん","🦒"],["どうぶつ","ペンギン","🐧"],["どうぶつ","ゴリラ","🦍"],
-["どうぶつ","カンガルー","🦘"],["どうぶつ","へび","🐍"],["どうぶつ","かえる","🐸"],["どうぶつ","にわとり","🐔"],
-["どうぶつ","ライオン","🦁"],["どうぶつ","くま","🐻"],["どうぶつ","パンダ","🐼"],["どうぶつ","かに","🦀"],
-["うごき","はみがき","🪥"],["うごき","ねる","😴"],["うごき","おふろ","🛁"],["うごき","ごはんをたべる","🍚"],
-["うごき","はしる","🏃"],["うごき","およぐ","🏊"],["うごき","ジャンプ","🤸"],["うごき","ダンス","💃"],
-["うごき","ほんをよむ","📖"],["うごき","そうじ","🧹"],["うごき","りょうり","🍳"],["うごき","しゃしんをとる","📷"],
-["うごき","でんわする","📱"],["うごき","なく","😭"],["うごき","わらう","😂"],["うごき","くしゃみ","🤧"],
-["のりもの","じてんしゃ","🚲"],["のりもの","くるま","🚗"],["のりもの","でんしゃ","🚃"],["のりもの","ひこうき","✈️"],
-["のりもの","バス","🚌"],["のりもの","ふね","🚢"],["のりもの","ロケット","🚀"],
-["スポーツ","やきゅう","⚾"],["スポーツ","サッカー","⚽"],["スポーツ","バスケットボール","🏀"],
-["スポーツ","テニス","🎾"],["スポーツ","ボウリング","🎳"],["スポーツ","なわとび",""],
-["たべもの","ラーメン","🍜"],["たべもの","アイス","🍨"],["たべもの","おにぎり","🍙"],
-["たべもの","スイカ","🍉"],["たべもの","バナナ","🍌"],["たべもの","ケーキ","🍰"],
-["そのほか","おばけ","👻"],["そのほか","ロボット","🤖"],["そのほか","あかちゃん","👶"],
-["そのほか","せんせい",""],["そのほか","にんじゃ","🥷"],["そのほか","まほうつかい","🪄"],
-["そのほか","きょうりゅう","🦖"],["そのほか","サンタクロース","🎅"]
+["どうぶつ","ねこ","🐱"],["どうぶつ","いぬ","🐶"],["どうぶつ","うさぎ","🐰"],["どうぶつ","ぞう","🐘"],["どうぶつ","さる","🐵"],["どうぶつ","きりん","🦒"],["どうぶつ","ペンギン","🐧"],["どうぶつ","ゴリラ","🦍"],["どうぶつ","カンガルー","🦘"],["どうぶつ","へび","🐍"],["どうぶつ","かえる","🐸"],["どうぶつ","にわとり","🐔"],["どうぶつ","ライオン","🦁"],["どうぶつ","くま","🐻"],["どうぶつ","パンダ","🐼"],["どうぶつ","かに","🦀"],["どうぶつ","ぶた","🐷"],["どうぶつ","うし","🐮"],["どうぶつ","ひつじ","🐑"],["どうぶつ","うま","🐴"],["どうぶつ","ねずみ","🐭"],["どうぶつ","りす","🐿️"],["どうぶつ","コアラ","🐨"],["どうぶつ","とり","🐦"],["どうぶつ","ふくろう","🦉"],["どうぶつ","わに","🐊"],["どうぶつ","かめ","🐢"],["どうぶつ","たこ","🐙"],["どうぶつ","さかな","🐟"],["どうぶつ","ちょうちょ","🦋"],["どうぶつ","はち","🐝"],
+["うごき","はみがき","🪥"],["うごき","ねる","😴"],["うごき","おふろ","🛁"],["うごき","ごはんをたべる","🍚"],["うごき","はしる","🏃"],["うごき","およぐ","🏊"],["うごき","ジャンプ","🤸"],["うごき","ダンス","💃"],["うごき","ほんをよむ","📖"],["うごき","そうじ","🧹"],["うごき","りょうり","🍳"],["うごき","しゃしんをとる","📷"],["うごき","でんわする","📱"],["うごき","なく","😭"],["うごき","わらう","😂"],["うごき","くしゃみ","🤧"],["うごき","あくび","🥱"],["うごき","てをあらう","🧼"],["うごき","かみをとかす",""],["うごき","ふくをきる","👕"],["うごき","くつをはく","👟"],["うごき","プレゼントをあける","🎁"],["うごき","つりをする","🎣"],["うごき","えをかく","🎨"],["うごき","ピアノをひく","🎹"],["うごき","ギターをひく","🎸"],["うごき","たいこをたたく","🥁"],["うごき","アイスをなめる","🍦"],["うごき","シャボンだまをふく","🫧"],["うごき","かさをさす","☂️"],
+["のりもの","じてんしゃ","🚲"],["のりもの","くるま","🚗"],["のりもの","でんしゃ","🚆"],["のりもの","ひこうき","✈️"],["のりもの","バス","🚌"],["のりもの","ふね","🚢"],["のりもの","ロケット","🚀"],["のりもの","しょうぼうしゃ","🚒"],["のりもの","きゅうきゅうしゃ","🚑"],["のりもの","パトカー","🚓"],["のりもの","ヘリコプター","🚁"],["のりもの","ショベルカー",""],
+["スポーツ","やきゅう","⚾"],["スポーツ","サッカー","⚽"],["スポーツ","バスケットボール","🏀"],["スポーツ","テニス","🎾"],["スポーツ","ボウリング","🎳"],["スポーツ","なわとび",""],["スポーツ","スキー","⛷️"],["スポーツ","スケート","⛸️"],["スポーツ","たっきゅう","🏓"],["スポーツ","ゴルフ","⛳"],
+["たべもの","ラーメン","🍜"],["たべもの","アイス","🍦"],["たべもの","おにぎり","🍙"],["たべもの","スイカ","🍉"],["たべもの","バナナ","🍌"],["たべもの","ケーキ","🍰"],["たべもの","ピザ","🍕"],["たべもの","ハンバーガー","🍔"],["たべもの","カレー","🍛"],["たべもの","とうもろこし","🌽"],["たべもの","りんご","🍎"],["たべもの","ぶどう","🍇"],
+["そのほか","おばけ","👻"],["そのほか","ロボット","🤖"],["そのほか","あかちゃん","👶"],["そのほか","せんせい",""],["そのほか","にんじゃ","🥷"],["そのほか","まほうつかい","🧙"],["そのほか","きょうりゅう","🦖"],["そのほか","サンタクロース","🎅"],["そのほか","おひめさま","👸"],["そのほか","おうさま","🤴"],["そのほか","うちゅうひこうし","🧑‍🚀"],["そのほか","かいぞく","🏴‍☠️"],["そのほか","ヒーロー","🦸"],["そのほか","おいしゃさん","🧑‍⚕️"],["そのほか","コックさん","🧑‍🍳"]
 ];
 
 const adultPrompts=[
-["ママ・パパ","でんしゃでねすごす","🚃😴"],
-["ママ・パパ","スマホをおとす","📱😱"],
-["ママ・パパ","かふんしょう","🤧🌲"],
-["ママ・パパ","あついラーメンをたべる","🍜🥵"],
-["ママ・パパ","さいふをわすれる","👛😨"],
-["ママ・パパ","あさねぼうする","⏰😱"],
-["ママ・パパ","ぎっくりごし","😵‍💫"],
-["ママ・パパ","かいぎでねむい","🥱"],
-["ママ・パパ","Wi-Fiがきれる","📶😵"],
-["ママ・パパ","しゃしんをとりなおす","📷😅"],
-["ママ・パパ","あめなのにかさがない","🌧️😱"],
-["ママ・パパ","のみものをこぼす","🥤😨"],
-["ママ・パパ","むしにさされる","🦟"],
-["ママ・パパ","たからくじがあたる","🎉💴"],
-["ママ・パパ","こどもにおこされる","👶⏰"],
-["ママ・パパ","スーパーでかいものする","🛒"],
-["ママ・パパ","にもつがおもい","📦😵"],
-["ママ・パパ","でんわしながらメモする","📱📝"],
-["ママ・パパ","からいものをたべる","🌶️🔥"],
-["ママ・パパ","こっそりおかしをたべる","🍪🤫"]
+["おとな","満員電車でつり革につかまる","🚃"],["おとな","寝坊して大あわて","⏰"],["おとな","子どもに起こされる","😵"],["おとな","スマホを落としてひやっとする","📱"],["おとな","コーヒーを飲んで生き返る","☕"],["おとな","ぎっくり腰になりそうになる",""],["おとな","肩こりがつらい",""],["おとな","レジ袋が開かない","🛍️"],["おとな","熱いものをフーフーする","🥣"],["おとな","蚊を必死で追いかける","🦟"],["おとな","子どもの寝かしつけで先に寝る","😴"],["おとな","宅配便が来て急いで出る","📦"],["おとな","財布が見つからない","👛"],["おとな","メガネを探している","👓"],["おとな","靴下を片方なくす","🧦"],["おとな","料理中に味見する","🍳"],["おとな","写真を撮るときポーズに迷う","📷"],["おとな","風呂上がりに暑がる","🛁"],["おとな","電車でうとうとする","🚆"],["おとな","こっそりお菓子を食べる","🍪"],["おとな","子どもの宿題を見る","✏️"],["おとな","テレビのリモコンを探す","📺"],["おとな","洗濯物をたたむ","👕"],["おとな","掃除機をかける",""],["おとな","料理を焦がしてごまかす","😅"],["おとな","子どもに写真を撮られる","📸"],["おとな","寝る前にスマホを見る","📱"],["おとな","寒くて布団から出られない","🥶"],["おとな","暑くてうちわであおぐ",""],["おとな","ケーキをこっそり一口多く食べる","🍰"],
+["おとな","スマホの顔認証が通らない","📱"],["おとな","くしゃみを我慢する","🤧"],["おとな","足がしびれて立てない",""],["おとな","子どものおもちゃを踏む","🧱"],["おとな","熱いコーヒーで舌をやけどする","☕"],["おとな","エレベーターの閉ボタンを連打する",""],["おとな","スーパーで買う物を思い出せない","🛒"],["おとな","冷蔵庫を開けて何を取るか忘れる",""],["おとな","シャンプー中に目に泡が入る","🧴"],["おとな","ドライヤーで髪を乾かす",""],["おとな","子どもの服を着せようと追いかける","👕"],["おとな","写真を撮る瞬間に子どもが動く","📷"],["おとな","子どもを抱っこして腕が限界",""],["おとな","布団を子どもに取られる","🛏️"],["おとな","床の小さいゴミを足で拾う",""],["おとな","電子レンジが終わる直前に止める",""],["おとな","辛いものを食べて平気なふりをする","🌶️"],["おとな","炭酸を飲んでげっぷを我慢する","🥤"],["おとな","電車で降りる駅を乗り過ごしそうになる","🚆"],["おとな","雨なのに傘を忘れたことに気づく","☔"],["おとな","会計でポイントカードを探す","💳"],["おとな","重い買い物袋を両手で持つ","🛍️"],["おとな","子どもの髪を結ぶ",""],["おとな","眠いのに子どもに遊ぼうと言われる","🥱"],["おとな","目覚ましを止めて二度寝する","⏰"],["おとな","ソファから立ち上がるのをためらう",""],["おとな","熱いお風呂にそーっと入る","🛁"],["おとな","猫舌なのに熱い料理が来る",""],["おとな","Wi-Fiがつながらなくて困る","📶"],["おとな","充電が1％だと気づく","🔋"]
 ];
 
-const easySet=new Set(["ねこ","いぬ","うさぎ","ぞう","さる","ペンギン","ゴリラ","へび","はみがき","ねる","ごはんをたべる","はしる","およぐ","ジャンプ","ダンス","じてんしゃ","くるま","でんしゃ","ひこうき","やきゅう","サッカー","アイス","バナナ","おばけ","ロボット","あかちゃん","きょうりゅう"]);
+const app=document.getElementById("app");
+const category=document.getElementById("category");
+const emoji=document.getElementById("emoji");
+const promptEl=document.getElementById("prompt");
+const modeEl=document.getElementById("mode");
+const nextBtn=document.getElementById("next");
+const kidsBtn=document.getElementById("kids");
+const adultBtn=document.getElementById("adult");
+const wrongBtn=document.getElementById("wrong");
+const correctBtn=document.getElementById("correct");
 
-let easyOnly=false, adultMode=false, last="";
+let mode="kids",last="";
+let audioCtx=null, musicTimer=null, noteIndex=0;
+const melody=[523.25,659.25,783.99,659.25,587.33,698.46,880,698.46,523.25,659.25,783.99,987.77];
 
-function currentList(){
-  let list=easyOnly ? kidsPrompts.filter(x=>easySet.has(x[1])) : [...kidsPrompts];
-  if(adultMode && !easyOnly) list=list.concat(adultPrompts);
-  return list;
+function audio(){
+ if(!audioCtx){const AC=window.AudioContext||window.webkitAudioContext;audioCtx=new AC()}
+ if(audioCtx.state==="suspended")audioCtx.resume();
 }
+function tone(freq,duration=.14,type="triangle",volume=.08,delay=0){
+ audio();
+ const t=audioCtx.currentTime+delay,o=audioCtx.createOscillator(),g=audioCtx.createGain();
+ o.type=type;o.frequency.setValueAtTime(freq,t);
+ g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(volume,t+.015);g.gain.exponentialRampToValueAtTime(.0001,t+duration);
+ o.connect(g);g.connect(audioCtx.destination);o.start(t);o.stop(t+duration+.03);
+}
+function startThinking(){
+ stopThinking();noteIndex=0;
+ tone(melody[0],.12,"triangle",.055);
+ musicTimer=setInterval(()=>{tone(melody[noteIndex++%melody.length],.12,"triangle",.055)},210);
+ app.classList.add("thinking");
+}
+function stopThinking(){if(musicTimer){clearInterval(musicTimer);musicTimer=null}}
+function buzzer(){
+ tone(150,.18,"sawtooth",.09);tone(120,.28,"sawtooth",.09,.18);
+}
+function ding(){
+ stopThinking();
+ tone(659.25,.14,"sine",.11);
+ tone(783.99,.14,"sine",.11,.15);
+ tone(1046.5,.42,"sine",.12,.30);
+ setTimeout(()=>app.classList.remove("thinking"),720);
+}
+function currentList(){return mode==="adult"?adultPrompts:kidsPrompts}
 function showPrompt(){
-  const list=currentList();
-  let choice;
-  do{choice=list[Math.floor(Math.random()*list.length)]}while(choice[1]===last&&list.length>1);
-  last=choice[1];
-  document.getElementById("category").textContent="【"+choice[0]+"】";
-  document.getElementById("emoji").textContent=choice[2]||" ";
-  document.getElementById("prompt").textContent=choice[1];
+ audio();
+ const list=currentList();let choice;
+ do{choice=list[Math.floor(Math.random()*list.length)]}while(choice[1]===last&&list.length>1);
+ last=choice[1];
+ category.textContent="【"+choice[0]+"】";
+ emoji.textContent=choice[2]||"";
+ promptEl.textContent=choice[1];
+ startThinking();
 }
-document.getElementById("next").addEventListener("click",showPrompt);
-document.getElementById("easy").addEventListener("click",()=>{
-  easyOnly=!easyOnly;
-  document.getElementById("easy").textContent=easyOnly?"🌱 かんたんモード ON":"🌱 かんたんだけ";
-  document.getElementById("modeText").textContent=easyOnly?"ちいさいこでもやりやすいおだいだけ":(adultMode?"こども＋ママ・パパのおだいです":"こどもむけのおだいです");
-  showPrompt();
-});
-document.getElementById("adult").addEventListener("click",()=>{
-  adultMode=!adultMode;
-  const btn=document.getElementById("adult");
-  btn.classList.toggle("on",adultMode);
-  btn.textContent=adultMode?"👨‍👩‍👧 ママ・パパ参加 ON":"👨‍👩‍👧 ママ・パパもさんか";
-  document.getElementById("modeText").textContent=easyOnly?"かんたんモードでは、おとなのおだいはでません":(adultMode?"こども＋ママ・パパのおだいです":"こどもむけのおだいです");
-  showPrompt();
-});
+function setMode(m){
+ stopThinking();app.classList.remove("thinking");mode=m;
+ modeEl.textContent=m==="adult"?"ママ・パパモード":"こどもモード";
+ kidsBtn.style.opacity=m==="kids"?"1":".55";adultBtn.style.opacity=m==="adult"?"1":".55";
+ category.textContent="ボタンを押してね";emoji.textContent=m==="adult"?"👩‍👨":"👇";promptEl.textContent="おだい";
+}
+nextBtn.addEventListener("click",showPrompt);
+kidsBtn.addEventListener("click",()=>setMode("kids"));
+adultBtn.addEventListener("click",()=>setMode("adult"));
+wrongBtn.addEventListener("click",()=>{buzzer()});
+correctBtn.addEventListener("click",ding);
+document.addEventListener("visibilitychange",()=>{if(document.hidden)stopThinking()});
 </script>
 </body>
 </html>
