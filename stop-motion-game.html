@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>ストップモーションゲーム</title>
+<style>
+:root{--bg1:#fff5fb;--bg2:#eef8ff;--card:#ffffffef;--text:#222;--accent:#6f7cf6;--stop:#ff6b6b;--go:#43b581}
+*{box-sizing:border-box}
+body{margin:0;min-height:100svh;font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic",sans-serif;color:var(--text);background:linear-gradient(160deg,var(--bg1),var(--bg2));display:flex;align-items:center;justify-content:center;padding:18px}
+.app{width:min(680px,100%);text-align:center}
+h1{font-size:clamp(28px,8vw,46px);margin:0 0 10px}
+.lead{font-size:16px;opacity:.72;margin-bottom:16px}
+.card{min-height:330px;background:var(--card);border-radius:30px;box-shadow:0 12px 30px #0002;padding:30px 20px;display:flex;flex-direction:column;justify-content:center;align-items:center;margin-bottom:18px}
+.face{font-size:clamp(70px,22vw,118px);line-height:1;margin-bottom:14px}
+.status{font-size:clamp(44px,14vw,82px);font-weight:900;line-height:1.1}
+.sub{font-size:18px;font-weight:700;margin-top:12px;opacity:.72}
+.controls{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+button{appearance:none;border:0;border-radius:22px;padding:20px 14px;font-size:22px;font-weight:900;box-shadow:0 6px 14px #0002;touch-action:manipulation}
+#start{background:var(--accent);color:white;grid-column:1/-1}
+#end{background:#fff;color:#444}
+#gesture{background:#fff;color:#444}
+.small{margin-top:14px;font-size:13px;opacity:.58}
+.playing .card{outline:6px solid #43b58122}
+.stopped .card{outline:8px solid #ff6b6b33}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+<h1>🎵 ストップモーションゲーム</h1>
+<div class="lead">おんがくが とまったら、ぴたっ！</div>
+
+<div class="card" aria-live="polite">
+  <div class="face" id="face">🎶</div>
+  <div class="status" id="status">じゅんびOK？</div>
+  <div class="sub" id="sub">スタートを おしてね</div>
+</div>
+
+<div class="controls">
+  <button id="start" type="button">▶️ スタート</button>
+  <button id="end" type="button">⏹ おわる</button>
+  <button id="gesture" type="button">🎭 ジェスチャーゲーム</button>
+</div>
+
+<div class="small">音が止まるタイミングは毎回ランダムです。</div>
+</div>
+
+<script>
+const app=document.getElementById("app");
+const startBtn=document.getElementById("start");
+const endBtn=document.getElementById("end");
+const gestureBtn=document.getElementById("gesture");
+const statusEl=document.getElementById("status");
+const faceEl=document.getElementById("face");
+const subEl=document.getElementById("sub");
+
+let audioCtx=null;
+let master=null;
+let noteTimer=null;
+let phaseTimer=null;
+let running=false;
+let frozen=false;
+let noteIndex=0;
+
+const notes=[261.63,329.63,392.00,523.25,392.00,329.63,293.66,349.23,440.00,587.33,440.00,349.23];
+
+function rand(min,max){return Math.random()*(max-min)+min}
+
+function setupAudio(){
+  if(!audioCtx){
+    const AC=window.AudioContext||window.webkitAudioContext;
+    audioCtx=new AC();
+    master=audioCtx.createGain();
+    master.gain.value=0.11;
+    master.connect(audioCtx.destination);
+  }
+  if(audioCtx.state==="suspended") audioCtx.resume();
+}
+
+function playNote(freq){
+  if(!audioCtx||!running||frozen) return;
+  const now=audioCtx.currentTime;
+  const osc=audioCtx.createOscillator();
+  const gain=audioCtx.createGain();
+  osc.type="triangle";
+  osc.frequency.setValueAtTime(freq,now);
+  gain.gain.setValueAtTime(0.0001,now);
+  gain.gain.exponentialRampToValueAtTime(0.18,now+0.02);
+  gain.gain.exponentialRampToValueAtTime(0.0001,now+0.22);
+  osc.connect(gain);
+  gain.connect(master);
+  osc.start(now);
+  osc.stop(now+0.24);
+}
+
+function startMusicLoop(){
+  clearInterval(noteTimer);
+  noteTimer=setInterval(()=>{
+    if(running&&!frozen){
+      playNote(notes[noteIndex%notes.length]);
+      noteIndex++;
+    }
+  },280);
+}
+
+function setGo(){
+  frozen=false;
+  app.classList.remove("stopped");
+  app.classList.add("playing");
+  faceEl.textContent="💃";
+  statusEl.textContent="うごいて！";
+  subEl.textContent="おんがくが とまるまで ダンス！";
+}
+
+function setStop(){
+  frozen=true;
+  app.classList.remove("playing");
+  app.classList.add("stopped");
+  faceEl.textContent="🧊";
+  statusEl.textContent="ストップ！";
+  subEl.textContent="ぴたっ！ うごかないで！";
+}
+
+function scheduleNextStop(){
+  clearTimeout(phaseTimer);
+  if(!running) return;
+  phaseTimer=setTimeout(()=>{
+    if(!running) return;
+    setStop();
+    phaseTimer=setTimeout(()=>{
+      if(!running) return;
+      setGo();
+      scheduleNextStop();
+    },rand(1800,3500));
+  },rand(4500,9500));
+}
+
+function startGame(){
+  setupAudio();
+  running=true;
+  noteIndex=0;
+  startBtn.textContent="🔄 さいしょから";
+  setGo();
+  startMusicLoop();
+  scheduleNextStop();
+}
+
+function endGame(){
+  running=false;
+  frozen=false;
+  clearInterval(noteTimer);
+  clearTimeout(phaseTimer);
+  app.classList.remove("playing","stopped");
+  faceEl.textContent="🎶";
+  statusEl.textContent="おしまい！";
+  subEl.textContent="また あそぼう";
+  startBtn.textContent="▶️ スタート";
+}
+
+startBtn.addEventListener("click",startGame);
+endBtn.addEventListener("click",endGame);
+gestureBtn.addEventListener("click",()=>{location.href="gesture-game.html"});
+</script>
+</body>
+</html>
