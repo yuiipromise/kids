@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>ジェスチャーゲーム</title>
+<style>
+:root{--bg1:#fff7e8;--bg2:#eef8ff;--card:#ffffffee;--text:#222;--accent:#ff8a65}
+*{box-sizing:border-box}
+body{margin:0;min-height:100svh;font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic",sans-serif;color:var(--text);background:linear-gradient(160deg,var(--bg1),var(--bg2));display:flex;align-items:center;justify-content:center;padding:18px}
+.app{width:min(680px,100%);text-align:center}
+h1{font-size:clamp(28px,8vw,46px);margin:0 0 12px}
+.hint{font-size:15px;opacity:.7;margin-bottom:14px}
+.card{min-height:290px;background:var(--card);border-radius:28px;box-shadow:0 12px 30px #0002;padding:34px 22px;display:flex;flex-direction:column;justify-content:center;margin-bottom:18px}
+.category{font-size:18px;font-weight:700;color:#777;margin-bottom:16px}
+.prompt{font-size:clamp(44px,14vw,80px);font-weight:900;line-height:1.2;word-break:keep-all}
+.buttons{display:grid;gap:12px}
+button{appearance:none;border:0;border-radius:22px;padding:20px 18px;font-size:25px;font-weight:800;box-shadow:0 6px 14px #0002;touch-action:manipulation}
+#next{background:var(--accent);color:#fff}
+#easy{background:#fff;color:#444}
+.small{margin-top:14px;font-size:13px;opacity:.55}
+</style>
+</head>
+<body>
+<div class="app">
+<h1>🎭 ジェスチャーゲーム</h1>
+<div class="hint">声を出さずに、からだだけで伝えてね！</div>
+<div class="card">
+<div class="category" id="category">ボタンを押してね</div>
+<div class="prompt" id="prompt">👇</div>
+</div>
+<div class="buttons">
+<button id="next" type="button">🎲 次のお題！</button>
+<button id="easy" type="button">🌱 かんたんだけ</button>
+</div>
+<div class="small">同じお題がなるべく続かないようにしてあります。</div>
+</div>
+<script>
+const prompts=[
+["どうぶつ","ねこ"],["どうぶつ","いぬ"],["どうぶつ","うさぎ"],["どうぶつ","ぞう"],["どうぶつ","さる"],["どうぶつ","きりん"],["どうぶつ","ペンギン"],["どうぶつ","ゴリラ"],["どうぶつ","カンガルー"],["どうぶつ","へび"],["どうぶつ","かえる"],["どうぶつ","にわとり"],["どうぶつ","ライオン"],["どうぶつ","くま"],["どうぶつ","パンダ"],["どうぶつ","かに"],
+["うごき","はみがき"],["うごき","ねる"],["うごき","おふろ"],["うごき","ごはんを食べる"],["うごき","走る"],["うごき","泳ぐ"],["うごき","ジャンプ"],["うごき","ダンス"],["うごき","本を読む"],["うごき","そうじ"],["うごき","料理"],["うごき","写真をとる"],["うごき","電話する"],["うごき","泣く"],["うごき","笑う"],["うごき","くしゃみ"],
+["のりもの","自転車"],["のりもの","車"],["のりもの","電車"],["のりもの","飛行機"],["のりもの","バス"],["のりもの","船"],["のりもの","ロケット"],
+["スポーツ","野球"],["スポーツ","サッカー"],["スポーツ","バスケットボール"],["スポーツ","テニス"],["スポーツ","ボウリング"],["スポーツ","なわとび"],
+["たべもの","ラーメン"],["たべもの","アイス"],["たべもの","おにぎり"],["たべもの","スイカ"],["たべもの","バナナ"],["たべもの","ケーキ"],
+["そのほか","おばけ"],["そのほか","ロボット"],["そのほか","赤ちゃん"],["そのほか","先生"],["そのほか","忍者"],["そのほか","魔法使い"],["そのほか","恐竜"],["そのほか","サンタクロース"]
+];
+const easySet=new Set(["ねこ","いぬ","うさぎ","ぞう","さる","ペンギン","ゴリラ","へび","はみがき","ねる","ごはんを食べる","走る","泳ぐ","ジャンプ","ダンス","自転車","車","電車","飛行機","野球","サッカー","アイス","バナナ","おばけ","ロボット","赤ちゃん","恐竜"]);
+let easyOnly=false,last="";
+function showPrompt(){
+ const list=easyOnly?prompts.filter(x=>easySet.has(x[1])):prompts;
+ let choice;
+ do{choice=list[Math.floor(Math.random()*list.length)]}while(choice[1]===last&&list.length>1);
+ last=choice[1];
+ document.getElementById("category").textContent="【"+choice[0]+"】";
+ document.getElementById("prompt").textContent=choice[1];
+}
+document.getElementById("next").addEventListener("click",showPrompt);
+document.getElementById("easy").addEventListener("click",()=>{
+ easyOnly=!easyOnly;
+ document.getElementById("easy").textContent=easyOnly?"🌱 かんたんモード ON":"🌱 かんたんだけ";
+ showPrompt();
+});
+</script>
+</body>
+</html>
