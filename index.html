@@ -5,120 +5,163 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<title>ジェスチャーゲーム</title>
+<title>ストップモーションゲーム</title>
 <style>
-:root{--bg1:#fff7e8;--bg2:#eef8ff;--card:#ffffffee;--text:#222;--accent:#ff8a65;--adult:#8e7cc3}
+:root{--bg1:#fff5fb;--bg2:#eef8ff;--card:#ffffffef;--text:#222;--accent:#6f7cf6;--stop:#ff6b6b;--go:#43b581}
 *{box-sizing:border-box}
 body{margin:0;min-height:100svh;font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic",sans-serif;color:var(--text);background:linear-gradient(160deg,var(--bg1),var(--bg2));display:flex;align-items:center;justify-content:center;padding:18px}
 .app{width:min(680px,100%);text-align:center}
-h1{font-size:clamp(28px,8vw,46px);margin:0 0 12px}
-.hint{font-size:15px;opacity:.7;margin-bottom:14px}
-.card{min-height:330px;background:var(--card);border-radius:28px;box-shadow:0 12px 30px #0002;padding:28px 22px;display:flex;flex-direction:column;justify-content:center;margin-bottom:18px}
-.category{font-size:18px;font-weight:700;color:#777;margin-bottom:10px}
-.emoji{font-size:clamp(64px,20vw,110px);line-height:1.05;min-height:1.05em;margin-bottom:8px}
-.prompt{font-size:clamp(40px,12vw,72px);font-weight:900;line-height:1.2;word-break:keep-all}
-.buttons{display:grid;gap:12px}
-button{appearance:none;border:0;border-radius:22px;padding:18px 16px;font-size:23px;font-weight:800;box-shadow:0 6px 14px #0002;touch-action:manipulation}
-#next{background:var(--accent);color:#fff}
-#easy{background:#fff;color:#444}
-#adult{background:#fff;color:#5e4d8c}
-#adult.on{background:var(--adult);color:#fff}
+h1{font-size:clamp(28px,8vw,46px);margin:0 0 10px}
+.lead{font-size:16px;opacity:.72;margin-bottom:16px}
+.card{min-height:330px;background:var(--card);border-radius:30px;box-shadow:0 12px 30px #0002;padding:30px 20px;display:flex;flex-direction:column;justify-content:center;align-items:center;margin-bottom:18px}
+.face{font-size:clamp(70px,22vw,118px);line-height:1;margin-bottom:14px}
+.status{font-size:clamp(44px,14vw,82px);font-weight:900;line-height:1.1}
+.sub{font-size:18px;font-weight:700;margin-top:12px;opacity:.72}
+.controls{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+button{appearance:none;border:0;border-radius:22px;padding:20px 14px;font-size:22px;font-weight:900;box-shadow:0 6px 14px #0002;touch-action:manipulation}
+#start{background:var(--accent);color:white;grid-column:1/-1}
+#end{background:#fff;color:#444}
+#gesture{background:#fff;color:#444}
 .small{margin-top:14px;font-size:13px;opacity:.58}
+.playing .card{outline:6px solid #43b58122}
+.stopped .card{outline:8px solid #ff6b6b33}
 </style>
 </head>
 <body>
-<div class="app">
-<h1>🎭 ジェスチャーゲーム</h1>
-<div class="hint">こえをださずに、からだだけでつたえてね！</div>
-<div class="card">
-<div class="category" id="category">ボタンをおしてね</div>
-<div class="emoji" id="emoji">👇</div>
-<div class="prompt" id="prompt"></div>
+<div class="app" id="app">
+<h1>🎵 ストップモーションゲーム</h1>
+<div class="lead">おんがくが とまったら、ぴたっ！</div>
+
+<div class="card" aria-live="polite">
+  <div class="face" id="face">🎶</div>
+  <div class="status" id="status">じゅんびOK？</div>
+  <div class="sub" id="sub">スタートを おしてね</div>
 </div>
-<div class="buttons">
-<button id="next" type="button">🎲 つぎのおだい！</button>
-<button id="easy" type="button">🌱 かんたんだけ</button>
-<button id="adult" type="button">👨‍👩‍👧 ママ・パパもさんか</button>
+
+<div class="controls">
+  <button id="start" type="button">▶️ スタート</button>
+  <button id="end" type="button">⏹ おわる</button>
+  <button id="gesture" type="button">🎭 ジェスチャーゲーム</button>
 </div>
-<div class="small" id="modeText">こどもむけのおだいです</div>
+
+<div class="small">音が止まるタイミングは毎回ランダムです。</div>
 </div>
+
 <script>
-const kidsPrompts=[
-["どうぶつ","ねこ","🐱"],["どうぶつ","いぬ","🐶"],["どうぶつ","うさぎ","🐰"],["どうぶつ","ぞう","🐘"],
-["どうぶつ","さる","🐵"],["どうぶつ","きりん","🦒"],["どうぶつ","ペンギン","🐧"],["どうぶつ","ゴリラ","🦍"],
-["どうぶつ","カンガルー","🦘"],["どうぶつ","へび","🐍"],["どうぶつ","かえる","🐸"],["どうぶつ","にわとり","🐔"],
-["どうぶつ","ライオン","🦁"],["どうぶつ","くま","🐻"],["どうぶつ","パンダ","🐼"],["どうぶつ","かに","🦀"],
-["うごき","はみがき","🪥"],["うごき","ねる","😴"],["うごき","おふろ","🛁"],["うごき","ごはんをたべる","🍚"],
-["うごき","はしる","🏃"],["うごき","およぐ","🏊"],["うごき","ジャンプ","🤸"],["うごき","ダンス","💃"],
-["うごき","ほんをよむ","📖"],["うごき","そうじ","🧹"],["うごき","りょうり","🍳"],["うごき","しゃしんをとる","📷"],
-["うごき","でんわする","📱"],["うごき","なく","😭"],["うごき","わらう","😂"],["うごき","くしゃみ","🤧"],
-["のりもの","じてんしゃ","🚲"],["のりもの","くるま","🚗"],["のりもの","でんしゃ","🚃"],["のりもの","ひこうき","✈️"],
-["のりもの","バス","🚌"],["のりもの","ふね","🚢"],["のりもの","ロケット","🚀"],
-["スポーツ","やきゅう","⚾"],["スポーツ","サッカー","⚽"],["スポーツ","バスケットボール","🏀"],
-["スポーツ","テニス","🎾"],["スポーツ","ボウリング","🎳"],["スポーツ","なわとび",""],
-["たべもの","ラーメン","🍜"],["たべもの","アイス","🍨"],["たべもの","おにぎり","🍙"],
-["たべもの","スイカ","🍉"],["たべもの","バナナ","🍌"],["たべもの","ケーキ","🍰"],
-["そのほか","おばけ","👻"],["そのほか","ロボット","🤖"],["そのほか","あかちゃん","👶"],
-["そのほか","せんせい",""],["そのほか","にんじゃ","🥷"],["そのほか","まほうつかい","🪄"],
-["そのほか","きょうりゅう","🦖"],["そのほか","サンタクロース","🎅"]
-];
+const app=document.getElementById("app");
+const startBtn=document.getElementById("start");
+const endBtn=document.getElementById("end");
+const gestureBtn=document.getElementById("gesture");
+const statusEl=document.getElementById("status");
+const faceEl=document.getElementById("face");
+const subEl=document.getElementById("sub");
 
-const adultPrompts=[
-["ママ・パパ","でんしゃでねすごす","🚃😴"],
-["ママ・パパ","スマホをおとす","📱😱"],
-["ママ・パパ","かふんしょう","🤧🌲"],
-["ママ・パパ","あついラーメンをたべる","🍜🥵"],
-["ママ・パパ","さいふをわすれる","👛😨"],
-["ママ・パパ","あさねぼうする","⏰😱"],
-["ママ・パパ","ぎっくりごし","😵‍💫"],
-["ママ・パパ","かいぎでねむい","🥱"],
-["ママ・パパ","Wi-Fiがきれる","📶😵"],
-["ママ・パパ","しゃしんをとりなおす","📷😅"],
-["ママ・パパ","あめなのにかさがない","🌧️😱"],
-["ママ・パパ","のみものをこぼす","🥤😨"],
-["ママ・パパ","むしにさされる","🦟"],
-["ママ・パパ","たからくじがあたる","🎉💴"],
-["ママ・パパ","こどもにおこされる","👶⏰"],
-["ママ・パパ","スーパーでかいものする","🛒"],
-["ママ・パパ","にもつがおもい","📦😵"],
-["ママ・パパ","でんわしながらメモする","📱📝"],
-["ママ・パパ","からいものをたべる","🌶️🔥"],
-["ママ・パパ","こっそりおかしをたべる","🍪🤫"]
-];
+let audioCtx=null;
+let master=null;
+let noteTimer=null;
+let phaseTimer=null;
+let running=false;
+let frozen=false;
+let noteIndex=0;
 
-const easySet=new Set(["ねこ","いぬ","うさぎ","ぞう","さる","ペンギン","ゴリラ","へび","はみがき","ねる","ごはんをたべる","はしる","およぐ","ジャンプ","ダンス","じてんしゃ","くるま","でんしゃ","ひこうき","やきゅう","サッカー","アイス","バナナ","おばけ","ロボット","あかちゃん","きょうりゅう"]);
+const notes=[261.63,329.63,392.00,523.25,392.00,329.63,293.66,349.23,440.00,587.33,440.00,349.23];
 
-let easyOnly=false, adultMode=false, last="";
+function rand(min,max){return Math.random()*(max-min)+min}
 
-function currentList(){
-  let list=easyOnly ? kidsPrompts.filter(x=>easySet.has(x[1])) : [...kidsPrompts];
-  if(adultMode && !easyOnly) list=list.concat(adultPrompts);
-  return list;
+function setupAudio(){
+  if(!audioCtx){
+    const AC=window.AudioContext||window.webkitAudioContext;
+    audioCtx=new AC();
+    master=audioCtx.createGain();
+    master.gain.value=0.11;
+    master.connect(audioCtx.destination);
+  }
+  if(audioCtx.state==="suspended") audioCtx.resume();
 }
-function showPrompt(){
-  const list=currentList();
-  let choice;
-  do{choice=list[Math.floor(Math.random()*list.length)]}while(choice[1]===last&&list.length>1);
-  last=choice[1];
-  document.getElementById("category").textContent="【"+choice[0]+"】";
-  document.getElementById("emoji").textContent=choice[2]||" ";
-  document.getElementById("prompt").textContent=choice[1];
+
+function playNote(freq){
+  if(!audioCtx||!running||frozen) return;
+  const now=audioCtx.currentTime;
+  const osc=audioCtx.createOscillator();
+  const gain=audioCtx.createGain();
+  osc.type="triangle";
+  osc.frequency.setValueAtTime(freq,now);
+  gain.gain.setValueAtTime(0.0001,now);
+  gain.gain.exponentialRampToValueAtTime(0.18,now+0.02);
+  gain.gain.exponentialRampToValueAtTime(0.0001,now+0.22);
+  osc.connect(gain);
+  gain.connect(master);
+  osc.start(now);
+  osc.stop(now+0.24);
 }
-document.getElementById("next").addEventListener("click",showPrompt);
-document.getElementById("easy").addEventListener("click",()=>{
-  easyOnly=!easyOnly;
-  document.getElementById("easy").textContent=easyOnly?"🌱 かんたんモード ON":"🌱 かんたんだけ";
-  document.getElementById("modeText").textContent=easyOnly?"ちいさいこでもやりやすいおだいだけ":(adultMode?"こども＋ママ・パパのおだいです":"こどもむけのおだいです");
-  showPrompt();
-});
-document.getElementById("adult").addEventListener("click",()=>{
-  adultMode=!adultMode;
-  const btn=document.getElementById("adult");
-  btn.classList.toggle("on",adultMode);
-  btn.textContent=adultMode?"👨‍👩‍👧 ママ・パパ参加 ON":"👨‍👩‍👧 ママ・パパもさんか";
-  document.getElementById("modeText").textContent=easyOnly?"かんたんモードでは、おとなのおだいはでません":(adultMode?"こども＋ママ・パパのおだいです":"こどもむけのおだいです");
-  showPrompt();
-});
+
+function startMusicLoop(){
+  clearInterval(noteTimer);
+  noteTimer=setInterval(()=>{
+    if(running&&!frozen){
+      playNote(notes[noteIndex%notes.length]);
+      noteIndex++;
+    }
+  },280);
+}
+
+function setGo(){
+  frozen=false;
+  app.classList.remove("stopped");
+  app.classList.add("playing");
+  faceEl.textContent="💃";
+  statusEl.textContent="うごいて！";
+  subEl.textContent="おんがくが とまるまで ダンス！";
+}
+
+function setStop(){
+  frozen=true;
+  app.classList.remove("playing");
+  app.classList.add("stopped");
+  faceEl.textContent="🧊";
+  statusEl.textContent="ストップ！";
+  subEl.textContent="ぴたっ！ うごかないで！";
+}
+
+function scheduleNextStop(){
+  clearTimeout(phaseTimer);
+  if(!running) return;
+  phaseTimer=setTimeout(()=>{
+    if(!running) return;
+    setStop();
+    phaseTimer=setTimeout(()=>{
+      if(!running) return;
+      setGo();
+      scheduleNextStop();
+    },rand(1800,3500));
+  },rand(4500,9500));
+}
+
+function startGame(){
+  setupAudio();
+  running=true;
+  noteIndex=0;
+  startBtn.textContent="🔄 さいしょから";
+  setGo();
+  startMusicLoop();
+  scheduleNextStop();
+}
+
+function endGame(){
+  running=false;
+  frozen=false;
+  clearInterval(noteTimer);
+  clearTimeout(phaseTimer);
+  app.classList.remove("playing","stopped");
+  faceEl.textContent="🎶";
+  statusEl.textContent="おしまい！";
+  subEl.textContent="また あそぼう";
+  startBtn.textContent="▶️ スタート";
+}
+
+startBtn.addEventListener("click",startGame);
+endBtn.addEventListener("click",endGame);
+gestureBtn.addEventListener("click",()=>{location.href="gesture-game.html"});
 </script>
 </body>
 </html>
