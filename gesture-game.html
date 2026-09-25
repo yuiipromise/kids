@@ -41,6 +41,7 @@ button{appearance:none;border:0;border-radius:20px;padding:18px 10px;font-size:2
 .bedtime-screen .moon{font-size:90px;line-height:1;margin-bottom:18px}
 .bedtime-screen .goodnight{font-size:clamp(42px,13vw,74px);font-weight:900;line-height:1.2}
 .bedtime-screen .goodnight-sub{font-size:22px;font-weight:800;opacity:.7;margin-top:18px}
+#adultUnlock{margin-top:32px;background:#fff;color:#666;font-size:14px;padding:10px 14px;box-shadow:none;border:1px solid #ddd}
 .sleeping > *{display:none!important}
 .sleeping .bedtime-screen{display:flex!important;min-height:calc(100svh - 36px);flex-direction:column;align-items:center;justify-content:center}
 .small{margin-top:14px;font-size:13px;opacity:.55}
@@ -85,6 +86,7 @@ button{appearance:none;border:0;border-radius:20px;padding:18px 10px;font-size:2
   <div class="goodnight">きょうは<br>おしまい</div>
   <div class="goodnight-sub">おやすみなさい 😴</div>
   <div class="goodnight-sub">スマホを ママ・パパに かえしてね</div>
+  <button id="adultUnlock" type="button">🔒 おとな用 解除</button>
 </div>
 </div>
 
@@ -119,9 +121,12 @@ const playSub=document.getElementById("playSub");
 const timerEl=document.getElementById("timer");
 const giveupBtn=document.getElementById("giveup");
 const correctBtn=document.getElementById("correct");
+const adultUnlockBtn=document.getElementById("adultUnlock");
 
 let mode="kids",last="";
 let bedtimeMode=false, bedtimeRemaining=0;
+let bedtimePin="";
+const bedtimeKey="gestureBedtimeLock";
 let timeAttack=false, timeLeft=30, roundActive=false;
 let audioCtx=null, musicTimer=null, countdownTimer=null, noteIndex=0;
 const melody=[523.25,659.25,783.99,659.25,587.33,698.46,880,698.46,523.25,659.25,783.99,987.77];
@@ -174,6 +179,28 @@ function stopThinking(){
  if(musicTimer){clearTimeout(musicTimer);musicTimer=null}
  if(countdownTimer){clearInterval(countdownTimer);countdownTimer=null}
 }
+function saveBedtime(state){
+  if(!bedtimeMode)return;
+  localStorage.setItem(bedtimeKey,JSON.stringify({
+    state,
+    remaining:bedtimeRemaining,
+    pin:bedtimePin
+  }));
+}
+function restoreBedtime(){
+  try{
+    const saved=JSON.parse(localStorage.getItem(bedtimeKey)||"null");
+    if(!saved||!saved.pin)return;
+    bedtimeMode=true;
+    bedtimePin=String(saved.pin);
+    bedtimeRemaining=Number(saved.remaining)||0;
+    if(saved.state==="sleeping"||bedtimeRemaining<=0){
+      app.classList.add("sleeping");
+      return;
+    }
+    bedtimeBtn.textContent="🌙 あと"+bedtimeRemaining+"もん";
+  }catch(e){}
+}
 function returnToPrompt(delay){
  setTimeout(()=>{
    app.classList.remove("playing","timeup");
@@ -182,11 +209,13 @@ function returnToPrompt(delay){
    if(bedtimeMode){
      bedtimeRemaining--;
      if(bedtimeRemaining<=0){
+       saveBedtime("sleeping");
        app.classList.add("sleeping");
        stopThinking();
        window.scrollTo({top:0,behavior:"smooth"});
        return;
      }
+     saveBedtime("countdown");
      bedtimeBtn.textContent="🌙 あと"+bedtimeRemaining+"もん";
    }
    window.scrollTo({top:0,behavior:"smooth"});
@@ -247,14 +276,45 @@ timeAttackBtn.addEventListener("click",()=>{
   timeAttackBtn.textContent=timeAttack?"🔥 タイムアタック ON（30びょう）":"🔥 タイムアタック OFF";
 });
 bedtimeBtn.addEventListener("click",()=>{
+  if(bedtimeMode){
+    alert("🌙 おやすみモード中だよ");
+    return;
+  }
+  const pin=prompt("おとな用の4けたPINをきめてね");
+  if(pin===null)return;
+  if(!/^\d{4}$/.test(pin)){
+    alert("4けたの数字にしてね");
+    return;
+  }
   bedtimeMode=true;
+  bedtimePin=pin;
   bedtimeRemaining=3;
+  saveBedtime("countdown");
   bedtimeBtn.textContent="🌙 あと3もん";
+});
+adultUnlockBtn.addEventListener("click",()=>{
+  const pin=prompt("おとな用PINをいれてね");
+  if(pin===null)return;
+  if(pin!==bedtimePin){
+    alert("PINがちがいます");
+    return;
+  }
+  localStorage.removeItem(bedtimeKey);
+  bedtimeMode=false;
+  bedtimeRemaining=0;
+  bedtimePin="";
+  app.classList.remove("sleeping");
+  bedtimeBtn.textContent="🌙 おやすみモード";
+  category.textContent="ボタンをおしてね";
+  emoji.textContent="👇";
+  promptEl.textContent="おだい";
+  startPlayBtn.style.display="none";
 });
 startPlayBtn.addEventListener("click",startThinking);
 giveupBtn.addEventListener("click",()=>finishRound("giveup"));
 correctBtn.addEventListener("click",()=>finishRound("correct"));
 document.addEventListener("visibilitychange",()=>{if(document.hidden)stopThinking()});
+restoreBedtime();
 </script>
 </body>
 </html>
