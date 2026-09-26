@@ -17,6 +17,8 @@ h1{font-size:clamp(28px,8vw,46px);margin:0 0 10px}
 .emoji{font-size:clamp(52px,15vw,88px);line-height:1;margin-bottom:8px;min-height:1em}
 .prompt{font-size:clamp(38px,12vw,72px);font-weight:900;line-height:1.15;word-break:keep-all}
 .mode{font-size:14px;font-weight:700;margin-top:12px;opacity:.65}
+.reveal-note{display:none;font-size:18px;font-weight:900;margin-top:14px;color:#d26b45}
+.revealing .reveal-note{display:block}
 .buttons{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 button{appearance:none;border:0;border-radius:20px;padding:18px 10px;font-size:20px;font-weight:900;box-shadow:0 6px 14px #0002;touch-action:manipulation}
 #next{background:var(--accent);color:#fff;grid-column:1/-1}
@@ -25,7 +27,6 @@ button{appearance:none;border:0;border-radius:20px;padding:18px 10px;font-size:2
 #bedtime{background:#2f3d66;color:#fff;grid-column:1/-1}
 #timeAttack{background:#fff3cd;color:#6b4e00;grid-column:1/-1}
 #timeAttack.on{background:#ffb347;color:#3f2a00}
-#startPlay{display:none;background:var(--ok);color:#fff;grid-column:1/-1;font-size:28px}
 #giveup{background:#777;color:#fff;font-size:clamp(28px,8vw,44px);min-height:150px}
 #correct{background:var(--ok);color:#fff;font-size:clamp(30px,9vw,48px);min-height:150px}
 .play-screen{display:none}
@@ -57,11 +58,11 @@ button{appearance:none;border:0;border-radius:20px;padding:18px 10px;font-size:2
 <div class="emoji" id="emoji">👇</div>
 <div class="prompt" id="prompt">おだい</div>
 <div class="mode" id="mode">こどもモード</div>
+<div class="reveal-note" id="revealNote">👀 おぼえてね！</div>
 </div>
 
 <div class="buttons normal">
 <button id="next" type="button">🎲 つぎのおだい！</button>
-<button id="startPlay" type="button">▶️ やる！</button>
 <button id="kids" type="button">🧒 こども</button>
 <button id="adult" type="button">👩‍👨 ママ・パパ</button>
 <button id="timeAttack" type="button">🔥 タイムアタック OFF</button>
@@ -78,7 +79,7 @@ button{appearance:none;border:0;border-radius:20px;padding:18px 10px;font-size:2
   </div>
 </div>
 
-<div class="small" id="help">おだいをみたら「やる！」をおしてスタート！</div>
+<div class="small" id="help">「つぎのおだい！」をおすと、3びょうごにスタート！</div>
 <a class="home" href="index.html">← ゲームいちらん</a>
 
 <div class="bedtime-screen">
@@ -115,7 +116,6 @@ const kidsBtn=document.getElementById("kids");
 const adultBtn=document.getElementById("adult");
 const bedtimeBtn=document.getElementById("bedtime");
 const timeAttackBtn=document.getElementById("timeAttack");
-const startPlayBtn=document.getElementById("startPlay");
 const playTitle=document.getElementById("playTitle");
 const playSub=document.getElementById("playSub");
 const timerEl=document.getElementById("timer");
@@ -128,6 +128,7 @@ let bedtimeMode=false, bedtimeRemaining=0;
 let bedtimePin="";
 const bedtimeKey="gestureBedtimeLock";
 let timeAttack=false, timeLeft=30, roundActive=false;
+let revealTimer=null;
 let audioCtx=null, musicTimer=null, countdownTimer=null, noteIndex=0;
 const melody=[523.25,659.25,783.99,659.25,587.33,698.46,880,698.46,523.25,659.25,783.99,987.77];
 
@@ -205,7 +206,6 @@ function returnToPrompt(delay){
  setTimeout(()=>{
    app.classList.remove("playing","timeup");
    timerEl.classList.remove("on");
-   startPlayBtn.style.display="none";
    if(bedtimeMode){
      bedtimeRemaining--;
      if(bedtimeRemaining<=0){
@@ -251,18 +251,35 @@ function timeUp(){
 function currentList(){return mode==="adult"?adultPrompts:kidsPrompts}
 function showPrompt(){
  audio();
+ if(revealTimer||roundActive)return;
  const list=currentList();let choice;
  do{choice=list[Math.floor(Math.random()*list.length)]}while(choice[1]===last&&list.length>1);
  last=choice[1];
  category.textContent="【"+choice[0]+"】";
  emoji.textContent=choice[2]||"";
  promptEl.textContent=choice[1];
- startPlayBtn.style.display="block";
+ app.classList.add("revealing");
+ nextBtn.disabled=true;
+ kidsBtn.disabled=true;
+ adultBtn.disabled=true;
+ timeAttackBtn.disabled=true;
+ bedtimeBtn.disabled=true;
  window.scrollTo({top:0,behavior:"smooth"});
+ revealTimer=setTimeout(()=>{
+   revealTimer=null;
+   app.classList.remove("revealing");
+   nextBtn.disabled=false;
+   kidsBtn.disabled=false;
+   adultBtn.disabled=false;
+   timeAttackBtn.disabled=false;
+   bedtimeBtn.disabled=false;
+   startThinking();
+ },3000);
 }
 function setMode(m){
- stopThinking();app.classList.remove("playing");mode=m;
- startPlayBtn.style.display="none";
+ if(revealTimer){clearTimeout(revealTimer);revealTimer=null}
+ stopThinking();app.classList.remove("playing","revealing");mode=m;
+ nextBtn.disabled=false;kidsBtn.disabled=false;adultBtn.disabled=false;timeAttackBtn.disabled=false;bedtimeBtn.disabled=false;
  modeEl.textContent=m==="adult"?"ママ・パパモード":"こどもモード";
  kidsBtn.style.opacity=m==="kids"?"1":".55";adultBtn.style.opacity=m==="adult"?"1":".55";
  category.textContent="ボタンをおしてね";emoji.textContent=m==="adult"?"👩‍👨":"👇";promptEl.textContent="おだい";
@@ -303,14 +320,13 @@ adultUnlockBtn.addEventListener("click",()=>{
   bedtimeMode=false;
   bedtimeRemaining=0;
   bedtimePin="";
-  app.classList.remove("sleeping");
+  if(revealTimer){clearTimeout(revealTimer);revealTimer=null}
+  app.classList.remove("sleeping","revealing","playing");
   bedtimeBtn.textContent="🌙 おやすみモード";
   category.textContent="ボタンをおしてね";
   emoji.textContent="👇";
   promptEl.textContent="おだい";
-  startPlayBtn.style.display="none";
 });
-startPlayBtn.addEventListener("click",startThinking);
 giveupBtn.addEventListener("click",()=>finishRound("giveup"));
 correctBtn.addEventListener("click",()=>finishRound("correct"));
 document.addEventListener("visibilitychange",()=>{if(document.hidden)stopThinking()});
