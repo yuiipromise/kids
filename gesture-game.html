@@ -27,7 +27,7 @@ button{appearance:none;border:0;border-radius:20px;padding:18px 10px;font-size:2
 #bedtime{background:#2f3d66;color:#fff;grid-column:1/-1}
 #timeAttack{background:#fff3cd;color:#6b4e00;grid-column:1/-1}
 #timeAttack.on{background:#ffb347;color:#3f2a00}
-#giveup{background:#777;color:#fff;font-size:clamp(28px,8vw,44px);min-height:150px}
+#cant{background:#777;color:#fff;font-size:clamp(28px,8vw,44px);min-height:150px}
 #correct{background:var(--ok);color:#fff;font-size:clamp(30px,9vw,48px);min-height:150px}
 .play-screen{display:none}
 .play-title{font-size:clamp(34px,10vw,54px);font-weight:900;margin-bottom:10px}
@@ -74,7 +74,7 @@ button{appearance:none;border:0;border-radius:20px;padding:18px 10px;font-size:2
   <div class="play-sub" id="playSub">だれか わかるかな？</div>
   <div class="timer" id="timer">30</div>
   <div class="play-buttons">
-    <button id="giveup" type="button">🏳️<br>こうさん</button>
+    <button id="cant" type="button">🙅<br>できない</button>
     <button id="correct" type="button">⭕<br>せいかい！</button>
   </div>
 </div>
@@ -98,7 +98,7 @@ const kidsPrompts=[
 ["のりもの","じてんしゃ","🚲"],["のりもの","くるま","🚗"],["のりもの","でんしゃ","🚆"],["のりもの","ひこうき","✈️"],["のりもの","バス","🚌"],["のりもの","ふね","🚢"],["のりもの","ロケット","🚀"],["のりもの","しょうぼうしゃ","🚒"],["のりもの","きゅうきゅうしゃ","🚑"],["のりもの","パトカー","🚓"],["のりもの","ヘリコプター","🚁"],["のりもの","ショベルカー",""],
 ["スポーツ","やきゅう","⚾"],["スポーツ","サッカー","⚽"],["スポーツ","バスケットボール","🏀"],["スポーツ","テニス","🎾"],["スポーツ","ボウリング","🎳"],["スポーツ","なわとび",""],["スポーツ","スキー","⛷️"],["スポーツ","スケート","⛸️"],["スポーツ","たっきゅう","🏓"],["スポーツ","ゴルフ","⛳"],
 ["たべもの","ラーメン","🍜"],["たべもの","アイス","🍦"],["たべもの","おにぎり","🍙"],["たべもの","スイカ","🍉"],["たべもの","バナナ","🍌"],["たべもの","ケーキ","🍰"],["たべもの","ピザ","🍕"],["たべもの","ハンバーガー","🍔"],["たべもの","カレー","🍛"],["たべもの","とうもろこし","🌽"],["たべもの","りんご","🍎"],["たべもの","ぶどう","🍇"],
-["そのほか","おばけ","👻"],["そのほか","ロボット","🤖"],["そのほか","あかちゃん","👶"],["そのほか","せんせい",""],["そのほか","にんじゃ","🥷"],["そのほか","まほうつかい","🧙"],["そのほか","きょうりゅう","🦖"],["そのほか","サンタクロース","🎅"],["そのほか","おひめさま","👸"],["そのほか","おうさま","🤴"],["そのほか","うちゅうひこうし","🧑‍🚀"],["そのほか","かいぞく","🏴‍☠️"],["そのほか","ヒーロー","🦸"],["そのほか","おいしゃさん","🧑‍⚕️"],["そのほか","コックさん","🧑‍🍳"]
+["そのほか","おばけ","👻"],["そのほか","ロボット","🤖"],["そのほか","あかちゃん","👶"],["そのほか","せんせい",""],["そのほか","にんじゃ","🥷"],["そのほか","まほうつかい","🧙"],["そのほか","きょうりゅう","🦖"],["そのほか","サンタクロース","🎅"],["そのほか","おひめさま","👸"],["そのほか","おうさま","🤴"],["そのほか","うちゅうひこうし","🧑‍🚀"],["そのほか","かいぞく","🏴‍☠️"],["そのほか","ヒーロー","🦸"],["そのほか","おいしゃさん","🧑‍⚕️"],["そのほか","コックさん","🧑‍🍳"],["どうぶつ","カバ","🦛"],["どうぶつ","サイ","🦏"],["どうぶつ","シマウマ","🦓"],["どうぶつ","ラクダ","🐫"],["どうぶつ","アザラシ","🦭"],["どうぶつ","ラッコ","🦦"],["どうぶつ","イルカ","🐬"],["どうぶつ","クジラ","🐋"],["どうぶつ","サメ","🦈"],["どうぶつ","エビ","🦐"],["どうぶつ","クラゲ","🪼"],["どうぶつ","カタツムリ","🐌"],["どうぶつ","クモ","🕷️"],["どうぶつ","カブトムシ",""],["どうぶつ","ワシ","🦅"],["うごき","おきる","⏰"],["うごき","かおをあらう",""],["うごき","うがいする",""],["うごき","トイレにいく","🚽"],["うごき","かみをあらう","🧴"],["うごき","タオルでふく",""],["うごき","せきをする",""],["うごき","しゃっくりする",""],["うごき","ころぶ",""],["うごき","すべる",""],["うごき","かくれる","🙈"],["うごき","さがす","🔎"],["うごき","てをふる","👋"],["うごき","はくしゅする","👏"],["うごき","ハイタッチする","🙌"],["うごき","だっこする",""],["うごき","ボールをなげる","⚾"],["うごき","ボールをける","⚽"],["うごき","ふうせんをふくらます","🎈"],["うごき","ろうそくをけす","🕯️"],["うごき","ドアをあける","🚪"],["うごき","かいだんをのぼる",""],["うごき","おもいものをもつ",""],["うごき","あついものをさわる","🔥"],["うごき","さむくてふるえる","🥶"],["のりもの","バイク","🏍️"],["のりもの","タクシー","🚕"],["のりもの","トラック","🚚"],["のりもの","ブルドーザー",""],["のりもの","クレーンしゃ","🏗️"],["のりもの","ゴミしゅうしゅうしゃ",""],["のりもの","しんかんせん","🚄"],["のりもの","モノレール","🚝"],["のりもの","ヨット","⛵"],["のりもの","せんすいかん",""],["スポーツ","バレーボール","🏐"],["スポーツ","バドミントン","🏸"],["スポーツ","すもう",""],["スポーツ","からて","🥋"],["スポーツ","じゅうどう","🥋"],["スポーツ","たいそう","🤸"],["スポーツ","サーフィン","🏄"],["スポーツ","スノーボード","🏂"],["スポーツ","ボクシング","🥊"],["スポーツ","ダーツ","🎯"],["たべもの","うどん","🍜"],["たべもの","そば","🍜"],["たべもの","パン","🍞"],["たべもの","たまご","🥚"],["たべもの","ソフトクリーム","🍦"],["たべもの","ポテト","🍟"],["たべもの","ドーナツ","🍩"],["たべもの","みかん","🍊"],["たべもの","いちご","🍓"],["たべもの","メロン","🍈"],["たべもの","さくらんぼ","🍒"],["たべもの","レモン","🍋"],["そのほか","しょうぼうし","🧑‍🚒"],["そのほか","けいさつかん","👮"],["そのほか","びようし","💇"],["そのほか","アイドル","🎤"],["そのほか","たんてい","🕵️"],["そのほか","どろぼう",""],["そのほか","ゆきだるま","⛄"],["そのほか","かかし",""],["そのほか","てんぐ","👺"],["そのほか","かみなり","⚡"],["そのほか","ジェットコースター","🎢"]
 ];
 
 const adultPrompts=[
@@ -119,11 +119,13 @@ const timeAttackBtn=document.getElementById("timeAttack");
 const playTitle=document.getElementById("playTitle");
 const playSub=document.getElementById("playSub");
 const timerEl=document.getElementById("timer");
-const giveupBtn=document.getElementById("giveup");
+const cantBtn=document.getElementById("cant");
 const correctBtn=document.getElementById("correct");
 const adultUnlockBtn=document.getElementById("adultUnlock");
 
-let mode="kids",last="";
+let mode="kids";
+let currentPrompt=null;
+let kidDeck=[],adultDeck=[],adultPriority=[];
 let bedtimeMode=false, bedtimeRemaining=0;
 let bedtimePin="";
 const bedtimeKey="gestureBedtimeLock";
@@ -248,13 +250,26 @@ function timeUp(){
  tone(196,.48,"sawtooth",.08,.48);
  returnToPrompt(1450);
 }
+function shuffle(list){
+ const a=[...list];
+ for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}
+ return a;
+}
 function currentList(){return mode==="adult"?adultPrompts:kidsPrompts}
+function drawPrompt(){
+ if(mode==="adult"&&adultPriority.length) return adultPriority.shift();
+ if(mode==="kids"){
+   if(!kidDeck.length) kidDeck=shuffle(kidsPrompts);
+   return kidDeck.pop();
+ }
+ if(!adultDeck.length) adultDeck=shuffle(adultPrompts);
+ return adultDeck.pop();
+}
 function showPrompt(){
  audio();
  if(revealTimer||roundActive)return;
- const list=currentList();let choice;
- do{choice=list[Math.floor(Math.random()*list.length)]}while(choice[1]===last&&list.length>1);
- last=choice[1];
+ const choice=drawPrompt();
+ currentPrompt=choice;
  category.textContent="【"+choice[0]+"】";
  emoji.textContent=choice[2]||"";
  promptEl.textContent=choice[1];
@@ -327,7 +342,11 @@ adultUnlockBtn.addEventListener("click",()=>{
   emoji.textContent="👇";
   promptEl.textContent="おだい";
 });
-giveupBtn.addEventListener("click",()=>finishRound("giveup"));
+cantBtn.addEventListener("click",()=>{
+ if(!roundActive)return;
+ if(currentPrompt) adultPriority.push(currentPrompt);
+ finishRound("cant");
+});
 correctBtn.addEventListener("click",()=>finishRound("correct"));
 document.addEventListener("visibilitychange",()=>{if(document.hidden)stopThinking()});
 restoreBedtime();
