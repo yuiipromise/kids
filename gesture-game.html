@@ -22,8 +22,6 @@ h1{font-size:clamp(28px,8vw,46px);margin:0 0 10px}
 .buttons{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 button{appearance:none;border:0;border-radius:20px;padding:18px 10px;font-size:20px;font-weight:900;box-shadow:0 6px 14px #0002;touch-action:manipulation}
 #next{background:var(--accent);color:#fff;grid-column:1/-1}
-#kids{background:#fff;color:#444}
-#adult{background:var(--adult);color:#fff}
 #bedtime{background:#2f3d66;color:#fff;grid-column:1/-1}
 #timeAttack{background:#fff3cd;color:#6b4e00;grid-column:1/-1}
 #timeAttack.on{background:#ffb347;color:#3f2a00}
@@ -57,14 +55,12 @@ button{appearance:none;border:0;border-radius:20px;padding:18px 10px;font-size:2
 <div class="category" id="category">ボタンをおしてね</div>
 <div class="emoji" id="emoji">👇</div>
 <div class="prompt" id="prompt">おだい</div>
-<div class="mode" id="mode">こどもモード</div>
+<div class="mode" id="mode">🎭 まどかのばん！</div>
 <div class="reveal-note" id="revealNote">👀 おぼえてね！</div>
 </div>
 
 <div class="buttons normal">
-<button id="next" type="button">🎲 つぎのおだい！</button>
-<button id="kids" type="button">🧒 こども</button>
-<button id="adult" type="button">👩‍👨 ママ・パパ</button>
+<button id="next" type="button">🎲 まどかのおだい！</button>
 <button id="timeAttack" type="button">🔥 タイムアタック OFF</button>
 <button id="bedtime" type="button">🌙 おやすみモード</button>
 </div>
@@ -112,8 +108,6 @@ const emoji=document.getElementById("emoji");
 const promptEl=document.getElementById("prompt");
 const modeEl=document.getElementById("mode");
 const nextBtn=document.getElementById("next");
-const kidsBtn=document.getElementById("kids");
-const adultBtn=document.getElementById("adult");
 const bedtimeBtn=document.getElementById("bedtime");
 const timeAttackBtn=document.getElementById("timeAttack");
 const playTitle=document.getElementById("playTitle");
@@ -123,7 +117,15 @@ const cantBtn=document.getElementById("cant");
 const correctBtn=document.getElementById("correct");
 const adultUnlockBtn=document.getElementById("adultUnlock");
 
-let mode="kids";
+const turnOrder=[
+ {name:"まどか",mode:"kids"},
+ {name:"はるき",mode:"kids"},
+ {name:"まどか",mode:"kids"},
+ {name:"はるき",mode:"kids"},
+ {name:"おとな",mode:"adult"}
+];
+let turnIndex=0;
+let mode=turnOrder[turnIndex].mode;
 let currentPrompt=null;
 let kidDeck=[],adultDeck=[],adultPriority=[];
 let bedtimeMode=false, bedtimeRemaining=0;
@@ -133,6 +135,27 @@ let timeAttack=false, timeLeft=30, roundActive=false;
 let revealTimer=null;
 let audioCtx=null, musicTimer=null, countdownTimer=null, noteIndex=0;
 const melody=[523.25,659.25,783.99,659.25,587.33,698.46,880,698.46,523.25,659.25,783.99,987.77];
+
+function currentTurn(){return turnOrder[turnIndex]}
+function updateTurnUI(){
+ const turn=currentTurn();
+ mode=turn.mode;
+ if(turn.mode==="adult"){
+   modeEl.textContent="🎭 おとなのばん！（パパかママ）";
+   nextBtn.textContent="🎲 おとなのおだい！";
+   emoji.textContent="👩‍👨";
+ }else{
+   modeEl.textContent="🎭 "+turn.name+"のばん！";
+   nextBtn.textContent="🎲 "+turn.name+"のおだい！";
+   emoji.textContent="👇";
+ }
+ category.textContent="ボタンをおしてね";
+ promptEl.textContent="おだい";
+}
+function advanceTurn(){
+ turnIndex=(turnIndex+1)%turnOrder.length;
+ updateTurnUI();
+}
 
 function audio(){
  if(!audioCtx){const AC=window.AudioContext||window.webkitAudioContext;audioCtx=new AC()}
@@ -208,6 +231,7 @@ function returnToPrompt(delay){
  setTimeout(()=>{
    app.classList.remove("playing","timeup");
    timerEl.classList.remove("on");
+   advanceTurn();
    if(bedtimeMode){
      bedtimeRemaining--;
      if(bedtimeRemaining<=0){
@@ -284,24 +308,12 @@ function showPrompt(){
    revealTimer=null;
    app.classList.remove("revealing");
    nextBtn.disabled=false;
-   kidsBtn.disabled=false;
-   adultBtn.disabled=false;
    timeAttackBtn.disabled=false;
    bedtimeBtn.disabled=false;
    startThinking();
  },3000);
 }
-function setMode(m){
- if(revealTimer){clearTimeout(revealTimer);revealTimer=null}
- stopThinking();app.classList.remove("playing","revealing");mode=m;
- nextBtn.disabled=false;kidsBtn.disabled=false;adultBtn.disabled=false;timeAttackBtn.disabled=false;bedtimeBtn.disabled=false;
- modeEl.textContent=m==="adult"?"ママ・パパモード":"こどもモード";
- kidsBtn.style.opacity=m==="kids"?"1":".55";adultBtn.style.opacity=m==="adult"?"1":".55";
- category.textContent="ボタンをおしてね";emoji.textContent=m==="adult"?"👩‍👨":"👇";promptEl.textContent="おだい";
-}
 nextBtn.addEventListener("click",showPrompt);
-kidsBtn.addEventListener("click",()=>setMode("kids"));
-adultBtn.addEventListener("click",()=>setMode("adult"));
 timeAttackBtn.addEventListener("click",()=>{
   timeAttack=!timeAttack;
   timeAttackBtn.classList.toggle("on",timeAttack);
@@ -338,18 +350,17 @@ adultUnlockBtn.addEventListener("click",()=>{
   if(revealTimer){clearTimeout(revealTimer);revealTimer=null}
   app.classList.remove("sleeping","revealing","playing");
   bedtimeBtn.textContent="🌙 おやすみモード";
-  category.textContent="ボタンをおしてね";
-  emoji.textContent="👇";
-  promptEl.textContent="おだい";
+  updateTurnUI();
 });
 cantBtn.addEventListener("click",()=>{
  if(!roundActive)return;
- if(currentPrompt) adultPriority.push(currentPrompt);
+ if(currentPrompt&&currentTurn().mode==="kids") adultPriority.push(currentPrompt);
  finishRound("cant");
 });
 correctBtn.addEventListener("click",()=>finishRound("correct"));
 document.addEventListener("visibilitychange",()=>{if(document.hidden)stopThinking()});
 restoreBedtime();
+if(!app.classList.contains("sleeping")) updateTurnUI();
 </script>
 </body>
 </html>
