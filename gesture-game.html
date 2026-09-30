@@ -12,7 +12,12 @@ body{margin:0;min-height:100svh;font-family:-apple-system,BlinkMacSystemFont,"Hi
 .app{width:min(680px,100%);text-align:center}
 h1{font-size:clamp(28px,8vw,46px);margin:0 0 10px}
 .hint{font-size:15px;opacity:.7;margin-bottom:14px}
-.card{min-height:320px;background:var(--card);border-radius:28px;box-shadow:0 12px 30px #0002;padding:28px 20px;display:flex;flex-direction:column;justify-content:center;margin-bottom:18px}
+.card{min-height:320px;background:var(--card);border-radius:28px;box-shadow:0 12px 30px #0002;padding:28px 20px;display:flex;flex-direction:column;justify-content:center;margin-bottom:18px;transition:background .2s,border-color .2s}
+.card.result-correct{background:#e9f8ef;border:4px solid #70c996}
+.card.result-cant{background:#fff1df;border:4px solid #f2ad62}
+.card.result-timeup{background:#fff8d9;border:4px solid #e6c951}
+.result-badge{display:none;font-size:18px;font-weight:900;margin-bottom:10px}
+.result-correct .result-badge,.result-cant .result-badge,.result-timeup .result-badge{display:block}
 .category{font-size:18px;font-weight:700;color:#777;margin-bottom:8px}
 .emoji{font-size:clamp(52px,15vw,88px);line-height:1;margin-bottom:8px;min-height:1em}
 .prompt{font-size:clamp(38px,12vw,72px);font-weight:900;line-height:1.15;word-break:keep-all}
@@ -51,7 +56,8 @@ button{appearance:none;border:0;border-radius:20px;padding:18px 10px;font-size:2
 <div class="app" id="app">
 <h1>🎭 ジェスチャーゲーム</h1>
 <div class="hint">こえをださずに、からだだけでつたえてね！</div>
-<div class="card">
+<div class="card" id="card">
+<div class="result-badge" id="resultBadge"></div>
 <div class="category" id="category">ボタンをおしてね</div>
 <div class="emoji" id="emoji">👇</div>
 <div class="prompt" id="prompt">おだい</div>
@@ -103,6 +109,8 @@ const adultPrompts=[
 ];
 
 const app=document.getElementById("app");
+const cardEl=document.getElementById("card");
+const resultBadge=document.getElementById("resultBadge");
 const category=document.getElementById("category");
 const emoji=document.getElementById("emoji");
 const promptEl=document.getElementById("prompt");
@@ -137,24 +145,28 @@ let audioCtx=null, musicTimer=null, countdownTimer=null, noteIndex=0;
 const melody=[523.25,659.25,783.99,659.25,587.33,698.46,880,698.46,523.25,659.25,783.99,987.77];
 
 function currentTurn(){return turnOrder[turnIndex]}
-function updateTurnUI(){
+function updateTurnUI(resetCard=true){
  const turn=currentTurn();
  mode=turn.mode;
  if(turn.mode==="adult"){
-   modeEl.textContent="🎭 おとなのばん！（パパかママ）";
+   modeEl.textContent=resetCard?"🎭 おとなのばん！（パパかママ）":"➡️ つぎは おとな！（パパかママ）";
    nextBtn.textContent="🎲 おとなのおだい！";
-   emoji.textContent="👩‍👨";
+   if(resetCard) emoji.textContent="👩‍👨";
  }else{
-   modeEl.textContent="🎭 "+turn.name+"のばん！";
+   modeEl.textContent=resetCard?"🎭 "+turn.name+"のばん！":"➡️ つぎは "+turn.name+"のばん！";
    nextBtn.textContent="🎲 "+turn.name+"のおだい！";
-   emoji.textContent="👇";
+   if(resetCard) emoji.textContent="👇";
  }
- category.textContent="ボタンをおしてね";
- promptEl.textContent="おだい";
+ if(resetCard){
+   cardEl.classList.remove("result-correct","result-cant","result-timeup");
+   resultBadge.textContent="";
+   category.textContent="ボタンをおしてね";
+   promptEl.textContent="おだい";
+ }
 }
 function advanceTurn(){
  turnIndex=(turnIndex+1)%turnOrder.length;
- updateTurnUI();
+ updateTurnUI(false);
 }
 
 function audio(){
@@ -227,10 +239,24 @@ function restoreBedtime(){
     bedtimeBtn.textContent="🌙 あと"+bedtimeRemaining+"もん";
   }catch(e){}
 }
-function returnToPrompt(delay){
+function showRoundResult(kind){
+ cardEl.classList.remove("result-correct","result-cant","result-timeup");
+ if(kind==="correct"){
+   cardEl.classList.add("result-correct");
+   resultBadge.textContent="⭕ せいかいした おだい";
+ }else if(kind==="cant"){
+   cardEl.classList.add("result-cant");
+   resultBadge.textContent="🙅 できなかった おだい";
+ }else if(kind==="timeup"){
+   cardEl.classList.add("result-timeup");
+   resultBadge.textContent="⏰ じかんぎれの おだい";
+ }
+}
+function returnToPrompt(delay,kind){
  setTimeout(()=>{
    app.classList.remove("playing","timeup");
    timerEl.classList.remove("on");
+   showRoundResult(kind);
    advanceTurn();
    if(bedtimeMode){
      bedtimeRemaining--;
@@ -259,7 +285,7 @@ function finishRound(kind){
    tone(329.63,.20,"triangle",.09,.20);
    tone(261.63,.42,"triangle",.10,.40);
  }
- returnToPrompt(760);
+ returnToPrompt(760,kind);
 }
 function timeUp(){
  if(!roundActive)return;
@@ -272,7 +298,7 @@ function timeUp(){
  tone(330,.14,"square",.09,.15);
  tone(262,.18,"square",.10,.30);
  tone(196,.48,"sawtooth",.08,.48);
- returnToPrompt(1450);
+ returnToPrompt(1450,"timeup");
 }
 function shuffle(list){
  const a=[...list];
@@ -292,6 +318,8 @@ function drawPrompt(){
 function showPrompt(){
  audio();
  if(revealTimer||roundActive)return;
+ cardEl.classList.remove("result-correct","result-cant","result-timeup");
+ resultBadge.textContent="";
  const choice=drawPrompt();
  currentPrompt=choice;
  category.textContent="【"+choice[0]+"】";
@@ -299,8 +327,6 @@ function showPrompt(){
  promptEl.textContent=choice[1];
  app.classList.add("revealing");
  nextBtn.disabled=true;
- kidsBtn.disabled=true;
- adultBtn.disabled=true;
  timeAttackBtn.disabled=true;
  bedtimeBtn.disabled=true;
  window.scrollTo({top:0,behavior:"smooth"});
@@ -350,7 +376,7 @@ adultUnlockBtn.addEventListener("click",()=>{
   if(revealTimer){clearTimeout(revealTimer);revealTimer=null}
   app.classList.remove("sleeping","revealing","playing");
   bedtimeBtn.textContent="🌙 おやすみモード";
-  updateTurnUI();
+  updateTurnUI(true);
 });
 cantBtn.addEventListener("click",()=>{
  if(!roundActive)return;
@@ -360,7 +386,7 @@ cantBtn.addEventListener("click",()=>{
 correctBtn.addEventListener("click",()=>finishRound("correct"));
 document.addEventListener("visibilitychange",()=>{if(document.hidden)stopThinking()});
 restoreBedtime();
-if(!app.classList.contains("sleeping")) updateTurnUI();
+if(!app.classList.contains("sleeping")) updateTurnUI(true);
 </script>
 </body>
 </html>
