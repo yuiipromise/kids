@@ -24,6 +24,11 @@
     .wheel{position:absolute;inset:16px;border-radius:50%;box-shadow:var(--shadow), inset 0 0 0 8px rgba(255,255,255,.75);transition:none;overflow:hidden}
     .wheel-center{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:28%;aspect-ratio:1;border-radius:50%;background:#fff;display:grid;place-items:center;box-shadow:0 3px 12px rgba(0,0,0,.15);z-index:3;font-size:clamp(14px,3.6vw,19px);font-weight:900;padding:8px}
     .wheel-label{position:absolute;left:50%;top:50%;width:42%;text-align:center;transform-origin:0 50%;font-size:clamp(12px,3.1vw,17px);font-weight:900;line-height:1.15;text-shadow:0 1px 0 #fff;white-space:normal;word-break:keep-all}
+    .slot-wrap{width:min(88vw,460px);margin:0 auto 24px}
+    .slot-window{background:#fff;border:3px solid #e9dfd9;border-radius:28px;box-shadow:var(--shadow);padding:18px 16px;overflow:hidden}
+    .slot-item{min-height:74px;display:flex;align-items:center;justify-content:center;text-align:center;font-size:clamp(24px,6vw,36px);font-weight:900;line-height:1.25;padding:8px 10px;transition:opacity .15s,transform .15s}
+    .slot-item.faded{opacity:.28;transform:scale(.88)}
+    .slot-item.active{opacity:1;transform:scale(1)}
     .big-btn{width:min(90%,430px);border:0;border-radius:24px;padding:18px 20px;font-size:clamp(24px,6vw,34px);font-weight:900;box-shadow:var(--shadow);cursor:pointer;touch-action:manipulation}
     .start{background:var(--pink);color:white}
     .stop{background:#333;color:white}
@@ -52,10 +57,19 @@
 
   <section class="screen hidden" id="gameScreen">
     <div class="prompt" id="prompt">だれが？</div>
-    <div class="wheel-wrap">
-      <div class="pointer"></div>
-      <div class="wheel" id="wheel"></div>
-      <div class="wheel-center" id="wheelCenter">まわってる！</div>
+    <div id="rouletteArea">
+      <div class="wheel-wrap" id="wheelWrap">
+        <div class="pointer"></div>
+        <div class="wheel" id="wheel"></div>
+        <div class="wheel-center" id="wheelCenter">まわってる！</div>
+      </div>
+      <div class="slot-wrap hidden" id="slotWrap">
+        <div class="slot-window">
+          <div class="slot-item faded" id="slotPrev"></div>
+          <div class="slot-item active" id="slotCurrent"></div>
+          <div class="slot-item faded" id="slotNext"></div>
+        </div>
+      </div>
     </div>
     <button class="big-btn stop" id="stopBtn">ストップ！</button>
   </section>
@@ -94,6 +108,9 @@ let raf = null;
 let speed = 0;
 let stopping = false;
 let lastTime = 0;
+let slotTimer = null;
+let slotIndex = 0;
+let slotDelay = 70;
 
 const startScreen = document.getElementById('startScreen');
 const gameScreen = document.getElementById('gameScreen');
@@ -104,6 +121,11 @@ const stopBtn = document.getElementById('stopBtn');
 const againBtn = document.getElementById('againBtn');
 const wheel = document.getElementById('wheel');
 const wheelCenter = document.getElementById('wheelCenter');
+const wheelWrap = document.getElementById('wheelWrap');
+const slotWrap = document.getElementById('slotWrap');
+const slotPrev = document.getElementById('slotPrev');
+const slotCurrent = document.getElementById('slotCurrent');
+const slotNext = document.getElementById('slotNext');
 const promptEl = document.getElementById('prompt');
 const stepText = document.getElementById('stepText');
 const pickedText = document.getElementById('pickedText');
@@ -141,19 +163,29 @@ function buildWheel(options){
 }
 
 function prepareRound(){
-  const c=categories[index];
-  promptEl.textContent=c.label;
+  const cat=categories[index];
+  promptEl.textContent=cat.label;
   stepText.textContent=`${index+1} / ${categories.length}`;
-  currentOptions=shuffle(c.values).slice(0,8);
-  buildWheel(currentOptions);
-  rotation = Math.random()*360;
-  wheel.style.transform=`rotate(${rotation}deg)`;
-  wheelCenter.textContent='まわってる！';
+  currentOptions=shuffle(cat.values).slice(0,8);
+
   gameScreen.classList.remove('hidden');
   startScreen.classList.add('hidden');
   pickedScreen.classList.add('hidden');
   resultScreen.classList.add('hidden');
-  startSpin();
+
+  if(cat.key==='what' || cat.key==='feeling'){
+    wheelWrap.classList.add('hidden');
+    slotWrap.classList.remove('hidden');
+    startSlot();
+  }else{
+    slotWrap.classList.add('hidden');
+    wheelWrap.classList.remove('hidden');
+    buildWheel(currentOptions);
+    rotation = Math.random()*360;
+    wheel.style.transform=`rotate(${rotation}deg)`;
+    wheelCenter.textContent='まわってる！';
+    startSpin();
+  }
 }
 
 function startSpin(){
@@ -184,9 +216,69 @@ function animate(now){
 
 function stopSpin(){
   if(stopping) return;
+  const cat=categories[index];
+  if(cat.key==='what' || cat.key==='feeling'){
+    stopSlot();
+    return;
+  }
   stopping=true;
   stopBtn.disabled=true;
   wheelCenter.textContent='どれかな…';
+}
+
+function renderSlot(){
+  const n=currentOptions.length;
+  const prev=(slotIndex-1+n)%n;
+  const next=(slotIndex+1)%n;
+  slotPrev.textContent=currentOptions[prev];
+  slotCurrent.textContent=currentOptions[slotIndex];
+  slotNext.textContent=currentOptions[next];
+}
+
+function startSlot(){
+  clearTimeout(slotTimer);
+  stopping=false;
+  stopBtn.disabled=false;
+  slotIndex=Math.floor(Math.random()*currentOptions.length);
+  slotDelay=65;
+  renderSlot();
+
+  const tick=()=>{
+    if(stopping) return;
+    slotIndex=(slotIndex+1)%currentOptions.length;
+    renderSlot();
+    slotTimer=setTimeout(tick,slotDelay);
+  };
+  slotTimer=setTimeout(tick,slotDelay);
+}
+
+function stopSlot(){
+  if(stopping) return;
+  stopping=true;
+  stopBtn.disabled=true;
+  clearTimeout(slotTimer);
+
+  let steps=9;
+  let delay=90;
+  const decel=()=>{
+    if(steps<=0){
+      const chosen=currentOptions[slotIndex];
+      setTimeout(()=>showPickedFromSlot(chosen),700);
+      return;
+    }
+    slotIndex=(slotIndex+1)%currentOptions.length;
+    renderSlot();
+    steps--;
+    delay+=45;
+    slotTimer=setTimeout(decel,delay);
+  };
+  decel();
+}
+
+function showPickedFromSlot(chosen){
+  const cat=categories[index];
+  state[cat.key]=chosen;
+  showPicked(chosen);
 }
 
 function normalizeDeg(d){
