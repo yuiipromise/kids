@@ -6,72 +6,255 @@
   <title>へんなぶんルーレット</title>
   <style>
     :root{
-      --bg:#fffaf5; --card:#ffffff; --text:#2b2b2b; --muted:#6f6f6f;
-      --accent:#ff8fb1; --accent2:#ffd66e; --accent3:#9fd8ff;
-      --line:#eadfd8; --shadow:0 8px 24px rgba(0,0,0,.08);
+      --bg1:#fff8fb; --bg2:#fffdf7; --text:#2d2d2d; --muted:#777;
+      --pink:#ff86ad; --yellow:#ffd86d; --blue:#9fdcff; --green:#bfe8c4;
+      --card:#fff; --line:#eadfd9; --shadow:0 10px 30px rgba(0,0,0,.10);
     }
     *{box-sizing:border-box}
-    body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic",Meiryo,sans-serif;background:linear-gradient(180deg,#fff7fb 0%,#fffdf8 100%);color:var(--text);min-height:100vh}
-    main{max-width:720px;margin:0 auto;padding:20px 16px 40px}
-    h1{font-size:clamp(28px,7vw,44px);text-align:center;margin:8px 0 4px}
-    .sub{color:var(--muted);text-align:center;font-size:14px;margin-bottom:18px}
-    .roulette-grid{display:grid;gap:12px}
-    .slot{background:var(--card);border:2px solid var(--line);border-radius:22px;padding:14px;box-shadow:var(--shadow)}
-    .slot-head{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px}
-    .label{font-weight:800;font-size:18px}
-    .value{min-height:58px;display:flex;align-items:center;justify-content:center;text-align:center;border-radius:16px;background:#fffdf7;border:2px dashed #ead9c9;font-size:clamp(22px,6vw,32px);font-weight:800;padding:10px 12px}
-    button{appearance:none;border:0;border-radius:16px;padding:12px 16px;font-size:18px;font-weight:800;cursor:pointer;touch-action:manipulation}
-    .spin-btn{background:var(--accent2);color:#4a3a00;min-width:110px}
-    .spin-btn.done{background:#dff4df;color:#265226}
-    .actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}
-    .primary{background:var(--accent);color:white}
-    .secondary{background:var(--accent3);color:#12415f}
-    .ghost{background:white;border:2px solid var(--line);color:var(--text)}
-    .sentence-card{margin-top:18px;background:white;border:3px solid #ffd3e0;border-radius:24px;padding:18px;box-shadow:var(--shadow)}
-    .sentence-title{font-weight:900;font-size:18px;margin-bottom:10px;text-align:center}
-    .sentence{font-size:clamp(24px,6vw,34px);line-height:1.6;text-align:center;font-weight:800;word-break:keep-all;overflow-wrap:anywhere}
-    .mini{font-size:13px;color:var(--muted);text-align:center;margin-top:8px}
-    .confetti{animation:pop .35s ease}
-    @keyframes pop{0%{transform:scale(.96)}60%{transform:scale(1.03)}100%{transform:scale(1)}}
-    @media (min-width:620px){.actions{grid-template-columns:1fr 1fr 1fr}}
+    html,body{margin:0;min-height:100%;font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic",Meiryo,sans-serif;background:linear-gradient(180deg,var(--bg1),var(--bg2));color:var(--text)}
+    body{min-height:100vh;display:flex;justify-content:center}
+    main{width:min(100%,720px);min-height:100vh;padding:18px 16px 28px;display:flex;flex-direction:column}
+    .top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px}
+    h1{font-size:clamp(28px,7vw,42px);margin:0;font-weight:900}
+    .step{font-size:14px;color:var(--muted);font-weight:800}
+    .screen{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+    .prompt{font-size:clamp(28px,7vw,44px);font-weight:900;margin:8px 0 18px}
+    .wheel-wrap{position:relative;width:min(84vw,430px);aspect-ratio:1;margin:0 auto 20px}
+    .pointer{position:absolute;z-index:4;top:-3px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:18px solid transparent;border-right:18px solid transparent;border-top:0;border-bottom:34px solid #333;filter:drop-shadow(0 3px 2px rgba(0,0,0,.18))}
+    .wheel{position:absolute;inset:16px;border-radius:50%;box-shadow:var(--shadow), inset 0 0 0 8px rgba(255,255,255,.75);transition:none;overflow:hidden}
+    .wheel-center{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:28%;aspect-ratio:1;border-radius:50%;background:#fff;display:grid;place-items:center;box-shadow:0 3px 12px rgba(0,0,0,.15);z-index:3;font-size:clamp(14px,3.6vw,19px);font-weight:900;padding:8px}
+    .wheel-label{position:absolute;left:50%;top:50%;width:34%;transform-origin:0 0;font-size:clamp(12px,3vw,17px);font-weight:900;line-height:1.15;text-shadow:0 1px 0 #fff;word-break:keep-all}
+    .big-btn{width:min(90%,430px);border:0;border-radius:24px;padding:18px 20px;font-size:clamp(24px,6vw,34px);font-weight:900;box-shadow:var(--shadow);cursor:pointer;touch-action:manipulation}
+    .start{background:var(--pink);color:white}
+    .stop{background:#333;color:white}
+    .again{background:var(--yellow);color:#4a3a00}
+    .result-card{background:#fff;border:3px solid #ffd1df;border-radius:28px;padding:20px;width:min(95%,600px);box-shadow:var(--shadow)}
+    .result-title{font-size:18px;font-weight:900;margin-bottom:10px}
+    .result-text{font-size:clamp(28px,7vw,42px);font-weight:900;line-height:1.55}
+    .picked{font-size:clamp(38px,10vw,64px);font-weight:900;line-height:1.2;margin:24px 0}
+    .flash{animation:pop .5s ease}
+    @keyframes pop{0%{transform:scale(.8);opacity:.2}60%{transform:scale(1.08)}100%{transform:scale(1);opacity:1}}
+    .sub{font-size:14px;color:var(--muted);margin-top:10px}
+    .hidden{display:none!important}
   </style>
 </head>
 <body>
 <main>
-  <h1>🎰 へんなぶんルーレット</h1>
-  <div class="sub">ぜんぶ とめたら、へんな ぶんが できるよ！</div>
-  <div id="slots" class="roulette-grid"></div>
-  <div class="actions">
-    <button class="primary" id="autoBtn">✨ ぜんぶおまかせ</button>
-    <button class="secondary" id="readBtn">🔊 よみあげる</button>
-    <button class="ghost" id="resetBtn">🔄 もういっかい</button>
+  <div class="top">
+    <h1>🎰 へんなぶん</h1>
+    <div class="step" id="stepText">スタート</div>
   </div>
-  <section class="sentence-card" id="sentenceCard">
-    <div class="sentence-title">できた ぶん</div>
-    <div class="sentence" id="sentence">ルーレットを とめてね！</div>
-    <div class="mini">※ よみあげは スマホやブラウザの おんせいを つかいます</div>
+
+  <section class="screen" id="startScreen">
+    <div class="prompt">へんな ぶんを<br>つくろう！</div>
+    <button class="big-btn start" id="startBtn">はじめる！</button>
+  </section>
+
+  <section class="screen hidden" id="gameScreen">
+    <div class="prompt" id="prompt">だれが？</div>
+    <div class="wheel-wrap">
+      <div class="pointer"></div>
+      <div class="wheel" id="wheel"></div>
+      <div class="wheel-center" id="wheelCenter">まわってる！</div>
+    </div>
+    <button class="big-btn stop" id="stopBtn">ストップ！</button>
+  </section>
+
+  <section class="screen hidden" id="pickedScreen">
+    <div class="prompt" id="pickedPrompt">えらばれたのは…</div>
+    <div class="picked flash" id="pickedText"></div>
+  </section>
+
+  <section class="screen hidden" id="resultScreen">
+    <div class="result-card">
+      <div class="result-title">🎉 へんなぶん かんせい！</div>
+      <div class="result-text" id="resultText"></div>
+      <div class="sub">じどうで よみあげるよ</div>
+    </div>
+    <div style="height:16px"></div>
+    <button class="big-btn again" id="againBtn">もういっかい！</button>
   </section>
 </main>
+
 <script>
 const categories = [
-  {key:'who',label:'だれが？',emoji:'👤',items:['ママが','パパが','ぼくが','わたしが','せんせいが','こうちょうせんせいが','おともだちが','あかちゃんが','ねこが','いぬが','きょうりゅうが','ペンギンが','ゴリラが','おばけが','うちゅうじんが','サンタさんが']},
-  {key:'when',label:'いつ？',emoji:'🕒',items:['きょう','きのう','あした','あさ','ひる','まよなか','100ねんまえ','100ねんご','クリスマスに','おしょうがつに','たんじょうびに','ねるまえに','ごはんのまえに','がっこうがおわったあと']},
-  {key:'where',label:'どこで？',emoji:'📍',items:['がっこうで','こうえんで','おうちで','トイレで','おふろで','れいぞうこのなかで','うちゅうで','つきのうえで','ジャングルで','きょうしつで','スーパーで','でんしゃのなかで','ベッドのうえで','プールで','きょうりゅうのせなかで']},
-  {key:'what',label:'なにをした？',emoji:'🎬',items:['おどりました','ねました','カレーをつくりました','うたいました','さけびました','おにごっこをしました','ケーキをたべました','ダンスをしました','ほんをよみました','ころびました','ジャンプしました','おならをしました','ラーメンをつくりました','かくれんぼをしました','ピアノをひきました','えをかきました']},
-  {key:'feeling',label:'どんなきもち？',emoji:'💭',items:['とてもたのしかったです','びっくりしました','うれしかったです','ちょっとかなしかったです','どきどきしました','くやしかったです','おもしろかったです','ふしぎだなとおもいました','またやりたいとおもいました','なんで！？とおもいました']}
+  {key:'who', label:'だれが？', values:['ママが','パパが','ぼくが','わたしが','せんせいが','こうちょうせんせいが','おともだちが','あかちゃんが','ねこが','いぬが','きょうりゅうが','ペンギンが','ゴリラが','おばけが','うちゅうじんが','サンタさんが']},
+  {key:'when', label:'いつ？', values:['きょう','きのう','あした','あさ','ひる','まよなか','100ねんまえ','100ねんご','クリスマスに','おしょうがつに','たんじょうびに','ねるまえに','ごはんのまえに','がっこうがおわったあと']},
+  {key:'where', label:'どこで？', values:['がっこうで','こうえんで','おうちで','トイレで','おふろで','れいぞうこのなかで','うちゅうで','つきのうえで','ジャングルで','きょうしつで','スーパーで','でんしゃのなかで','ベッドのうえで','プールで','きょうりゅうのせなかで']},
+  {key:'what', label:'なにをした？', values:['おどりました','ねました','カレーをつくりました','うたいました','さけびました','おにごっこをしました','ケーキをたべました','ダンスをしました','ほんをよみました','ころびました','ジャンプしました','おならをしました','ラーメンをつくりました','かくれんぼをしました','ピアノをひきました','えをかきました']},
+  {key:'feeling', label:'どんなきもち？', values:['とてもたのしかったです','びっくりしました','うれしかったです','ちょっとかなしかったです','どきどきしました','くやしかったです','おもしろかったです','ふしぎだなとおもいました','またやりたいとおもいました','なんで！？とおもいました']}
 ];
-const state=Object.fromEntries(categories.map(c=>[c.key,null]));
-const slotsEl=document.getElementById('slots'),sentenceEl=document.getElementById('sentence'),sentenceCard=document.getElementById('sentenceCard'),autoBtn=document.getElementById('autoBtn'),readBtn=document.getElementById('readBtn'),resetBtn=document.getElementById('resetBtn');
-function pick(arr){return arr[Math.floor(Math.random()*arr.length)]}
-function renderSlots(){slotsEl.innerHTML='';categories.forEach(c=>{const slot=document.createElement('section');slot.className='slot';slot.innerHTML=`
-<div class="slot-head"><div class="label">${c.emoji} ${c.label}</div><button class="spin-btn" data-key="${c.key}">ルーレット！</button></div>
-<div class="value" id="value-${c.key}">？？？</div>`;slotsEl.appendChild(slot)});document.querySelectorAll('.spin-btn').forEach(btn=>btn.addEventListener('click',()=>spin(btn.dataset.key,btn)))}
-function spin(key,btn){const c=categories.find(x=>x.key===key),valueEl=document.getElementById(`value-${key}`);let n=0;btn.disabled=true;btn.textContent='まわってる…';const timer=setInterval(()=>{valueEl.textContent=pick(c.items);n++;if(n>=12){clearInterval(timer);const final=pick(c.items);state[key]=final;valueEl.textContent=final;btn.disabled=false;btn.textContent='もういっかい';btn.classList.add('done');updateSentence()}},70)}
-function updateSentence(){const ready=categories.every(c=>state[c.key]);if(!ready){const count=categories.filter(c=>state[c.key]).length;sentenceEl.textContent=`あと ${categories.length-count}こ とめてね！`;return}const text=`${state.when}、${state.who}${state.where}${state.what}。${state.feeling}。`;sentenceEl.textContent=text;sentenceCard.classList.remove('confetti');void sentenceCard.offsetWidth;sentenceCard.classList.add('confetti');speak(text)}
-function speak(text){if(!('speechSynthesis' in window))return;window.speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang='ja-JP';u.rate=.9;u.pitch=1.05;const voices=window.speechSynthesis.getVoices();const ja=voices.find(v=>v.lang&&v.lang.toLowerCase().startsWith('ja'));if(ja)u.voice=ja;window.speechSynthesis.speak(u)}
-async function spinAll(){autoBtn.disabled=true;for(const c of categories){const btn=[...document.querySelectorAll('.spin-btn')].find(b=>b.dataset.key===c.key);await new Promise(resolve=>{const valueEl=document.getElementById(`value-${c.key}`);let n=0;btn.disabled=true;btn.textContent='まわってる…';const timer=setInterval(()=>{valueEl.textContent=pick(c.items);n++;if(n>=10){clearInterval(timer);const final=pick(c.items);state[c.key]=final;valueEl.textContent=final;btn.disabled=false;btn.textContent='もういっかい';btn.classList.add('done');resolve()}},55)})}updateSentence();autoBtn.disabled=false}
-function reset(){categories.forEach(c=>state[c.key]=null);renderSlots();sentenceEl.textContent='ルーレットを とめてね！';if('speechSynthesis'in window)window.speechSynthesis.cancel()}
-autoBtn.addEventListener('click',spinAll);readBtn.addEventListener('click',()=>{if(categories.every(c=>state[c.key]))speak(sentenceEl.textContent)});resetBtn.addEventListener('click',reset);renderSlots();
+
+const colors = ['#ffd7e5','#ffe6a7','#d9efff','#dff3d8','#e8ddff','#ffd8c2','#d4f2ec','#fff1b8'];
+const state = {};
+let index = 0;
+let currentOptions = [];
+let rotation = 0;
+let raf = null;
+let speed = 0;
+let stopping = false;
+let lastTime = 0;
+
+const startScreen = document.getElementById('startScreen');
+const gameScreen = document.getElementById('gameScreen');
+const pickedScreen = document.getElementById('pickedScreen');
+const resultScreen = document.getElementById('resultScreen');
+const startBtn = document.getElementById('startBtn');
+const stopBtn = document.getElementById('stopBtn');
+const againBtn = document.getElementById('againBtn');
+const wheel = document.getElementById('wheel');
+const wheelCenter = document.getElementById('wheelCenter');
+const promptEl = document.getElementById('prompt');
+const stepText = document.getElementById('stepText');
+const pickedText = document.getElementById('pickedText');
+const resultText = document.getElementById('resultText');
+
+function shuffle(arr){
+  const a=[...arr];
+  for(let i=a.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [a[i],a[j]]=[a[j],a[i]];
+  }
+  return a;
+}
+
+function buildWheel(options){
+  currentOptions = options;
+  const n = options.length;
+  const seg = 360/n;
+  const stops = [];
+  for(let i=0;i<n;i++){
+    const start=i*seg;
+    const end=(i+1)*seg;
+    stops.push(`${colors[i%colors.length]} ${start}deg ${end}deg`);
+  }
+  wheel.style.background=`conic-gradient(from -90deg, ${stops.join(',')})`;
+  wheel.innerHTML='';
+  options.forEach((txt,i)=>{
+    const label=document.createElement('div');
+    label.className='wheel-label';
+    const angle = i*seg + seg/2 - 90;
+    label.style.transform=`rotate(${angle}deg) translate(26%, -50%) rotate(${-angle}deg)`;
+    label.textContent=txt;
+    wheel.appendChild(label);
+  });
+}
+
+function prepareRound(){
+  const c=categories[index];
+  promptEl.textContent=c.label;
+  stepText.textContent=`${index+1} / ${categories.length}`;
+  currentOptions=shuffle(c.values).slice(0,8);
+  buildWheel(currentOptions);
+  rotation = Math.random()*360;
+  wheel.style.transform=`rotate(${rotation}deg)`;
+  wheelCenter.textContent='まわってる！';
+  gameScreen.classList.remove('hidden');
+  startScreen.classList.add('hidden');
+  pickedScreen.classList.add('hidden');
+  resultScreen.classList.add('hidden');
+  startSpin();
+}
+
+function startSpin(){
+  cancelAnimationFrame(raf);
+  speed=160;
+  stopping=false;
+  lastTime=performance.now();
+  stopBtn.disabled=false;
+  animate(lastTime);
+}
+
+function animate(now){
+  const dt=Math.min(32, now-lastTime)/1000;
+  lastTime=now;
+  rotation += speed*dt;
+  wheel.style.transform=`rotate(${rotation}deg)`;
+  if(stopping){
+    speed*=Math.pow(0.986, dt*60);
+    if(speed<16){
+      finalizeStop();
+      return;
+    }
+  }else{
+    if(speed<520) speed+=520*dt;
+  }
+  raf=requestAnimationFrame(animate);
+}
+
+function stopSpin(){
+  if(stopping) return;
+  stopping=true;
+  stopBtn.disabled=true;
+  wheelCenter.textContent='どれかな…';
+}
+
+function normalizeDeg(d){
+  return ((d%360)+360)%360;
+}
+
+function finalizeStop(){
+  cancelAnimationFrame(raf);
+  const n=currentOptions.length;
+  const seg=360/n;
+  const pointerAngle = normalizeDeg(-rotation);
+  const idx=Math.floor(pointerAngle/seg)%n;
+  const chosen=currentOptions[idx];
+  const c=categories[index];
+  state[c.key]=chosen;
+
+  gameScreen.classList.add('hidden');
+  pickedScreen.classList.remove('hidden');
+  pickedText.classList.remove('flash');
+  void pickedText.offsetWidth;
+  pickedText.classList.add('flash');
+  pickedText.textContent=chosen;
+
+  setTimeout(()=>{
+    index++;
+    if(index<categories.length){
+      prepareRound();
+    }else{
+      showResult();
+    }
+  },1100);
+}
+
+function showResult(){
+  pickedScreen.classList.add('hidden');
+  resultScreen.classList.remove('hidden');
+  stepText.textContent='かんせい！';
+  const text=`${state.when}、${state.who}${state.where}${state.what}。${state.feeling}。`;
+  resultText.textContent=text;
+  setTimeout(()=>speak(text),350);
+}
+
+function speak(text){
+  if(!('speechSynthesis' in window)) return;
+  window.speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(text);
+  u.lang='ja-JP';
+  u.rate=0.9;
+  u.pitch=1.05;
+  const voices=window.speechSynthesis.getVoices();
+  const ja=voices.find(v=>v.lang && v.lang.toLowerCase().startsWith('ja'));
+  if(ja) u.voice=ja;
+  window.speechSynthesis.speak(u);
+}
+
+function resetGame(){
+  Object.keys(state).forEach(k=>delete state[k]);
+  index=0;
+  stepText.textContent='スタート';
+  resultScreen.classList.add('hidden');
+  pickedScreen.classList.add('hidden');
+  gameScreen.classList.add('hidden');
+  startScreen.classList.remove('hidden');
+}
+
+startBtn.addEventListener('click',prepareRound);
+stopBtn.addEventListener('click',stopSpin);
+againBtn.addEventListener('click',resetGame);
 </script>
 </body>
 </html>
