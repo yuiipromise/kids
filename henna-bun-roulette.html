@@ -20,7 +20,7 @@
     .screen{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
     .prompt{font-size:clamp(28px,7vw,44px);font-weight:900;margin:8px 0 18px}
     .wheel-wrap{position:relative;width:min(84vw,430px);aspect-ratio:1;margin:0 auto 20px}
-    .pointer{position:absolute;z-index:4;top:-3px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:18px solid transparent;border-right:18px solid transparent;border-top:0;border-bottom:34px solid #333;filter:drop-shadow(0 3px 2px rgba(0,0,0,.18))}
+    .pointer{position:absolute;z-index:4;top:-3px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:18px solid transparent;border-right:18px solid transparent;border-bottom:0;border-top:34px solid #333;filter:drop-shadow(0 3px 2px rgba(0,0,0,.18))}
     .wheel{position:absolute;inset:16px;border-radius:50%;box-shadow:var(--shadow), inset 0 0 0 8px rgba(255,255,255,.75);transition:none;overflow:hidden}
     .wheel-center{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:28%;aspect-ratio:1;border-radius:50%;background:#fff;display:grid;place-items:center;box-shadow:0 3px 12px rgba(0,0,0,.15);z-index:3;font-size:clamp(14px,3.6vw,19px);font-weight:900;padding:8px}
     .wheel-label{position:absolute;left:50%;top:50%;width:42%;text-align:center;transform-origin:0 50%;font-size:clamp(12px,3.1vw,17px);font-weight:900;line-height:1.15;text-shadow:0 1px 0 #fff;white-space:normal;word-break:keep-all}
@@ -171,9 +171,9 @@ function animate(now){
   rotation += speed*dt;
   wheel.style.transform=`rotate(${rotation}deg)`;
   if(stopping){
-    speed*=Math.pow(0.986, dt*60);
-    if(speed<16){
-      finalizeStop();
+    speed*=Math.pow(0.972, dt*60);
+    if(speed<5){
+      settleWheel();
       return;
     }
   }else{
@@ -193,16 +193,50 @@ function normalizeDeg(d){
   return ((d%360)+360)%360;
 }
 
-function finalizeStop(){
+function settleWheel(){
   cancelAnimationFrame(raf);
   const n=currentOptions.length;
   const seg=360/n;
   const pointerAngle = normalizeDeg(-rotation);
   const idx=Math.floor(pointerAngle/seg)%n;
   const chosen=currentOptions[idx];
-  const c=categories[index];
-  state[c.key]=chosen;
 
+  // Move the chosen segment center exactly under the pointer,
+  // but do it visibly so the child sees the wheel finish.
+  const centerAngle = idx*seg + seg/2;
+  const currentNorm = normalizeDeg(rotation);
+  const targetNorm = normalizeDeg(-centerAngle);
+  let delta = targetNorm - currentNorm;
+  if(delta < 0) delta += 360;
+  const targetRotation = rotation + delta;
+
+  const startRotation = rotation;
+  const start = performance.now();
+  const duration = 900;
+
+  function easeOutCubic(t){ return 1 - Math.pow(1-t,3); }
+
+  function finishFrame(now){
+    const t=Math.min(1,(now-start)/duration);
+    rotation = startRotation + (targetRotation-startRotation)*easeOutCubic(t);
+    wheel.style.transform=`rotate(${rotation}deg)`;
+    if(t<1){
+      raf=requestAnimationFrame(finishFrame);
+      return;
+    }
+
+    wheelCenter.textContent='これ！';
+    const cat=categories[index];
+    state[cat.key]=chosen;
+
+    // Let the fully stopped wheel remain on screen before revealing the word.
+    setTimeout(()=>showPicked(chosen),900);
+  }
+
+  raf=requestAnimationFrame(finishFrame);
+}
+
+function showPicked(chosen){
   gameScreen.classList.add('hidden');
   pickedScreen.classList.remove('hidden');
   pickedText.classList.remove('flash');
