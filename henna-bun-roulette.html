@@ -86,6 +86,8 @@
       <div class="sub">じどうで よみあげるよ</div>
     </div>
     <div style="height:16px"></div>
+    <button class="big-btn start" id="readBtn">🔊 よみあげる</button>
+    <div style="height:10px"></div>
     <button class="big-btn again" id="againBtn">もういっかい！</button>
   </section>
 </main>
@@ -119,6 +121,7 @@ const resultScreen = document.getElementById('resultScreen');
 const startBtn = document.getElementById('startBtn');
 const stopBtn = document.getElementById('stopBtn');
 const againBtn = document.getElementById('againBtn');
+const readBtn = document.getElementById('readBtn');
 const wheel = document.getElementById('wheel');
 const wheelCenter = document.getElementById('wheelCenter');
 const wheelWrap = document.getElementById('wheelWrap');
@@ -380,6 +383,7 @@ function resetGame(){
 
 startBtn.addEventListener('click',prepareRound);
 stopBtn.addEventListener('click',stopSpin);
+readBtn.addEventListener('click',()=>{ if(resultText.textContent) speak(resultText.textContent); });
 againBtn.addEventListener('click',resetGame);
 </script>
 </body>
