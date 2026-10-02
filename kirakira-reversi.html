@@ -4,18 +4,22 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="theme-color" content="#f7eefe">
-<title>きらきらリバーシ β</title>
+<title>きらきらリバーシ</title>
 <style>
 :root{--text:#5b4d75;--line:#d9c9ef}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;min-height:100%;color:var(--text);font-family:"Hiragino Maru Gothic ProN","Yu Gothic",system-ui,sans-serif;background:linear-gradient(160deg,#fff3fb,#f2efff 52%,#eaf9ff)}
 body{min-height:100dvh;display:flex;justify-content:center;padding:calc(12px + env(safe-area-inset-top)) 12px calc(14px + env(safe-area-inset-bottom))}
-.app{width:min(100%,430px);min-height:calc(100dvh - 26px);display:flex;flex-direction:column;gap:10px}
+.app{width:min(100%,430px);min-height:calc(100dvh - 26px);display:flex;flex-direction:column;gap:10px;position:relative}
 header{text-align:center}
 h1{margin:0;font-size:clamp(24px,7vw,34px);color:#7a5b9f;text-shadow:0 2px #fff}
 .beta{font-size:11px;background:#fff;border:1px solid #e9d9f7;border-radius:999px;padding:2px 6px;vertical-align:top}
 .subtitle{margin:4px 0 0;font-size:12px;color:#8c7ca4}
 .card{background:#ffffffc9;border:1px solid #fff;border-radius:22px;padding:10px 12px;box-shadow:0 12px 30px #694c8c29}
+.mode-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px}
+.mode-btn,.control,.again{border:0;border-radius:18px;padding:12px 10px;font:inherit;font-weight:800;color:#67567d;box-shadow:0 5px 12px #60497d21}
+.mode-btn{background:linear-gradient(#fff,#f8f2ff);border:2px solid #eadbf7}
+.mode-btn.active{background:linear-gradient(#ffddec,#ffc5df);border-color:#f2b6d5;color:#7e4f6d}
 .score-row{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px}
 .score{display:flex;align-items:center;justify-content:center;gap:8px;font-weight:700;font-size:14px}
 .num{font-size:22px;min-width:24px;text-align:center}
@@ -25,18 +29,17 @@ h1{margin:0;font-size:clamp(24px,7vw,34px);color:#7a5b9f;text-shadow:0 2px #fff}
 .turn{text-align:center;margin-top:7px;font-weight:800;min-height:22px}
 .board-wrap{display:flex;justify-content:center;align-items:center;flex:1;min-height:0}
 .shell{width:min(92vw,390px);padding:9px;border-radius:25px;background:linear-gradient(145deg,#f8d9ed,#dcd3f8);box-shadow:0 14px 30px #694c8c33,inset 0 0 0 2px #ffffffa6}
-.board{display:grid;grid-template-columns:repeat(6,1fr);grid-template-rows:repeat(8,1fr);aspect-ratio:6/8;overflow:hidden;border-radius:17px;border:2px solid #cdb9e5;background:#fff}
+.board{display:grid;overflow:hidden;border-radius:17px;border:2px solid #cdb9e5;background:#fff}
 .cell{appearance:none;-webkit-appearance:none;border:0;border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:0;background:#fffaff;display:flex;align-items:center;justify-content:center;touch-action:manipulation}
-.cell:nth-child(12n+7),.cell:nth-child(12n+9),.cell:nth-child(12n+11),.cell:nth-child(12n+2),.cell:nth-child(12n+4),.cell:nth-child(12n+6){background:#f4efff}
-.cell:nth-child(6n){border-right:0}.cell:nth-last-child(-n+6){border-bottom:0}
+.cell.alt{background:#f4efff}
 .stone{width:76%;aspect-ratio:1;border-radius:50%;box-shadow:0 4px 8px #4c39612e;position:relative}
 .stone.p{background:radial-gradient(circle at 34% 28%,#ad9cd6 0 10%,#826eaf 26%,#66558e 72%,#574674 100%);border:1px solid #51407273}
 .stone.w{background:radial-gradient(circle at 34% 28%,#fff 0 30%,#fbf7fc 55%,#e7dfe9 100%);border:1px solid #d9cfdf}
-.flip .stone{animation:flip .38s ease}@keyframes flip{0%{transform:rotateY(0) scale(1)}50%{transform:rotateY(90deg) scale(.88)}100%{transform:rotateY(180deg) scale(1)}}
+.flip .stone{animation:flip .38s ease}
+@keyframes flip{0%{transform:rotateY(0) scale(1)}50%{transform:rotateY(90deg) scale(.88)}100%{transform:rotateY(180deg) scale(1)}}
 .hint{width:30%;aspect-ratio:1;border-radius:50%;background:#73dcc094;box-shadow:0 0 0 5px #bdf3e447,0 0 10px #64d7bc8c;animation:pulse 1.25s ease-in-out infinite}
 @keyframes pulse{0%,100%{transform:scale(.86);opacity:.62}50%{transform:scale(1.08);opacity:1}}
 .controls{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.control,.again{border:0;border-radius:18px;padding:12px 10px;font:inherit;font-weight:800;color:#67567d;box-shadow:0 5px 12px #60497d21}
 .undo{background:linear-gradient(#d9f3ff,#bfe7fb)}.restart,.again{background:linear-gradient(#ffddec,#ffc5df)}
 .control:disabled{opacity:.45}
 .message{text-align:center;font-size:12px;color:#8a7a9e;min-height:20px}
@@ -45,67 +48,166 @@ h1{margin:0;font-size:clamp(24px,7vw,34px);color:#7a5b9f;text-shadow:0 2px #fff}
 @keyframes popmsg{0%{opacity:0;transform:translate(-50%,-50%) scale(.65)}18%{opacity:1;transform:translate(-50%,-50%) scale(1.1)}72%{opacity:1}100%{opacity:0;transform:translate(-50%,-62%) scale(1)}}
 .spark{position:fixed;z-index:8;pointer-events:none;font-size:22px;animation:sparkfly .95s ease-out forwards}
 @keyframes sparkfly{0%{opacity:0;transform:translate(0,0) scale(.5) rotate(0deg)}18%{opacity:1}100%{opacity:0;transform:translate(var(--dx),var(--dy)) scale(1.2) rotate(120deg)}}
-.award{margin:14px 0 16px;padding:12px 10px;border-radius:18px;background:linear-gradient(145deg,#fff0f8,#f5ecff);border:1px solid #f2cfe3;font-weight:900;color:#c14f91;display:none}
-.award.show{display:block}
 .overlay{position:fixed;inset:0;background:#5d477438;display:none;align-items:center;justify-content:center;padding:22px;z-index:10}.overlay.show{display:flex}
 .result{width:min(340px,92vw);border-radius:28px;background:linear-gradient(155deg,#fff,#fff5fb 48%,#f2efff);box-shadow:0 18px 44px #53396e47;text-align:center;padding:24px 18px 18px}
 .result h2{margin:4px 0 8px;color:#735a97}.result p{font-weight:700}.again{width:100%}
-@media(max-height:700px){.app{gap:7px}.subtitle{display:none}.shell{width:min(76vh,360px,90vw)}.control{padding:9px 8px}}
+.award{margin:14px 0 16px;padding:12px 10px;border-radius:18px;background:linear-gradient(145deg,#fff0f8,#f5ecff);border:1px solid #f2cfe3;font-weight:900;color:#c14f91;display:none;white-space:pre-line}
+.award.show{display:block}
+@media(max-height:700px){.app{gap:7px}.subtitle{display:none}.shell{width:min(76vh,360px,90vw)}.control,.mode-btn{padding:9px 8px}}
 </style>
 </head>
 <body>
 <main class="app">
-<header><h1>✨ きらきらリバーシ <span class="beta">β</span></h1><p class="subtitle">6 × 8 の ゆめかわリバーシ</p></header>
+<header>
+  <h1>✨ きらきらリバーシ <span class="beta">β</span></h1>
+  <p class="subtitle">ミニ 4×6 と ふつう 6×8 を えらべるよ</p>
+</header>
 <section class="card">
-<div class="score-row">
-<div class="score"><span class="dot p"></span><span>むらさき</span><span class="num" id="ps">2</span></div>
-<div>VS</div>
-<div class="score"><span class="dot w"></span><span>しろ</span><span class="num" id="ws">2</span></div>
-</div>
-<div class="turn" id="turn">むらさきの ばん！</div>
+  <div class="mode-row">
+    <button class="mode-btn" id="miniBtn" type="button">🌙 ミニ 4×6</button>
+    <button class="mode-btn active" id="normalBtn" type="button">✨ ふつう 6×8</button>
+  </div>
+  <div class="score-row">
+    <div class="score"><span class="dot p"></span><span>むらさき</span><span class="num" id="ps">2</span></div>
+    <div>VS</div>
+    <div class="score"><span class="dot w"></span><span>しろ</span><span class="num" id="ws">2</span></div>
+  </div>
+  <div class="turn" id="turn">むらさきの ばん！</div>
 </section>
 <div class="board-wrap"><div class="shell"><div class="board" id="board"></div></div></div>
-<div class="controls"><button class="control undo" id="undo">↩ ひとつもどる</button><button class="control restart" id="restart">✦ はじめから</button></div>
+<div class="controls"><button class="control undo" id="undo" type="button">↩ ひとつもどる</button><button class="control restart" id="restart" type="button">✦ はじめから</button></div>
 <div class="message" id="msg">ひかっているところに おいてね ✨</div>
 <div class="popmsg" id="popmsg"></div>
 </main>
-<div class="overlay" id="overlay"><div class="result"><div style="font-size:28px">✦ ☆ ✦</div><h2 id="rt">おしまい！</h2><p id="rr"></p><div class="award" id="award"></div><button class="again" id="again">もういっかい あそぶ</button></div></div>
+<div class="overlay" id="overlay"><div class="result"><div style="font-size:28px">✦ ☆ ✦</div><h2 id="rt">おしまい！</h2><p id="rr"></p><div class="award" id="award"></div><button class="again" id="again" type="button">もういっかい あそぶ</button></div></div>
 <script>
 (function(){
-var R=8,C=6,E=0,P=1,W=2,b=[],cur=P,hist=[],over=false,flipped={},best={1:0,2:0};
-var dirs=[[-1,-1],[-1,0],[-1,1],[0,-1],[0,1],[1,-1],[1,0],[1,1]];
-var el=document.getElementById("board"),ps=document.getElementById("ps"),ws=document.getElementById("ws"),turn=document.getElementById("turn"),msg=document.getElementById("msg"),undo=document.getElementById("undo"),overlay=document.getElementById("overlay"),rt=document.getElementById("rt"),rr=document.getElementById("rr"),popmsg=document.getElementById("popmsg"),award=document.getElementById("award");
-function fresh(){var x=[];for(var r=0;r<R;r++){x[r]=[];for(var c=0;c<C;c++)x[r][c]=E}x[3][2]=W;x[3][3]=P;x[4][2]=P;x[4][3]=W;return x}
-function clone(x){return x.map(function(y){return y.slice()})}
-function other(x){return x===P?W:P}
-function inside(r,c){return r>=0&&r<R&&c>=0&&c<C}
-function flips(r,c,p){if(b[r][c]!==E)return[];var o=other(p),all=[];dirs.forEach(function(d){var rr=r+d[0],cc=c+d[1],line=[];while(inside(rr,cc)&&b[rr][cc]===o){line.push([rr,cc]);rr+=d[0];cc+=d[1]}if(line.length&&inside(rr,cc)&&b[rr][cc]===p)all=all.concat(line)});return all}
-function moves(p){var a=[];for(var r=0;r<R;r++)for(var c=0;c<C;c++){var f=flips(r,c,p);if(f.length)a.push({r:r,c:c,f:f})}return a}
-function name(p){return p===P?"むらさき":"しろ"}
-function celebrate(n){
-  popmsg.textContent=n+"まい とれた！";
-  popmsg.classList.remove("show"); void popmsg.offsetWidth; popmsg.classList.add("show");
-  var count=Math.min(4+n,12);
-  for(var i=0;i<count;i++){
-    var s=document.createElement("span"); s.className="spark"; s.textContent=i%3===0?"💖":(i%2?"✨":"★");
-    s.style.left=(45+Math.random()*10)+"vw"; s.style.top=(42+Math.random()*8)+"vh";
-    s.style.setProperty("--dx",((Math.random()-.5)*180)+"px");
-    s.style.setProperty("--dy",(-35-Math.random()*120)+"px");
-    document.body.appendChild(s); setTimeout(function(x){return function(){x.remove()}}(s),1000);
+  var E=0,P=1,W=2;
+  var MODES={mini:{rows:6,cols:4,label:"ミニ 4×6"},normal:{rows:8,cols:6,label:"ふつう 6×8"}};
+  var mode='normal', R=8, C=6, b=[], cur=P, hist=[], over=false, flipped={}, best={1:0,2:0};
+  var dirs=[[-1,-1],[-1,0],[-1,1],[0,-1],[0,1],[1,-1],[1,0],[1,1]];
+  var el=document.getElementById('board'), ps=document.getElementById('ps'), ws=document.getElementById('ws'),
+      turn=document.getElementById('turn'), msg=document.getElementById('msg'), undo=document.getElementById('undo'),
+      restart=document.getElementById('restart'), overlay=document.getElementById('overlay'), rt=document.getElementById('rt'),
+      rr=document.getElementById('rr'), popmsg=document.getElementById('popmsg'), award=document.getElementById('award'),
+      miniBtn=document.getElementById('miniBtn'), normalBtn=document.getElementById('normalBtn'), again=document.getElementById('again');
+  function setMode(next){
+    mode=next;
+    R=MODES[mode].rows; C=MODES[mode].cols;
+    miniBtn.classList.toggle('active',mode==='mini');
+    normalBtn.classList.toggle('active',mode==='normal');
+    reset();
   }
-}
-function render(){el.innerHTML="";var m=over?[]:moves(cur),map={};m.forEach(function(x){map[x.r+"-"+x.c]=1});for(var r=0;r<R;r++)for(var c=0;c<C;c++){var cell=document.createElement("button");cell.className="cell";cell.type="button";cell.dataset.r=r;cell.dataset.c=c;var k=r+"-"+c;if(flipped[k])cell.classList.add("flip");if(b[r][c]){var s=document.createElement("span");s.className="stone "+(b[r][c]===P?"p":"w");cell.appendChild(s)}else if(map[k]){var q=document.createElement("span");q.className="hint";cell.appendChild(q)}cell.addEventListener("click",play);el.appendChild(cell)}flipped={};status()}
-function status(){var p=0,w=0;for(var r=0;r<R;r++)for(var c=0;c<C;c++){if(b[r][c]===P)p++;if(b[r][c]===W)w++}ps.textContent=p;ws.textContent=w;undo.disabled=!hist.length||over;if(!over)turn.textContent=name(cur)+"の ばん！"}
-function play(e){if(over)return;var r=+e.currentTarget.dataset.r,c=+e.currentTarget.dataset.c,f=flips(r,c,cur);if(!f.length)return;var player=cur;hist.push({b:clone(b),cur:cur,best:{1:best[1],2:best[2]}});b[r][c]=cur;flipped[r+"-"+c]=1;f.forEach(function(x){b[x[0]][x[1]]=cur;flipped[x[0]+"-"+x[1]]=1});if(f.length>best[player])best[player]=f.length;celebrate(f.length);cur=other(cur);resolve()}
-function resolve(){if(moves(cur).length){msg.textContent="ひかっているところに おいてね ✨";render();return}var prev=cur,n=other(cur);if(moves(n).length){cur=n;msg.textContent=name(prev)+"は おけるところがないよ。パス！";render();return}finish()}
-function finish(){over=true;render();var p=+ps.textContent,w=+ws.textContent,winner=p>w?P:w>p?W:0;rt.textContent=p>w?"むらさきの かち！ ✨":w>p?"しろの かち！ ✨":"ひきわけ！ ✨";rr.textContent="むらさき "+p+"こ　・　しろ "+w+"こ";
-award.classList.remove("show");award.textContent="";
-var bestWinner=best[P]>best[W]?P:best[W]>best[P]?W:0;
-if(winner&&bestWinner&&bestWinner!==winner){award.textContent="🌟 たくさんとれたで賞 🌟\n"+name(bestWinner)+"！ いちどに "+best[bestWinner]+"まい とれたよ 💖";award.style.whiteSpace="pre-line";award.classList.add("show")}
-overlay.classList.add("show");msg.textContent="ゲームしゅうりょう！"}
-function reset(){b=fresh();cur=P;hist=[];over=false;flipped={};best={1:0,2:0};overlay.classList.remove("show");award.classList.remove("show");msg.textContent="ひかっているところに おいてね ✨";render()}
-undo.onclick=function(){if(!hist.length||over)return;var x=hist.pop();b=clone(x.b);cur=x.cur;best=x.best||best;msg.textContent="ひとつ もどったよ";render()};
-document.getElementById("restart").onclick=reset;document.getElementById("again").onclick=reset;reset()
+  function fresh(){
+    var x=[];
+    for(var r=0;r<R;r++){x[r]=[];for(var c=0;c<C;c++)x[r][c]=E}
+    var r1=R/2-1,r2=R/2,c1=C/2-1,c2=C/2;
+    x[r1][c1]=W; x[r1][c2]=P; x[r2][c1]=P; x[r2][c2]=W;
+    return x;
+  }
+  function clone(x){return x.map(function(y){return y.slice()})}
+  function other(x){return x===P?W:P}
+  function inside(r,c){return r>=0&&r<R&&c>=0&&c<C}
+  function flips(r,c,p){
+    if(b[r][c]!==E) return [];
+    var o=other(p), all=[];
+    dirs.forEach(function(d){
+      var rr=r+d[0], cc=c+d[1], line=[];
+      while(inside(rr,cc)&&b[rr][cc]===o){line.push([rr,cc]);rr+=d[0];cc+=d[1]}
+      if(line.length&&inside(rr,cc)&&b[rr][cc]===p) all=all.concat(line);
+    });
+    return all;
+  }
+  function moves(p){
+    var a=[];
+    for(var r=0;r<R;r++) for(var c=0;c<C;c++){
+      var f=flips(r,c,p); if(f.length) a.push({r:r,c:c,f:f});
+    }
+    return a;
+  }
+  function name(p){return p===P?'むらさき':'しろ'}
+  function celebrate(n){
+    popmsg.textContent=n+'まい とれた！';
+    popmsg.classList.remove('show'); void popmsg.offsetWidth; popmsg.classList.add('show');
+    var count=Math.min(4+n,12);
+    for(var i=0;i<count;i++){
+      var s=document.createElement('span'); s.className='spark'; s.textContent=i%3===0?'💖':(i%2?'✨':'★');
+      s.style.left=(45+Math.random()*10)+'vw'; s.style.top=(42+Math.random()*8)+'vh';
+      s.style.setProperty('--dx',((Math.random()-.5)*180)+'px');
+      s.style.setProperty('--dy',(-35-Math.random()*120)+'px');
+      document.body.appendChild(s); setTimeout((function(x){return function(){x.remove()}})(s),1000);
+    }
+  }
+  function render(){
+    el.innerHTML='';
+    el.style.gridTemplateColumns='repeat('+C+',1fr)';
+    el.style.gridTemplateRows='repeat('+R+',1fr)';
+    el.style.aspectRatio=C+' / '+R;
+    var m=over?[]:moves(cur), map={};
+    m.forEach(function(x){map[x.r+'-'+x.c]=1});
+    for(var r=0;r<R;r++) for(var c=0;c<C;c++){
+      var cell=document.createElement('button'); cell.className='cell'; if((r+c)%2===1) cell.classList.add('alt');
+      cell.type='button'; cell.dataset.r=r; cell.dataset.c=c;
+      if(c===C-1) cell.style.borderRight='0';
+      if(r===R-1) cell.style.borderBottom='0';
+      var k=r+'-'+c;
+      if(flipped[k]) cell.classList.add('flip');
+      if(b[r][c]){
+        var s=document.createElement('span'); s.className='stone '+(b[r][c]===P?'p':'w'); cell.appendChild(s);
+      }else if(map[k]){
+        var q=document.createElement('span'); q.className='hint'; cell.appendChild(q);
+      }
+      cell.addEventListener('click',play); el.appendChild(cell);
+    }
+    flipped={}; status();
+  }
+  function status(){
+    var p=0,w=0;
+    for(var r=0;r<R;r++) for(var c=0;c<C;c++){ if(b[r][c]===P)p++; if(b[r][c]===W)w++; }
+    ps.textContent=p; ws.textContent=w; undo.disabled=!hist.length||over;
+    if(!over) turn.textContent=name(cur)+'の ばん！';
+  }
+  function play(e){
+    if(over) return;
+    var r=+e.currentTarget.dataset.r, c=+e.currentTarget.dataset.c, f=flips(r,c,cur);
+    if(!f.length) return;
+    var player=cur;
+    hist.push({b:clone(b),cur:cur,best:{1:best[1],2:best[2]}});
+    b[r][c]=cur; flipped[r+'-'+c]=1;
+    f.forEach(function(x){b[x[0]][x[1]]=cur; flipped[x[0]+'-'+x[1]]=1});
+    if(f.length>best[player]) best[player]=f.length;
+    celebrate(f.length);
+    cur=other(cur); resolve();
+  }
+  function resolve(){
+    if(moves(cur).length){ msg.textContent='ひかっているところに おいてね ✨'; render(); return; }
+    var prev=cur, n=other(cur);
+    if(moves(n).length){ cur=n; msg.textContent=name(prev)+'は おけるところがないよ。パス！'; render(); return; }
+    finish();
+  }
+  function finish(){
+    over=true; render();
+    var p=+ps.textContent, w=+ws.textContent, winner=p>w?P:w>p?W:0;
+    rt.textContent=p>w?'むらさきの かち！ ✨':w>p?'しろの かち！ ✨':'ひきわけ！ ✨';
+    rr.textContent='むらさき '+p+'こ　・　しろ '+w+'こ';
+    award.classList.remove('show'); award.textContent='';
+    var bestWinner=best[P]>best[W]?P:best[W]>best[P]?W:0;
+    if(winner&&bestWinner&&bestWinner!==winner){
+      award.textContent='🌟 たくさんとれたで賞 🌟\n'+name(bestWinner)+'！ いちどに '+best[bestWinner]+'まい とれたよ 💖';
+      award.classList.add('show');
+    }
+    overlay.classList.add('show'); msg.textContent='ゲームしゅうりょう！';
+  }
+  function reset(){
+    b=fresh(); cur=P; hist=[]; over=false; flipped={}; best={1:0,2:0};
+    overlay.classList.remove('show'); award.classList.remove('show'); award.textContent='';
+    msg.textContent='ひかっているところに おいてね ✨';
+    render();
+  }
+  undo.onclick=function(){ if(!hist.length||over) return; var x=hist.pop(); b=clone(x.b); cur=x.cur; best=x.best||best; msg.textContent='ひとつ もどったよ'; render(); };
+  restart.onclick=reset; again.onclick=reset;
+  miniBtn.onclick=function(){setMode('mini')}; normalBtn.onclick=function(){setMode('normal')};
+  setMode('normal');
 })();
 </script>
 </body>
