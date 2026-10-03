@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>レシピたいせん</title>
+<style>
+:root{
+  --bg:#fff8ef;--panel:#fff;--ink:#3b312c;--pink:#ff8fab;--orange:#ffb45f;
+  --green:#8bcf8b;--line:#eadfd7;--shadow:0 10px 26px #8b5e3c1f;
+}
+*{box-sizing:border-box}
+body{margin:0;min-height:100svh;font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic",sans-serif;background:linear-gradient(160deg,#fff6e8,#fff0f5);color:var(--ink)}
+button{font:inherit}
+.app{width:min(760px,100%);margin:auto;padding:14px 14px 28px}
+.top{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.back{border:0;background:#ffffffcc;border-radius:16px;padding:10px 14px;font-weight:800;box-shadow:0 4px 14px #0001}
+h1{font-size:clamp(27px,8vw,42px);margin:0;flex:1;text-align:center}
+.screen{display:none}
+.screen.active{display:block}
+.cardbox{background:#ffffffeb;border-radius:26px;padding:20px;box-shadow:var(--shadow)}
+.center{text-align:center}
+.sub{opacity:.7;line-height:1.6}
+.characters{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:18px}
+.char{border:3px solid transparent;background:#fff;border-radius:24px;padding:16px 8px;box-shadow:0 6px 18px #0001;min-height:170px}
+.char:active{transform:scale(.98)}
+.char .face{font-size:54px}
+.char .name{font-weight:900;font-size:20px;margin:6px 0}
+.char .level{font-size:13px;opacity:.65}
+.startTitle{font-weight:900;font-size:22px;margin-top:10px}
+.rules{margin:16px auto 0;max-width:540px;text-align:left;background:#fff8;padding:14px 16px;border-radius:18px;font-size:14px;line-height:1.7}
+.arena{display:grid;gap:12px}
+.player{background:#fff;border-radius:24px;padding:14px;box-shadow:var(--shadow)}
+.who{display:flex;align-items:center;gap:9px;font-weight:900;font-size:18px}
+.who .avatar{font-size:32px}
+.recipe{margin-top:10px;background:#fff7e9;border-radius:19px;padding:12px}
+.recipeTitle{font-weight:900;font-size:20px;display:flex;justify-content:space-between;gap:8px}
+.ingredients{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:10px}
+.slot{border:2px dashed #d8c9bd;border-radius:15px;padding:8px 4px;text-align:center;min-height:64px;display:flex;flex-direction:column;justify-content:center;align-items:center;font-size:12px}
+.slot .emoji{font-size:25px}
+.slot.got{border-style:solid;background:#ecfaec;border-color:#99d399}
+.slot.got::after{content:"✓";position:absolute}
+.progress{font-size:13px;font-weight:800}
+.handBox{margin-top:10px}
+.label{font-size:13px;font-weight:900;opacity:.62;margin-bottom:6px}
+.hand{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
+.handCard{position:relative;border:2px solid var(--line);background:#fff;border-radius:16px;min-height:76px;padding:7px 3px;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 3px 9px #0001}
+.handCard .emoji{font-size:28px}
+.handCard .txt{font-size:12px;font-weight:800;margin-top:3px}
+.handCard.selectable{border-color:#ffaf61;animation:pulse 1.1s infinite}
+.handCard.selectable:active{transform:scale(.96)}
+.hiddenHand{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
+.backCard{min-height:66px;border-radius:15px;background:repeating-linear-gradient(45deg,#ffc6d5,#ffc6d5 8px,#ffe1e9 8px,#ffe1e9 16px);border:2px solid white;box-shadow:0 3px 9px #0001;display:flex;align-items:center;justify-content:center;font-size:24px}
+.mid{background:#fffdf9;border-radius:24px;padding:14px;box-shadow:var(--shadow);text-align:center}
+.turn{font-weight:900;font-size:19px;min-height:28px}
+.drawArea{display:flex;justify-content:center;gap:12px;margin:10px 0}
+.pile{width:92px;height:116px;border-radius:18px;display:flex;flex-direction:column;justify-content:center;align-items:center;font-weight:900;box-shadow:0 5px 15px #0002}
+.deck{border:0;background:repeating-linear-gradient(45deg,#ffd68a,#ffd68a 9px,#ffe8b9 9px,#ffe8b9 18px);color:#704b1f}
+.deck:disabled{opacity:.45}
+.discard{background:white;border:2px solid var(--line)}
+.discard .emoji{font-size:34px}
+.discard small{font-size:11px}
+.action{width:100%;border:0;border-radius:18px;padding:14px;font-weight:900;font-size:18px;background:linear-gradient(135deg,#ffb76a,#ff8e9e);color:white;box-shadow:0 5px 14px #ff9a8c55}
+.action:disabled{opacity:.42}
+.message{min-height:46px;background:#fff8ef;border-radius:16px;padding:9px 12px;margin-top:8px;font-weight:800;line-height:1.45}
+.drawn{margin:8px auto;width:120px;border:3px solid #ffb366;background:white;border-radius:18px;padding:8px}
+.drawn .emoji{font-size:35px}
+.drawn .txt{font-weight:900;font-size:13px}
+.choice{display:flex;gap:8px;margin-top:8px}
+.choice button{flex:1;border:0;border-radius:15px;padding:11px 6px;font-weight:900}
+.use{background:#9bd69b}
+.throw{background:#eee3dc}
+.overlay{position:fixed;inset:0;background:#0007;display:none;align-items:center;justify-content:center;padding:20px;z-index:10}
+.overlay.show{display:flex}
+.result{background:white;border-radius:30px;padding:28px 20px;text-align:center;width:min(430px,100%);box-shadow:0 20px 60px #0004}
+.result .big{font-size:74px}
+.result h2{font-size:30px;margin:10px 0 6px}
+.result p{line-height:1.6}
+.result button{border:0;border-radius:18px;padding:14px 18px;font-weight:900;font-size:17px;margin:5px;background:#ffd39d}
+.note{font-size:12px;opacity:.55;margin-top:10px}
+@keyframes pulse{50%{box-shadow:0 0 0 5px #ffb45f33}}
+@media(max-width:520px){
+  .characters{grid-template-columns:1fr}
+  .char{min-height:0;display:grid;grid-template-columns:70px 1fr;align-items:center;text-align:left}
+  .char .face{grid-row:1/3}
+  .ingredients{grid-template-columns:repeat(3,1fr)}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="top">
+    <button class="back" onclick="location.href='index.html'">← もどる</button>
+    <h1>🍳 レシピたいせん</h1>
+  </div>
+
+  <section id="select" class="screen active">
+    <div class="cardbox center">
+      <div class="startTitle">だれと たいせんする？</div>
+      <div class="sub">あいてによって つよさが ちがうよ！</div>
+      <div class="characters">
+        <button class="char" onclick="startGame('cat')">
+          <div class="face">🐱</div><div><div class="name">ねこさん</div><div class="level">やさしい 🌱<br>たまに うっかり</div></div>
+        </button>
+        <button class="char" onclick="startGame('sister')">
+          <div class="face">👩</div><div><div class="name">おねえさん</div><div class="level">ふつう 🌷<br>しっかり りょうり</div></div>
+        </button>
+        <button class="char" onclick="startGame('chef')">
+          <div class="face">👨‍🍳</div><div><div class="name">シェフ</div><div class="level">つよい ⭐️<br>むだなく あつめる</div></div>
+        </button>
+      </div>
+      <div class="rules">
+        <b>あそびかた</b><br>
+        じぶんの ばんに ぐざいを1まい ひきます。<br>
+        レシピに ひつようなら「つかう」、いらなければ「すてる」。<br>
+        さきに 6この ぐざいを そろえたら かち！
+      </div>
+    </div>
+  </section>
+
+  <section id="game" class="screen">
+    <div class="arena">
+      <div class="player" id="comArea"></div>
+      <div class="mid">
+        <div class="turn" id="turnText"></div>
+        <div class="drawArea">
+          <button class="pile deck" id="deckBtn" onclick="playerDraw()">🂠<br>ぐざい<br><span id="deckCount"></span></button>
+          <div class="pile discard" id="discardPile"><div class="emoji">🍽️</div><small>すてば</small></div>
+        </div>
+        <div id="drawnArea"></div>
+        <div class="message" id="message"></div>
+      </div>
+      <div class="player" id="youArea"></div>
+    </div>
+  </section>
+</div>
+
+<div class="overlay" id="overlay">
+  <div class="result">
+    <div class="big" id="resultEmoji"></div>
+    <h2 id="resultTitle"></h2>
+    <p id="resultText"></p>
+    <button onclick="restartSame()">もういちど</button>
+    <button onclick="backToSelect()">あいてを かえる</button>
+  </div>
+</div>
+
+<script>
+const ITEMS = {
+  rice:["🍚","ごはん"], onion:["🧅","たまねぎ"], carrot:["🥕","にんじん"], potato:["🥔","じゃがいも"],
+  meat:["🥩","おにく"], curry:["🟫","カレールウ"], egg:["🥚","たまご"], ketchup:["🍅","ケチャップ"],
+  chicken:["🍗","とりにく"], butter:["🧈","バター"], milk:["🥛","ぎゅうにゅう"], cheese:["🧀","チーズ"],
+  pasta:["🍝","パスタ"], tomato:["🍅","トマト"], mushroom:["🍄","きのこ"], bacon:["🥓","ベーコン"],
+  bread:["🍞","パン"], lettuce:["🥬","レタス"], ham:["🥓","ハム"], cucumber:["🥒","きゅうり"],
+  flour:["🌾","こむぎこ"], sugar:["🧂","さとう"], strawberry:["🍓","いちご"], cream:["🍦","クリーム"]
+};
+
+const RECIPES = [
+  {name:"カレー",emoji:"🍛",need:["rice","onion","carrot","potato","meat","curry"]},
+  {name:"オムライス",emoji:"🍳",need:["rice","egg","onion","chicken","ketchup","butter"]},
+  {name:"グラタン",emoji:"🧀",need:["milk","cheese","onion","mushroom","butter","flour"]},
+  {name:"ナポリタン",emoji:"🍝",need:["pasta","tomato","onion","mushroom","bacon","ketchup"]},
+  {name:"サンドイッチ",emoji:"🥪",need:["bread","lettuce","ham","cucumber","egg","cheese"]},
+  {name:"いちごケーキ",emoji:"🍰",need:["flour","egg","milk","sugar","strawberry","cream"]}
+];
+
+const COMS = {
+  cat:{name:"ねこさん",avatar:"🐱",miss:.32,block:false},
+  sister:{name:"おねえさん",avatar:"👩",miss:.05,block:false},
+  chef:{name:"シェフ",avatar:"👨‍🍳",miss:0,block:true}
+};
+
+let selectedCom="cat",you,com,deck=[],discard=[],phase="playerDraw",drawn=null,gameOver=false;
+
+function rand(n){return Math.floor(Math.random()*n)}
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=rand(i+1);[a[i],a[j]]=[a[j],a[i]]}return a}
+function otherRecipe(except){
+  let r;
+  do{r=RECIPES[rand(RECIPES.length)]}while(r===except);
+  return r;
+}
+function makeDeck(){
+  const keys=Object.keys(ITEMS), a=[];
+  keys.forEach(k=>{a.push(k,k)});
+  // 各レシピの具材が山札に十分残るように追加
+  you.recipe.need.forEach(k=>a.push(k));
+  com.recipe.need.forEach(k=>a.push(k));
+  return shuffle(a);
+}
+function startGame(key){
+  selectedCom=key;
+  const r1=RECIPES[rand(RECIPES.length)],r2=otherRecipe(r1);
+  you={recipe:r1,got:[],hand:[]};
+  com={recipe:r2,got:[],hand:[]};
+  deck=makeDeck();discard=[];gameOver=false;phase="playerDraw";drawn=null;
+  // 初期手札4枚
+  for(let i=0;i<4;i++){you.hand.push(deck.pop());com.hand.push(deck.pop())}
+  document.getElementById("select").classList.remove("active");
+  document.getElementById("game").classList.add("active");
+  setMessage("あなたの ばん！ ぐざいを ひいてね。");
+  render();
+}
+function render(){
+  const c=COMS[selectedCom];
+  document.getElementById("comArea").innerHTML=
+    '<div class="who"><span class="avatar">'+c.avatar+'</span>'+c.name+'</div>'+
+    recipeHTML(com.recipe,com.got,false)+
+    '<div class="handBox"><div class="label">てふだ '+com.hand.length+'まい</div><div class="hiddenHand">'+
+    com.hand.map(()=>'<div class="backCard">🍴</div>').join("")+'</div></div>';
+
+  document.getElementById("youArea").innerHTML=
+    '<div class="who"><span class="avatar">🙂</span>あなた</div>'+
+    recipeHTML(you.recipe,you.got,true)+
+    '<div class="handBox"><div class="label">てふだ</div><div class="hand">'+
+    you.hand.map((k,i)=>cardHTML(k,i)).join("")+'</div></div>';
+
+  document.getElementById("deckCount").textContent=deck.length+"まい";
+  const d=discard.at(-1);
+  document.getElementById("discardPile").innerHTML=d?
+    '<div class="emoji">'+ITEMS[d][0]+'</div><small>'+ITEMS[d][1]+'</small>':
+    '<div class="emoji">🍽️</div><small>すてば</small>';
+  document.getElementById("deckBtn").disabled=phase!=="playerDraw"||gameOver||deck.length===0;
+  document.getElementById("turnText").textContent=phase.startsWith("player")?"あなたの ばん":"相手の ばん";
+  renderDrawn();
+}
+function recipeHTML(recipe,got){
+  return '<div class="recipe"><div class="recipeTitle"><span>'+recipe.emoji+' '+recipe.name+'</span><span class="progress">'+got.length+'/6</span></div>'+
+  '<div class="ingredients">'+recipe.need.map(k=>{
+    const ok=got.includes(k),it=ITEMS[k];
+    return '<div class="slot '+(ok?'got':'')+'"><span class="emoji">'+(ok?it[0]:'❓')+'</span><span>'+(ok?it[1]:'？？？')+'</span></div>';
+  }).join("")+'</div></div>';
+}
+function cardHTML(k,i){
+  const it=ITEMS[k];
+  return '<button class="handCard" onclick="useHand('+i+')"><span class="emoji">'+it[0]+'</span><span class="txt">'+it[1]+'</span></button>';
+}
+function setMessage(t){document.getElementById("message").textContent=t}
+function renderDrawn(){
+  const a=document.getElementById("drawnArea");
+  if(!drawn||phase!=="playerChoose"){a.innerHTML="";return}
+  const it=ITEMS[drawn],needed=you.recipe.need.includes(drawn)&&!you.got.includes(drawn);
+  a.innerHTML='<div class="drawn"><div class="emoji">'+it[0]+'</div><div class="txt">'+it[1]+'</div></div>'+
+    '<div class="choice"><button class="use" onclick="useDrawn()" '+(needed?'':'disabled')+'>つかう</button><button class="throw" onclick="discardDrawn()">すてる</button></div>';
+}
+function playerDraw(){
+  if(phase!=="playerDraw"||gameOver)return;
+  if(deck.length===0){refillDeck();if(deck.length===0)return}
+  drawn=deck.pop();phase="playerChoose";
+  const needed=you.recipe.need.includes(drawn)&&!you.got.includes(drawn);
+  setMessage(needed?"やった！ "+ITEMS[drawn][1]+" は ひつような ぐざい！":"これは どうする？");
+  render();
+}
+function useDrawn(){
+  if(phase!=="playerChoose"||!drawn)return;
+  if(you.recipe.need.includes(drawn)&&!you.got.includes(drawn)){
+    you.got.push(drawn);setMessage(ITEMS[drawn][1]+" を レシピに おいた！");
+    drawn=null;render();
+    if(checkWin("you"))return;
+    endPlayerTurn();
+  }
+}
+function discardDrawn(){
+  if(!drawn)return;
+  you.hand.push(drawn); drawn=null;
+  // 手札は最大4枚。5枚なら1枚捨ててもらう
+  if(you.hand.length>4){
+    phase="playerDiscard";
+    setMessage("てふだが 5まい！ すてるカードを 1まい えらんでね。");
+    render();
+  }else endPlayerTurn();
+}
+function useHand(i){
+  if(phase==="playerDiscard"){
+    const k=you.hand.splice(i,1)[0];discard.push(k);
+    setMessage(ITEMS[k][1]+" を すてた。");
+    render();
+    setTimeout(()=>endPlayerTurn(),450);
+    return;
+  }
+  if(phase!=="playerDraw")return;
+  const k=you.hand[i];
+  if(you.recipe.need.includes(k)&&!you.got.includes(k)){
+    you.hand.splice(i,1);you.got.push(k);
+    setMessage("てふだから "+ITEMS[k][1]+" を レシピに おいた！");
+    render();
+    if(checkWin("you"))return;
+  }else{
+    setMessage("そのぐざいは いまのレシピには つかわないよ。");
+  }
+}
+function endPlayerTurn(){
+  phase="com";render();setMessage(COMS[selectedCom].name+" が かんがえています…");
+  setTimeout(comTurn,700);
+}
+function comTurn(){
+  if(gameOver)return;
+  const ai=COMS[selectedCom];
+  // 手札からまず使える物を置く
+  const useful=com.hand.findIndex(k=>com.recipe.need.includes(k)&&!com.got.includes(k));
+  if(useful>=0 && Math.random()>=ai.miss){
+    const k=com.hand.splice(useful,1)[0];com.got.push(k);
+    setMessage(ai.name+" は "+ITEMS[k][1]+" を つかった！");
+    render();if(checkWin("com"))return;
+  }
+  if(deck.length===0)refillDeck();
+  if(deck.length===0){phase="playerDraw";render();return}
+  const k=deck.pop();
+  const need=com.recipe.need.includes(k)&&!com.got.includes(k);
+  if(need && Math.random()>=ai.miss){
+    com.got.push(k);
+    setMessage(ai.name+" は "+ITEMS[k][1]+" を みつけた！");
+  }else{
+    com.hand.push(k);
+    if(com.hand.length>4){
+      let idx=chooseComDiscard(ai);
+      const tossed=com.hand.splice(idx,1)[0];discard.push(tossed);
+      setMessage(ai.name+" は "+ITEMS[tossed][1]+" を すてた。");
+    }
+  }
+  render();if(checkWin("com"))return;
+  setTimeout(()=>{
+    phase="playerDraw";setMessage("あなたの ばん！ ぐざいを ひいてね。");render();
+  },650);
+}
+function chooseComDiscard(ai){
+  const useless=com.hand.map((k,i)=>({k,i})).filter(x=>!com.recipe.need.includes(x.k)||com.got.includes(x.k));
+  if(!useless.length)return 0;
+  if(ai.block){
+    // シェフは、あなたがまだ欲しい具材をなるべく捨てない
+    const safe=useless.filter(x=>!you.recipe.need.includes(x.k)||you.got.includes(x.k));
+    if(safe.length)return safe[rand(safe.length)].i;
+  }
+  return useless[rand(useless.length)].i;
+}
+function refillDeck(){
+  if(discard.length>1){
+    const top=discard.pop();deck=shuffle(discard.splice(0));discard=[top];
+    setMessage("すてばを まぜて、あたらしい山札にしたよ。");
+  }
+}
+function checkWin(who){
+  const p=who==="you"?you:com;
+  if(p.got.length<6)return false;
+  gameOver=true;
+  const win=who==="you",c=COMS[selectedCom];
+  document.getElementById("resultEmoji").textContent=win?"🎉"+p.recipe.emoji:c.avatar+p.recipe.emoji;
+  document.getElementById("resultTitle").textContent=win?"できあがり！":"さきに できあがった！";
+  document.getElementById("resultText").textContent=win?
+    p.recipe.name+" かんせい！ "+c.name+" に かったよ！":
+    c.name+" が "+p.recipe.name+" を かんせいさせたよ。";
+  setTimeout(()=>document.getElementById("overlay").classList.add("show"),400);
+  return true;
+}
+function restartSame(){
+  document.getElementById("overlay").classList.remove("show");
+  startGame(selectedCom);
+}
+function backToSelect(){
+  document.getElementById("overlay").classList.remove("show");
+  document.getElementById("game").classList.remove("active");
+  document.getElementById("select").classList.add("active");
+}
+</script>
+</body>
+</html>
