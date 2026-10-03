@@ -6,58 +6,37 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <title>レシピたいせん</title>
 <style>
-:root{--ink:#342d29;--paper:#fffdf9;--line:#eadfd7;--shadow:0 7px 22px #6d4b3520}
+:root{--ink:#342d29;--line:#eadfd7;--shadow:0 7px 22px #6d4b3520}
 *{box-sizing:border-box}
 body{margin:0;min-height:100svh;font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic",sans-serif;color:var(--ink);background:linear-gradient(160deg,#fff8ec,#fff1f5)}
-button{font:inherit}
-.app{width:min(860px,100%);margin:auto;padding:8px 8px 24px}
-.top{display:flex;align-items:center;gap:8px;margin-bottom:7px}
-.back{border:0;background:#fff;border-radius:13px;padding:9px 11px;font-weight:900;box-shadow:0 3px 11px #0001}
-h1{font-size:clamp(24px,7vw,36px);margin:0;flex:1;text-align:center}
-.screen{display:none}.screen.active{display:block}
-.panel{background:#ffffffeb;border-radius:24px;padding:18px;box-shadow:var(--shadow)}
-.center{text-align:center}.title{font-size:23px;font-weight:1000}.sub{opacity:.7;line-height:1.55}
+button{font:inherit}.app{width:min(860px,100%);margin:auto;padding:8px 8px 24px}
+.top{display:flex;align-items:center;gap:8px;margin-bottom:7px}.back{border:0;background:#fff;border-radius:13px;padding:9px 11px;font-weight:900;box-shadow:0 3px 11px #0001}
+h1{font-size:clamp(24px,7vw,36px);margin:0;flex:1;text-align:center}.screen{display:none}.screen.active{display:block}
+.panel{background:#ffffffeb;border-radius:24px;padding:18px;box-shadow:var(--shadow)}.center{text-align:center}.title{font-size:23px;font-weight:1000}.sub{opacity:.7;line-height:1.55}
 .bigbtn{border:0;border-radius:18px;background:linear-gradient(135deg,#ffbd72,#ff93ac);color:#fff;padding:14px 22px;font-size:18px;font-weight:1000;box-shadow:0 5px 15px #ff9a8c44}
-.toggle{display:flex;align-items:center;justify-content:center;gap:11px;margin:18px 0 7px}
-.switch{position:relative;width:58px;height:34px;border:0;border-radius:30px;background:#d7cfca;padding:0}
-.switch span{position:absolute;width:26px;height:26px;border-radius:50%;background:#fff;top:4px;left:4px;transition:.18s;box-shadow:0 2px 6px #0002}
-.switch.on{background:#8bd08b}.switch.on span{left:28px}
-.recipePick{display:grid;grid-template-columns:repeat(3,1fr);gap:11px;margin-top:17px}
-.faceDown{min-height:125px;border:4px solid #fff;border-radius:21px;background:repeating-linear-gradient(45deg,#ffc8d7,#ffc8d7 10px,#ffe5eb 10px,#ffe5eb 20px);font-size:40px;box-shadow:0 5px 15px #0002}
+.toggle{display:flex;align-items:center;justify-content:center;gap:11px;margin:18px 0 7px}.switch{position:relative;width:58px;height:34px;border:0;border-radius:30px;background:#d7cfca;padding:0}
+.switch span{position:absolute;width:26px;height:26px;border-radius:50%;background:#fff;top:4px;left:4px;transition:.18s;box-shadow:0 2px 6px #0002}.switch.on{background:#8bd08b}.switch.on span{left:28px}
+.recipePick{display:grid;grid-template-columns:repeat(3,1fr);gap:11px;margin-top:17px}.faceDown{min-height:125px;border:4px solid #fff;border-radius:21px;background:repeating-linear-gradient(45deg,#ffc8d7,#ffc8d7 10px,#ffe5eb 10px,#ffe5eb 20px);font-size:40px;box-shadow:0 5px 15px #0002}
 .reveal{font-size:68px;margin:12px}.needList{display:flex;flex-wrap:wrap;justify-content:center;gap:7px;margin:12px 0}.needChip{padding:6px 8px;border-radius:13px;background:#fff1d8;font-size:13px;font-weight:900}
 .roulette{font-size:78px;min-height:96px;margin:16px 0 6px}
-.board{display:grid;grid-template-columns:1fr 1fr;grid-template-areas:"top top" "left right" "table table" "you you";gap:6px}
-.seat{background:#fff;border-radius:18px;padding:8px;box-shadow:var(--shadow);min-width:0}
-.topSeat{grid-area:top}.leftSeat{grid-area:left}.rightSeat{grid-area:right}.youSeat{grid-area:you;padding:10px}
+.board{display:grid;grid-template-columns:1fr 1fr;grid-template-areas:"left right" "table table" "you you";gap:6px}
+.seat{background:#fff;border-radius:18px;padding:8px;box-shadow:var(--shadow);min-width:0}.leftSeat{grid-area:left}.rightSeat{grid-area:right}.youSeat{grid-area:you;padding:10px}
 .table{grid-area:table;background:#fff9ef;border-radius:20px;padding:10px;box-shadow:var(--shadow);text-align:center}
 .who{display:flex;align-items:center;gap:6px;font-weight:1000}.avatar{font-size:25px}.turn{margin-left:auto;font-size:10px;background:#ffe184;padding:3px 7px;border-radius:999px;display:none}.active .turn{display:inline}
-.counter{display:grid;grid-template-columns:repeat(6,1fr);gap:3px;margin-top:7px}
-.slot{position:relative;aspect-ratio:0.78;border-radius:9px;border:1px solid #e2d5cc;background:#fff;overflow:hidden;display:flex;align-items:center;justify-content:center}
-.slot .cardface{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:10px;font-weight:900;background:#fff9ed}
-.slot .cardface .e{font-size:20px}
-.slot.empty{border:2px dashed #dbcfc6;background:#faf8f6}
-.slot.self-hidden .veil{position:absolute;inset:0;background:rgba(0,0,0,.50)}
-.slot.preview .veil{position:absolute;inset:0;background:rgba(255,255,255,.68)}
-.slot.public{border:2px solid #9dce9e}
-.comMeta{display:flex;justify-content:space-between;gap:5px;margin-top:5px;font-size:11px;opacity:.68}
-.recipeLabel{font-size:12px;font-weight:1000;margin-top:4px}
-.myHeader{display:flex;justify-content:space-between;align-items:end;gap:8px}
-.myRecipeName{font-size:18px;font-weight:1000}
-.handTitle{font-size:12px;font-weight:1000;margin:10px 0 5px;opacity:.65}
-.hand{display:flex;gap:4px;overflow-x:auto;padding-bottom:4px;min-height:94px}
+.counter{display:grid;grid-template-columns:repeat(6,1fr);gap:3px;margin-top:7px}.slot{position:relative;aspect-ratio:.78;border-radius:9px;border:1px solid #e2d5cc;background:#fff;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.slot .cardface{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:3px;font-size:10px;font-weight:900;background:#fff9ed}
+.slot.empty{border:2px dashed #dbcfc6;background:#faf8f6}.slot.self-hidden .veil{position:absolute;inset:0;background:rgba(0,0,0,.50)}.slot.preview .veil{position:absolute;inset:0;background:rgba(255,255,255,.68)}.slot.public{border:2px solid #9dce9e}
+.comMeta{display:flex;justify-content:space-between;gap:5px;margin-top:5px;font-size:11px;opacity:.68}.recipeLabel{font-size:12px;font-weight:1000;margin-top:4px}
+.myHeader{display:flex;justify-content:space-between;align-items:end;gap:8px}.myRecipeName{font-size:18px;font-weight:1000}
+.handTitle{font-size:12px;font-weight:1000;margin:10px 0 5px;opacity:.65}.hand{display:flex;gap:4px;overflow-x:auto;padding-bottom:4px;min-height:94px}
 .handCard{flex:0 0 68px;border:2px solid #e4d8cf;border-radius:13px;background:#fff;min-height:88px;padding:5px 3px;font-size:11px;font-weight:900;touch-action:none;position:relative}
-.handCard .e{display:block;font-size:29px}.handCard.need::after{content:"★";position:absolute;right:3px;top:1px;font-size:16px}.handCard.canDiscard{border-color:#ffad63;box-shadow:0 0 0 2px #ffbd7240}
-.handCard.dragging{opacity:.45}.handCard.dropTarget{transform:translateX(6px)}
-.piles{display:flex;justify-content:center;gap:12px;align-items:center}
-.pile{width:88px;height:104px;border-radius:15px;display:flex;align-items:center;justify-content:center;flex-direction:column;font-weight:1000}
-.deck{border:0;background:repeating-linear-gradient(45deg,#ffd991,#ffd991 9px,#ffecbe 9px,#ffecbe 18px)}
-.discard{background:#fff;border:2px solid #e5d9d1}.discard .e{font-size:32px}
-.recipeBtn{margin:8px auto 0;border:0;border-radius:18px;padding:13px 25px;font-size:19px;font-weight:1000;background:#ff9db4;color:#fff;box-shadow:0 4px 12px #ff9db455}
-.recipeBtn[hidden]{display:none}.recipeBtn:disabled{opacity:.4}
+.handCard.need::after{content:"★";position:absolute;right:3px;top:1px;font-size:16px}.handCard.canDiscard{border-color:#ffad63;box-shadow:0 0 0 2px #ffbd7240}.handCard.dragging{opacity:.45}
+.piles{display:flex;justify-content:center;gap:8px;align-items:center}.pile{width:88px;height:104px;border-radius:15px;display:flex;align-items:center;justify-content:center;flex-direction:column;font-weight:1000}
+.deck{border:0;background:repeating-linear-gradient(45deg,#ffd991,#ffd991 9px,#ffecbe 9px,#ffecbe 18px)}.discard{background:#fff;border:2px solid #e5d9d1;padding:7px;text-align:center}
+.recipeBtn{border:0;font-size:17px;font-weight:1000;background:#ff9db4;color:#fff;box-shadow:0 4px 12px #ff9db455}.recipeBtn.easyDisabled{filter:grayscale(1);opacity:.42}
 .status{margin-top:8px;padding:8px;border-radius:13px;background:#fff;min-height:44px;font-weight:900;line-height:1.4}
-.overlay{position:fixed;inset:0;background:#0007;display:none;align-items:center;justify-content:center;padding:18px;z-index:20}.overlay.show{display:flex}
-.modal{width:min(420px,100%);background:#fff;border-radius:28px;padding:24px;text-align:center}.modal .big{font-size:70px}.modal h2{font-size:28px;margin:5px}.modal button{border:0;border-radius:15px;padding:12px 15px;font-weight:1000;background:#ffd39c}
-@media(max-width:560px){.slot .cardface{font-size:8px}.slot .cardface .e{font-size:18px}.handCard{flex-basis:64px}.recipePick{grid-template-columns:repeat(2,1fr)}}
+.overlay{position:fixed;inset:0;background:#0007;display:none;align-items:center;justify-content:center;padding:18px;z-index:20}.overlay.show{display:flex}.modal{width:min(420px,100%);background:#fff;border-radius:28px;padding:24px;text-align:center}.modal .big{font-size:70px}.modal h2{font-size:28px;margin:5px}.modal button{border:0;border-radius:15px;padding:12px 15px;font-weight:1000;background:#ffd39c}
+@media(max-width:560px){.slot .cardface{font-size:9px}.handCard{flex-basis:64px}.recipePick{grid-template-columns:repeat(2,1fr)}}
 </style>
 </head>
 <body>
@@ -66,52 +45,44 @@ h1{font-size:clamp(24px,7vw,36px);margin:0;flex:1;text-align:center}
 
   <section id="start" class="screen active">
     <div class="panel center">
-      <div class="title">4にんで レシピたいせん！</div>
-      <div class="sub">あなた・ねこさん・おねえさん・シェフ</div>
+      <div class="title">3にんで レシピたいせん！</div>
+      <div class="sub">ねこさん・おねえさん・シェフ から、対戦相手がランダムで2人えらばれるよ</div>
       <div class="toggle"><b>かんたんモード</b><button id="easySwitch" class="switch on" onclick="toggleEasy()"><span></span></button><span id="easyText">ON</span></div>
-      <div class="sub">ON：必要な手札に★。取れる捨て札のときだけ「レシピ！」が出ます。</div>
+      <div class="sub">ON：必要な手札に★。取れないときの「レシピ！」はグレーになります。</div>
       <br><button class="bigbtn" onclick="showRecipePick()">ゲームスタート</button>
     </div>
   </section>
 
-  <section id="pick" class="screen">
-    <div class="panel center"><div class="title">レシピカードを 1まい えらんでね</div><div class="sub">6まいとも うらむき</div><div id="recipePick" class="recipePick"></div></div>
-  </section>
-
-  <section id="reveal" class="screen">
-    <div class="panel center"><div class="title">あなたの レシピは…</div><div id="revealFood" class="reveal"></div><div id="revealName" class="title"></div><div id="revealNeeds" class="needList"></div><br><button class="bigbtn" onclick="startRoulette()">つぎへ</button></div>
-  </section>
-
-  <section id="rouletteScreen" class="screen">
-    <div class="panel center"><div class="title">さいしょは だれ？</div><div id="roulette" class="roulette">🎲</div><div id="rouletteName" class="title">ルーレット！</div><br><button id="rouletteBtn" class="bigbtn" onclick="spinRoulette()">まわす！</button></div>
-  </section>
+  <section id="pick" class="screen"><div class="panel center"><div class="title">レシピカードを 1まい えらんでね</div><div class="sub">6まいとも うらむき</div><div id="recipePick" class="recipePick"></div></div></section>
+  <section id="reveal" class="screen"><div class="panel center"><div class="title">あなたの レシピは…</div><div id="revealFood" class="reveal"></div><div id="revealName" class="title"></div><div id="revealNeeds" class="needList"></div><br><button class="bigbtn" onclick="startRoulette()">つぎへ</button></div></section>
+  <section id="rouletteScreen" class="screen"><div class="panel center"><div class="title">さいしょは だれ？</div><div id="roulette" class="roulette">🎲</div><div id="rouletteName" class="title">ルーレット！</div><br><button id="rouletteBtn" class="bigbtn" onclick="spinRoulette()">まわす！</button></div></section>
 
   <section id="game" class="screen">
     <div class="board">
-      <div id="seat2" class="seat topSeat"></div>
       <div id="seat1" class="seat leftSeat"></div>
-      <div id="seat3" class="seat rightSeat"></div>
+      <div id="seat2" class="seat rightSeat"></div>
       <div class="table">
         <div id="turnText" class="title" style="font-size:18px"></div>
         <div class="piles">
           <button id="deckBtn" class="pile deck" onclick="humanDraw()">🂠<br>やまふだ<br><span id="deckCount"></span></button>
-          <div id="discardPile" class="pile discard"><span class="e">🍽️</span><small>すてば</small></div>
+          <div id="discardPile" class="pile discard"><b>すてば</b></div>
+          <button id="recipeBtn" class="pile recipeBtn" onclick="humanRecipe()">レシピ！</button>
         </div>
-        <button id="recipeBtn" class="recipeBtn" onclick="humanRecipe()">レシピ！</button>
         <div id="status" class="status"></div>
       </div>
       <div id="seat0" class="seat youSeat"></div>
     </div>
   </section>
 </div>
+
 <div id="overlay" class="overlay"><div class="modal"><div id="resultEmoji" class="big"></div><h2 id="resultTitle"></h2><p id="resultText"></p><button onclick="restart()">もういちど</button></div></div>
 
 <script>
 const ITEMS={
-rice:["🍚","ごはん"],onion:["🧅","たまねぎ"],carrot:["🥕","にんじん"],potato:["🥔","じゃがいも"],meat:["🥩","おにく"],curry:["🟫","カレールウ"],
-egg:["🥚","たまご"],ketchup:["🍅","ケチャップ"],chicken:["🍗","とりにく"],butter:["🧈","バター"],milk:["🥛","ぎゅうにゅう"],cheese:["🧀","チーズ"],
-pasta:["🍝","パスタ"],tomato:["🍅","トマト"],mushroom:["🍄","きのこ"],bacon:["🥓","ベーコン"],bread:["🍞","パン"],lettuce:["🥬","レタス"],
-ham:["🥓","ハム"],cucumber:["🥒","きゅうり"],flour:["🌾","こむぎこ"],sugar:["🧂","さとう"],strawberry:["🍓","いちご"],cream:["🍦","クリーム"]
+rice:"ごはん",onion:"たまねぎ",carrot:"にんじん",potato:"じゃがいも",meat:"おにく",curry:"カレールウ",
+egg:"たまご",ketchup:"ケチャップ",chicken:"とりにく",butter:"バター",milk:"ぎゅうにゅう",cheese:"チーズ",
+pasta:"パスタ",tomato:"トマト",mushroom:"きのこ",bacon:"ベーコン",bread:"パン",lettuce:"レタス",
+ham:"ハム",cucumber:"きゅうり",flour:"こむぎこ",sugar:"さとう",strawberry:"いちご",cream:"クリーム"
 };
 const RECIPES=[
 {name:"カレー",emoji:"🍛",need:["rice","onion","carrot","potato","meat","curry"]},
@@ -121,159 +92,202 @@ const RECIPES=[
 {name:"サンドイッチ",emoji:"🥪",need:["bread","lettuce","ham","cucumber","egg","cheese"]},
 {name:"いちごケーキ",emoji:"🍰",need:["flour","egg","milk","sugar","strawberry","cream"]}
 ];
-const BASE=[
-{id:0,name:"あなた",avatar:"🙂",human:true,skill:1},
-{id:1,name:"ねこさん",avatar:"🐱",human:false,skill:.58},
-{id:2,name:"おねえさん",avatar:"👩",human:false,skill:.84},
-{id:3,name:"シェフ",avatar:"👨‍🍳",human:false,skill:.97}
+const USER={name:"あなた",avatar:"🙂",human:true,skill:1};
+const COMS=[
+{name:"ねこさん",avatar:"🐱",human:false,skill:.58},
+{name:"おねえさん",avatar:"👩",human:false,skill:.84},
+{name:"シェフ",avatar:"👨‍🍳",human:false,skill:.97}
 ];
+
 let easy=true,players=[],deck=[],discard=[],turn=0,phase="idle",pending=null,gameOver=false,dragIndex=null;
 
 function $(id){return document.getElementById(id)}
 function rand(n){return Math.floor(Math.random()*n)}
 function shuffle(a){for(let i=a.length-1;i>0;i--){const j=rand(i+1);[a[i],a[j]]=[a[j],a[i]]}return a}
 function show(id){document.querySelectorAll(".screen").forEach(x=>x.classList.remove("active"));$(id).classList.add("active")}
-function toggleEasy(){easy=!easy;$("easySwitch").classList.toggle("on",easy);$("easyText").textContent=easy?"ON":"OFF"}
-function showRecipePick(){const b=$("recipePick");b.innerHTML="";for(let i=0;i<6;i++)b.innerHTML+='<button class="faceDown" onclick="chooseRecipe('+i+')">🍽️</button>';show("pick")}
-function chooseRecipe(i){
- const shuffled=shuffle([...RECIPES]),mine=shuffled[i],rest=shuffled.filter((_,x)=>x!==i);
- players=BASE.map(p=>({...p,recipe:null,hand:[],placed:[]}));
- players[0].recipe=mine;players[1].recipe=rest[0];players[2].recipe=rest[1];players[3].recipe=rest[2];
- $("revealFood").textContent=mine.emoji;$("revealName").textContent=mine.name;
- $("revealNeeds").innerHTML=mine.need.map(k=>'<span class="needChip">'+ITEMS[k][0]+" "+ITEMS[k][1]+'</span>').join("");
- show("reveal")
+function toggleEasy(){easy=!easy;$("easySwitch").classList.toggle("on",easy);$("easyText").textContent=easy?"ON":"OFF";if($("game").classList.contains("active"))render()}
+
+function showRecipePick(){
+  const b=$("recipePick");b.innerHTML="";
+  for(let i=0;i<6;i++)b.innerHTML+='<button class="faceDown" onclick="chooseRecipe('+i+')">🍽️</button>';
+  show("pick")
 }
+
+function chooseRecipe(i){
+  const shuffledRecipes=shuffle([...RECIPES]),mine=shuffledRecipes[i],rest=shuffledRecipes.filter((_,x)=>x!==i);
+  const opponents=shuffle([...COMS]).slice(0,2);
+  players=[USER,...opponents].map((p,idx)=>({...p,id:idx,recipe:null,hand:[],placed:[]}));
+  players[0].recipe=mine;players[1].recipe=rest[0];players[2].recipe=rest[1];
+  $("revealFood").textContent=mine.emoji;$("revealName").textContent=mine.name;
+  $("revealNeeds").innerHTML=mine.need.map(k=>'<span class="needChip">'+ITEMS[k]+'</span>').join("");
+  show("reveal")
+}
+
 function startRoulette(){buildDeck();show("rouletteScreen");$("roulette").textContent="🎲";$("rouletteName").textContent="ルーレット！";$("rouletteBtn").disabled=false}
 function buildDeck(){
- let a=[];Object.keys(ITEMS).forEach(k=>a.push(k,k,k,k));deck=shuffle(a);discard=[];gameOver=false;
- players.forEach(p=>{p.hand=[];p.placed=[];for(let i=0;i<6;i++)p.hand.push(deck.pop())})
+  let a=[];Object.keys(ITEMS).forEach(k=>a.push(k,k,k,k));deck=shuffle(a);discard=[];gameOver=false;
+  players.forEach(p=>{p.hand=[];p.placed=[];for(let i=0;i<6;i++)p.hand.push(deck.pop())})
 }
 function spinRoulette(){
- $("rouletteBtn").disabled=true;let t=0;
- const tm=setInterval(()=>{const p=players[t%4];$("roulette").textContent=p.avatar;$("rouletteName").textContent=p.name;t++;
- if(t>16+rand(8)){clearInterval(tm);turn=rand(4);const p=players[turn];$("roulette").textContent=p.avatar;$("rouletteName").textContent=p.name+" から スタート！";
- setTimeout(()=>{show("game");startTurn()},800)}},85)
+  $("rouletteBtn").disabled=true;let t=0;
+  const tm=setInterval(()=>{
+    const p=players[t%players.length];$("roulette").textContent=p.avatar;$("rouletteName").textContent=p.name;t++;
+    if(t>16+rand(8)){
+      clearInterval(tm);turn=rand(players.length);const p=players[turn];
+      $("roulette").textContent=p.avatar;$("rouletteName").textContent=p.name+" から スタート！";
+      setTimeout(()=>{show("game");startTurn()},800)
+    }
+  },85)
 }
 function startTurn(){
- if(gameOver)return;phase="discard";const p=players[turn];
- setStatus(p.human?"てふだから 1まい すててね。":p.name+" の ばん！");render();
- if(!p.human)setTimeout(comDiscard,650)
+  if(gameOver)return;phase="discard";const p=players[turn];
+  setStatus(p.human?"てふだから 1まい すててね。":p.name+" の ばん！");render();
+  if(!p.human)setTimeout(comDiscard,650)
 }
+
 function render(){
- players.forEach((p,i)=>renderSeat(p,i));
- const d=discard.at(-1);$("discardPile").innerHTML=d?'<span class="e">'+ITEMS[d][0]+'</span><small>'+ITEMS[d][1]+'</small>':'<span class="e">🍽️</span><small>すてば</small>';
- $("deckCount").textContent=deck.length+"まい";$("turnText").textContent=players[turn].avatar+" "+players[turn].name+" の ばん";
- $("deckBtn").disabled=!(turn===0&&phase==="draw");
- const canRecipe=pending&&pending.from!==0&&canUse(players[0],pending.card);
- if(easy)$("recipeBtn").hidden=!canRecipe; else $("recipeBtn").hidden=false;
- $("recipeBtn").disabled=!(pending&&pending.from!==0)
+  players.forEach((p,i)=>renderSeat(p,i));
+  const d=discard.at(-1);
+  $("discardPile").innerHTML=d?'<b>'+ITEMS[d]+'</b><small>すてば</small>':'<b>すてば</b>';
+  $("deckCount").textContent=deck.length+"まい";
+  $("turnText").textContent=players[turn].avatar+" "+players[turn].name+" の ばん";
+  $("deckBtn").disabled=!(turn===0&&phase==="draw");
+  const canRecipe=!!(pending&&pending.from!==0&&canUse(players[0],pending.card));
+  $("recipeBtn").classList.toggle("easyDisabled",easy&&!canRecipe);
 }
+
 function renderSeat(p,i){
- const el=$("seat"+i);el.classList.toggle("active",i===turn);
- const counter=counterHTML(p,i===0);
- let body='<div class="who"><span class="avatar">'+p.avatar+'</span>'+p.name+'<span class="turn">ばん</span></div>';
- if(i===0){
-  body+='<div class="myHeader"><div class="myRecipeName">'+p.recipe.emoji+" "+p.recipe.name+'</div><div>'+p.placed.length+'/6</div></div>'+counter+
-  '<div class="handTitle">てふだ '+p.hand.length+'まい　<span style="font-weight:600">（ドラッグでならべかえ）</span></div><div class="hand" id="myHand">'+p.hand.map((k,idx)=>handCardHTML(k,idx)).join("")+'</div>';
- }else{
-  body+='<div class="recipeLabel">キッチンカウンター '+p.placed.length+'/6</div>'+counter+'<div class="comMeta"><span>てふだ '+p.hand.length+'まい</span><span>レシピは ひみつ</span></div>';
- }
- el.innerHTML=body;
- if(i===0)bindDrag()
+  const el=$("seat"+i);el.classList.toggle("active",i===turn);
+  const counter=counterHTML(p,i===0);
+  let body='<div class="who"><span class="avatar">'+p.avatar+'</span>'+p.name+'<span class="turn">ばん</span></div>';
+  if(i===0){
+    body+='<div class="myHeader"><div class="myRecipeName">'+p.recipe.emoji+" "+p.recipe.name+'</div><div>'+p.placed.length+'/6</div></div>'+counter+
+      '<div class="handTitle">てふだ '+p.hand.length+'まい　<span style="font-weight:600">（ドラッグでならべかえ）</span></div><div class="hand" id="myHand">'+
+      p.hand.map((k,idx)=>handCardHTML(k,idx)).join("")+'</div>';
+  }else{
+    body+='<div class="recipeLabel">キッチンカウンター '+p.placed.length+'/6</div>'+counter+
+      '<div class="comMeta"><span>てふだ '+p.hand.length+'まい</span><span>レシピは ひみつ</span></div>';
+  }
+  el.innerHTML=body;if(i===0)bindDrag()
 }
+
 function counterHTML(p,isMe){
- return '<div class="counter">'+p.recipe.need.map(k=>{
-   const x=p.placed.find(q=>q.card===k);
-   if(!x){
-     if(isMe)return '<div class="slot preview"><div class="cardface"><span class="e">'+ITEMS[k][0]+'</span>'+ITEMS[k][1]+'</div><div class="veil"></div></div>';
-     return '<div class="slot empty"></div>';
-   }
-   if(x.public)return '<div class="slot public"><div class="cardface"><span class="e">'+ITEMS[k][0]+'</span>'+ITEMS[k][1]+'</div></div>';
-   if(isMe)return '<div class="slot self-hidden"><div class="cardface"><span class="e">'+ITEMS[k][0]+'</span>'+ITEMS[k][1]+'</div><div class="veil"></div></div>';
-   return '<div class="slot self-hidden"><div class="cardface"></div><div class="veil"></div></div>';
- }).join("")+'</div>'
+  return '<div class="counter">'+p.recipe.need.map(k=>{
+    const x=p.placed.find(q=>q.card===k);
+    if(!x){
+      if(isMe)return '<div class="slot preview"><div class="cardface">'+ITEMS[k]+'</div><div class="veil"></div></div>';
+      return '<div class="slot empty"></div>';
+    }
+    if(x.public)return '<div class="slot public"><div class="cardface">'+ITEMS[k]+'</div></div>';
+    if(isMe)return '<div class="slot self-hidden"><div class="cardface">'+ITEMS[k]+'</div><div class="veil"></div></div>';
+    return '<div class="slot self-hidden"><div class="cardface"></div><div class="veil"></div></div>';
+  }).join("")+'</div>'
 }
+
 function handCardHTML(k,i){
- const need=easy&&canUse(players[0],k);
- return '<button class="handCard '+(need?"need ":"")+(turn===0&&phase==="discard"?"canDiscard":"")+'" draggable="true" data-i="'+i+'" onclick="humanDiscard('+i+')"><span class="e">'+ITEMS[k][0]+'</span>'+ITEMS[k][1]+'</button>'
+  const need=easy&&canUse(players[0],k);
+  return '<button class="handCard '+(need?"need ":"")+(turn===0&&phase==="discard"?"canDiscard":"")+'" draggable="true" data-i="'+i+'" onclick="humanDiscard('+i+')">'+ITEMS[k]+'</button>'
 }
+
 function bindDrag(){
- const cards=[...document.querySelectorAll("#myHand .handCard")];
- cards.forEach(c=>{
-  c.addEventListener("dragstart",e=>{dragIndex=+c.dataset.i;c.classList.add("dragging")});
-  c.addEventListener("dragend",e=>{c.classList.remove("dragging");dragIndex=null});
-  c.addEventListener("dragover",e=>{e.preventDefault();c.classList.add("dropTarget")});
-  c.addEventListener("dragleave",()=>c.classList.remove("dropTarget"));
-  c.addEventListener("drop",e=>{e.preventDefault();c.classList.remove("dropTarget");const to=+c.dataset.i;if(dragIndex===null||to===dragIndex)return;const [m]=players[0].hand.splice(dragIndex,1);players[0].hand.splice(to,0,m);render()});
-  let sx=0,sy=0,moved=false;
-  c.addEventListener("touchstart",e=>{sx=e.touches[0].clientX;sy=e.touches[0].clientY;dragIndex=+c.dataset.i;moved=false},{passive:true});
-  c.addEventListener("touchmove",e=>{const x=e.touches[0].clientX,y=e.touches[0].clientY;if(Math.abs(x-sx)>12||Math.abs(y-sy)>12)moved=true;const target=document.elementFromPoint(x,y)?.closest(".handCard");if(target&&target!==c){const to=+target.dataset.i;const [m]=players[0].hand.splice(dragIndex,1);players[0].hand.splice(to,0,m);dragIndex=to;render()}},{passive:true});
- })
+  const cards=[...document.querySelectorAll("#myHand .handCard")];
+  cards.forEach(c=>{
+    c.addEventListener("dragstart",()=>{dragIndex=+c.dataset.i;c.classList.add("dragging")});
+    c.addEventListener("dragend",()=>{c.classList.remove("dragging");dragIndex=null});
+    c.addEventListener("dragover",e=>e.preventDefault());
+    c.addEventListener("drop",e=>{
+      e.preventDefault();const to=+c.dataset.i;
+      if(dragIndex===null||to===dragIndex)return;
+      const [m]=players[0].hand.splice(dragIndex,1);players[0].hand.splice(to,0,m);render()
+    });
+    c.addEventListener("touchstart",()=>{dragIndex=+c.dataset.i},{passive:true});
+    c.addEventListener("touchmove",e=>{
+      const x=e.touches[0].clientX,y=e.touches[0].clientY,target=document.elementFromPoint(x,y)?.closest(".handCard");
+      if(target&&target!==c){const to=+target.dataset.i;const [m]=players[0].hand.splice(dragIndex,1);players[0].hand.splice(to,0,m);dragIndex=to;render()}
+    },{passive:true})
+  })
 }
+
 function setStatus(t){$("status").textContent=t}
 function canUse(p,k){return p.recipe.need.includes(k)&&!p.placed.some(x=>x.card===k)}
 function humanDiscard(i){if(turn!==0||phase!=="discard"||gameOver)return;discardFrom(0,i)}
+
 function discardFrom(pid,i){
- const p=players[pid],card=p.hand.splice(i,1)[0];discard.push(card);pending={from:pid,card};phase="claim";
- setStatus(p.name+" が "+ITEMS[card][0]+" "+ITEMS[card][1]+" を すてた！");render();setTimeout(()=>resolveClaims(pid,card),500)
+  const p=players[pid],card=p.hand.splice(i,1)[0];discard.push(card);pending={from:pid,card};phase="claim";
+  setStatus(p.name+" が "+ITEMS[card]+" を すてた！");render();setTimeout(()=>resolveClaims(pid,card),500)
 }
+
 function resolveClaims(from,card){
- if(gameOver)return;
- const order=[];for(let s=1;s<4;s++)order.push((from+s)%4);
- if(from!==0&&canUse(players[0],card)){phase="claim";render();setStatus("すてふだを みてね。");setTimeout(()=>autoResolveAfterHumanWindow(from,card,order),1400);return}
- autoResolveAfterHumanWindow(from,card,order)
+  if(gameOver)return;
+  const order=[];for(let s=1;s<players.length;s++)order.push((from+s)%players.length);
+  if(from!==0&&canUse(players[0],card)){
+    phase="claim";render();setStatus("すてふだを みてね。");
+    setTimeout(()=>autoResolveAfterHumanWindow(from,card,order),1400);return
+  }
+  autoResolveAfterHumanWindow(from,card,order)
 }
+
 function humanRecipe(){
- if(!pending||pending.from===0)return;
- const card=pending.card;
- if(!canUse(players[0],card)){setStatus("これは とれないよ！");return}
- takeDiscard(0,card,pending.from)
+  const canClaim=!!(pending&&pending.from!==0&&canUse(players[0],pending.card));
+  if(easy&&!canClaim)return;
+  if(!pending||pending.from===0){setStatus("いまは とれないよ！");return}
+  const card=pending.card;
+  if(!canUse(players[0],card)){setStatus("これは とれないよ！");return}
+  takeDiscard(0,card,pending.from)
 }
+
 function autoResolveAfterHumanWindow(from,card,order){
- if(!pending||pending.from!==from||pending.card!==card)return;
- for(const id of order){
-   if(id===0)continue;
-   const p=players[id];
-   if(canUse(p,card)&&Math.random()<p.skill){takeDiscard(id,card,from);return}
- }
- finishClaimWindow(from)
+  if(!pending||pending.from!==from||pending.card!==card)return;
+  for(const id of order){
+    if(id===0)continue;
+    const p=players[id];
+    if(canUse(p,card)&&Math.random()<p.skill){takeDiscard(id,card,from);return}
+  }
+  finishClaimWindow(from)
 }
+
 function takeDiscard(pid,card,from){
- if(discard.at(-1)===card)discard.pop();
- players[pid].placed.push({card,public:true});pending=null;
- setStatus("「レシピ！」 "+players[pid].name+" が "+ITEMS[card][1]+" を とった！");
- render();if(checkWin(pid))return;
- setTimeout(()=>finishClaimWindow(from),650)
+  if(discard.at(-1)===card)discard.pop();
+  players[pid].placed.push({card,public:true});pending=null;
+  setStatus("「レシピ！」 "+players[pid].name+" が "+ITEMS[card]+" を とった！");
+  render();if(checkWin(pid))return;
+  setTimeout(()=>finishClaimWindow(from),650)
 }
+
 function finishClaimWindow(from){
- pending=null;turn=from;phase="draw";const p=players[turn];
- setStatus(p.human?"やまふだから 1まい ひいてね。":p.name+" が やまふだから ひきます。");render();
- if(!p.human)setTimeout(()=>drawFor(turn),600)
+  pending=null;turn=from;phase="draw";const p=players[turn];
+  setStatus(p.human?"やまふだから 1まい ひいてね。":p.name+" が やまふだから ひきます。");render();
+  if(!p.human)setTimeout(()=>drawFor(turn),600)
 }
+
 function humanDraw(){if(turn===0&&phase==="draw")drawFor(0)}
 function drawFor(pid){
- if(deck.length===0)refillDeck();if(deck.length===0)return;
- const p=players[pid],card=deck.pop();
- if(canUse(p,card)){p.placed.push({card,public:false});setStatus(p.name+" は ひいたカードを キッチンカウンターに おいた。");if(checkWin(pid)){render();return}}
- else{p.hand.push(card);setStatus(p.human?ITEMS[card][0]+" "+ITEMS[card][1]+" を ひいた。":p.name+" は カードを ひいた。")}
- render();setTimeout(nextTurn,550)
+  if(deck.length===0)refillDeck();if(deck.length===0)return;
+  const p=players[pid],card=deck.pop();
+  if(canUse(p,card)){
+    p.placed.push({card,public:false});setStatus(p.name+" は ひいたカードを キッチンカウンターに おいた。");
+    if(checkWin(pid)){render();return}
+  }else{
+    p.hand.push(card);setStatus(p.human?ITEMS[card]+" を ひいた。":p.name+" は カードを ひいた。")
+  }
+  render();setTimeout(nextTurn,550)
 }
+
 function comDiscard(){
- const p=players[turn];let choices=p.hand.map((k,i)=>({k,i}));
- let bad=choices.filter(x=>!canUse(p,x.k));
- if(!bad.length)bad=choices;
- if(p.name==="シェフ"){
-   const safe=bad.filter(x=>!players.some((o,j)=>j!==p.id&&canUse(o,x.k)));
-   if(safe.length)bad=safe
- }
- discardFrom(turn,bad[rand(bad.length)].i)
+  const p=players[turn];let choices=p.hand.map((k,i)=>({k,i}));
+  let bad=choices.filter(x=>!canUse(p,x.k));if(!bad.length)bad=choices;
+  if(p.name==="シェフ"){
+    const safe=bad.filter(x=>!players.some((o,j)=>j!==p.id&&canUse(o,x.k)));
+    if(safe.length)bad=safe
+  }
+  discardFrom(turn,bad[rand(bad.length)].i)
 }
-function nextTurn(){turn=(turn+1)%4;startTurn()}
+function nextTurn(){turn=(turn+1)%players.length;startTurn()}
 function refillDeck(){if(discard.length>1){const top=discard.pop();deck=shuffle(discard.splice(0));discard=[top]}}
 function checkWin(pid){
- const p=players[pid];if(p.placed.length<6)return false;gameOver=true;
- $("resultEmoji").textContent=p.avatar+p.recipe.emoji;$("resultTitle").textContent="できあがり！";$("resultText").textContent=p.name+" が "+p.recipe.name+" を かんせい！";
- setTimeout(()=>$("overlay").classList.add("show"),300);return true
+  const p=players[pid];if(p.placed.length<6)return false;gameOver=true;
+  $("resultEmoji").textContent=p.avatar+p.recipe.emoji;$("resultTitle").textContent="できあがり！";$("resultText").textContent=p.name+" が "+p.recipe.name+" を かんせい！";
+  setTimeout(()=>$("overlay").classList.add("show"),300);return true
 }
 function restart(){$("overlay").classList.remove("show");show("start")}
 </script>
