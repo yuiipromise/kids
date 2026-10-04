@@ -22,7 +22,7 @@ h1{font-size:clamp(24px,7vw,36px);margin:0;flex:1;text-align:center}.screen{disp
 .board{display:grid;grid-template-columns:1fr 1fr;grid-template-areas:"left right" "table table" "you you";gap:6px}
 .seat{background:#fff;border:2px solid transparent;border-radius:18px;padding:8px;box-shadow:var(--shadow);min-width:0;transition:background .2s,border-color .2s,box-shadow .2s,transform .2s}.seat.active{background:#fff4c9;border-color:#efbd42;box-shadow:0 0 0 3px #ffd96b55,0 7px 22px #6d4b3520}.leftSeat{grid-area:left}.rightSeat{grid-area:right}.youSeat{grid-area:you;padding:10px}
 .table{grid-area:table;background:#fff9ef;position:relative;border-radius:20px;padding:10px;box-shadow:var(--shadow);text-align:center}
-.who{display:flex;align-items:center;gap:6px;font-weight:1000}.avatar{font-size:25px}.turn{margin-left:auto;font-size:10px;background:#ffe184;padding:3px 7px;border-radius:999px;display:none}.active .turn{display:inline}
+.who{display:flex;align-items:center;gap:6px;font-weight:1000}.avatar{font-size:25px}
 .counter{display:grid;grid-template-columns:repeat(6,1fr);gap:3px;margin-top:7px}.slot{position:relative;aspect-ratio:.78;border-radius:9px;border:1px solid #e2d5cc;background:#fff;overflow:hidden;display:flex;align-items:center;justify-content:center}
 .slot .cardface{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:3px;font-size:10px;font-weight:900;background:#fff9ed}
 .slot.empty{border:2px dashed #dbcfc6;background:#faf8f6}.slot.self-hidden .veil{position:absolute;inset:0;background:rgba(0,0,0,.50)}.slot.preview .veil{position:absolute;inset:0;background:rgba(255,255,255,.68)}.slot.public{border:2px solid #9dce9e}
@@ -178,7 +178,7 @@ function spinRoulette(){
 function startTurn(){
   if(gameOver)return;selectedIndex=null;phase="discard";const p=players[turn];beep("turn");
   setStatus(p.human?"てふだから 1まい すててね。":p.name+" の ばん！");render();
-  if(!p.human)setTimeout(comDiscard,650)
+  if(!p.human)setTimeout(comDiscard,1300+rand(900))
 }
 
 function render(){
@@ -195,7 +195,7 @@ function render(){
 function renderSeat(p,i){
   const el=$("seat"+i);el.classList.toggle("active",i===turn);
   const counter=counterHTML(p,i===0);
-  let body='<div class="who"><span class="avatar">'+p.avatar+'</span>'+p.name+'<span class="turn">ばん</span></div>';
+  let body='<div class="who"><span class="avatar">'+p.avatar+'</span>'+p.name+'</div>';
   if(i===0){
     const canPlaceNow=turn===0&&phase==="discard"&&p.hand.some(k=>canUse(p,k));
     const selectedCanPlace=selectedIndex!==null&&p.hand[selectedIndex]&&canUse(p,p.hand[selectedIndex]);
@@ -338,11 +338,22 @@ function discardFrom(pid,i){
 function resolveClaims(from,card){
   if(gameOver)return;
   const order=[];for(let s=1;s<players.length;s++)order.push((from+s)%players.length);
-  if(from!==0&&canUse(players[0],card)){
-    phase="claim";render();setStatus("すてふだを みてね。");
-    setTimeout(()=>autoResolveAfterHumanWindow(from,card,order),1400);return
-  }
-  autoResolveAfterHumanWindow(from,card,order)
+  phase="claim";render();
+
+  const humanCanClaim=from!==0&&canUse(players[0],card);
+  if(humanCanClaim)setStatus("「レシピ！」できるか すてふだを みてね。");
+
+  // CPUも即決しない。少し考えてから判断する。
+  // 人間のレシピ！は時間では締め切らず、次の人の番へ移る瞬間まで pending を残す。
+  setTimeout(()=>{
+    if(gameOver||!pending||pending.from!==from||pending.card!==card)return;
+    for(const id of order){
+      if(id===0)continue;
+      const p=players[id];
+      if(canUse(p,card)&&Math.random()<p.skill){takeDiscard(id,card,from);return}
+    }
+    finishClaimWindow(from)
+  },950+rand(650))
 }
 
 function humanRecipe(){
@@ -352,16 +363,6 @@ function humanRecipe(){
   const card=pending.card;
   if(!canUse(players[0],card)){beep("error");setStatus("これは とれないよ！");return}
   takeDiscard(0,card,pending.from)
-}
-
-function autoResolveAfterHumanWindow(from,card,order){
-  if(!pending||pending.from!==from||pending.card!==card)return;
-  for(const id of order){
-    if(id===0)continue;
-    const p=players[id];
-    if(canUse(p,card)&&Math.random()<p.skill){takeDiscard(id,card,from);return}
-  }
-  finishClaimWindow(from)
 }
 
 function takeDiscard(pid,card,from){
@@ -379,9 +380,9 @@ function takeDiscard(pid,card,from){
 }
 
 function finishClaimWindow(from){
-  pending=null;turn=from;phase="draw";const p=players[turn];
+  turn=from;phase="draw";const p=players[turn];
   setStatus(p.human?"やまふだから 1まい ひいてね。":p.name+" が やまふだから ひきます。");render();
-  if(!p.human)setTimeout(()=>drawFor(turn),600)
+  if(!p.human)setTimeout(()=>drawFor(turn),900+rand(650))
 }
 
 function humanDraw(){if(turn===0&&phase==="draw")drawFor(0)}
@@ -399,7 +400,7 @@ function drawFor(pid){
     }
     render();flashEl($("seat"+pid),"placeFlash");
     if(checkWin(pid))return;
-    setTimeout(nextTurn,700)
+    setTimeout(nextTurn,900+rand(650))
   })
 }
 
@@ -412,7 +413,7 @@ function comDiscard(){
   }
   discardFrom(turn,bad[rand(bad.length)].i)
 }
-function nextTurn(){turn=(turn+1)%players.length;startTurn()}
+function nextTurn(){pending=null;turn=(turn+1)%players.length;startTurn()}
 function refillDeck(){if(discard.length>1){const top=discard.pop();deck=shuffle(discard.splice(0));discard=[top]}}
 function checkWin(pid){
   const p=players[pid];if(p.placed.length<6)return false;gameOver=true;beep("win");
