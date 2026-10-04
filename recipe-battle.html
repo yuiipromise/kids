@@ -324,6 +324,11 @@ function placeFromHand(i){
 
 function discardFrom(pid,i){
   if(pid===0)selectedIndex=null;
+
+  // 前の人の捨て札への「レシピ！」は、この人が次の捨て札を選ぶ瞬間まで有効。
+  // 新しい捨て札を出し始めた時点で、ひとつ前の権利だけを締め切る。
+  pending=null;
+
   const p=players[pid],card=p.hand[i];
   const from=pid===0?document.querySelector('#myHand .handCard[data-i="'+i+'"]'):$("seat"+pid);
   const to=$("discardPile");
@@ -344,7 +349,7 @@ function resolveClaims(from,card){
   if(humanCanClaim)setStatus("「レシピ！」できるか すてふだを みてね。");
 
   // CPUも即決しない。少し考えてから判断する。
-  // 人間のレシピ！は時間では締め切らず、次の人の番へ移る瞬間まで pending を残す。
+  // 人間のレシピ！は時間では締め切らない。次の人が自分の捨て札を選ぶまで pending を残す。
   setTimeout(()=>{
     if(gameOver||!pending||pending.from!==from||pending.card!==card)return;
     for(const id of order){
@@ -413,7 +418,7 @@ function comDiscard(){
   }
   discardFrom(turn,bad[rand(bad.length)].i)
 }
-function nextTurn(){pending=null;turn=(turn+1)%players.length;startTurn()}
+function nextTurn(){turn=(turn+1)%players.length;startTurn()}
 function refillDeck(){if(discard.length>1){const top=discard.pop();deck=shuffle(discard.splice(0));discard=[top]}}
 function checkWin(pid){
   const p=players[pid];if(p.placed.length<6)return false;gameOver=true;beep("win");
