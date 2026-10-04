@@ -28,15 +28,17 @@ h1{font-size:clamp(24px,7vw,36px);margin:0;flex:1;text-align:center}.screen{disp
 .slot.empty{border:2px dashed #dbcfc6;background:#faf8f6}.slot.self-hidden .veil{position:absolute;inset:0;background:rgba(0,0,0,.50)}.slot.preview .veil{position:absolute;inset:0;background:rgba(255,255,255,.68)}.slot.public{border:2px solid #9dce9e}
 .comMeta{display:flex;justify-content:space-between;gap:5px;margin-top:5px;font-size:11px;opacity:.68}.recipeLabel{font-size:12px;font-weight:1000;margin-top:4px}
 .myHeader{display:flex;justify-content:space-between;align-items:end;gap:8px}.myRecipeName{font-size:18px;font-weight:1000}
-.handTitle{font-size:12px;font-weight:1000;margin:10px 0 5px;opacity:.65}.hand{display:flex;gap:4px;overflow-x:auto;padding-bottom:4px;min-height:94px}
-.handCard{flex:0 0 68px;border:2px solid #e4d8cf;border-radius:13px;background:#fff;min-height:88px;padding:5px 3px;font-size:11px;font-weight:900;touch-action:none;position:relative}
-.handCard.need::after{content:"★";position:absolute;right:3px;top:1px;font-size:16px}.handCard.canDiscard{border-color:#ffad63;box-shadow:0 0 0 2px #ffbd7240}.handCard.dragging{opacity:.45}
+.counterActionRow{display:flex;justify-content:flex-end;margin-top:6px}.counterAction{border:0;border-radius:12px;padding:8px 12px;font-size:12px;font-weight:1000;background:#ddd6d1;color:#fff;box-shadow:none;transition:.18s;min-width:118px}.counterAction.ready{background:linear-gradient(135deg,#82d69a,#58bf7d);box-shadow:0 4px 11px #65c98944}.counterAction.selectedReady{transform:translateY(-1px);box-shadow:0 5px 13px #65c98966}
+.handTitle{font-size:12px;font-weight:1000;margin:8px 0 5px;opacity:.65}.hand{display:flex;justify-content:center;align-items:flex-end;overflow:visible;padding:7px 18px 8px;min-height:104px;touch-action:none}
+.handCard{flex:0 0 72px;border:2px solid #e4d8cf;border-radius:13px;background:#fff;min-height:90px;padding:5px 3px;font-size:11px;font-weight:900;touch-action:none;position:relative;transition:transform .12s,border-color .12s,box-shadow .12s;z-index:1}
+.handCard+.handCard{margin-left:-15px}.handCard.need::after{content:"★";position:absolute;right:3px;top:1px;font-size:16px}.handCard.canDiscard{border-color:#ffad63}.handCard.selected{transform:translateY(-10px);z-index:8;border-color:#ff8fa9;box-shadow:0 7px 16px #0002}.handCard.needNow.selected{border-color:#58bf7d;box-shadow:0 0 0 3px #9bdc9b66,0 7px 16px #0002}.handCard.dragging{opacity:.22}
+.dropReady{box-shadow:0 0 0 4px #6fca8d66!important}.discard.dropReady{border-color:#ff9f62;background:#fff4e8}.counter.dropReady{border-radius:12px;background:#f2fff4}
 .piles{display:flex;justify-content:center;gap:8px;align-items:center}.pile{width:88px;height:104px;border-radius:15px;display:flex;align-items:center;justify-content:center;flex-direction:column;font-weight:1000}
 .deck{border:0;background:repeating-linear-gradient(45deg,#ffd991,#ffd991 9px,#ffecbe 9px,#ffecbe 18px)}.discard{background:#fff;border:2px solid #e5d9d1;padding:7px;text-align:center}
 .recipeBtn{border:0;font-size:17px;font-weight:1000;background:#ff9db4;color:#fff;box-shadow:0 4px 12px #ff9db455;transition:.18s}.recipeBtn.ready{animation:recipePulse .8s ease-in-out infinite alternate}.recipeBtn.easyDisabled{filter:grayscale(1);opacity:.42}.handCard.needNow{border-color:#7bc77b;box-shadow:0 0 0 3px #9bdc9b55}.motionCard{position:fixed;z-index:1000;pointer-events:none;display:flex;align-items:center;justify-content:center;text-align:center;background:#fff;border:2px solid #d9cec6;border-radius:12px;padding:4px;font-size:11px;font-weight:900;box-shadow:0 7px 18px #0003;transition:transform .32s ease-in-out,opacity .32s}.flash{animation:flash .35s ease-out}.placeFlash{animation:placeFlash .4s ease-out}@keyframes recipePulse{from{transform:scale(1)}to{transform:scale(1.05)}}@keyframes flash{50%{transform:scale(1.08);background:#fff1b8}}@keyframes placeFlash{50%{transform:scale(1.04);box-shadow:0 0 0 5px #9bdc9b55}}
 .status{margin-top:8px;padding:8px;border-radius:13px;background:#fff;min-height:44px;font-weight:900;line-height:1.4}
 .overlay{position:fixed;inset:0;background:#0007;display:none;align-items:center;justify-content:center;padding:18px;z-index:20}.overlay.show{display:flex}.modal{width:min(420px,100%);background:#fff;border-radius:28px;padding:24px;text-align:center}.modal .big{font-size:70px}.modal h2{font-size:28px;margin:5px}.modal button{border:0;border-radius:15px;padding:12px 15px;font-weight:1000;background:#ffd39c}
-@media(max-width:560px){.slot .cardface{font-size:9px}.handCard{flex-basis:64px}.recipePick{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.slot .cardface{font-size:9px}.handCard{flex-basis:66px}.handCard+.handCard{margin-left:-17px}.hand{padding-left:10px;padding-right:10px}.recipePick{grid-template-columns:repeat(2,1fr)}}
 </style>
 </head>
 <body>
@@ -99,7 +101,7 @@ const COMS=[
 {name:"シェフ",avatar:"👨‍🍳",human:false,skill:.97}
 ];
 
-let easy=true,players=[],deck=[],discard=[],turn=0,phase="idle",pending=null,gameOver=false,dragIndex=null;
+let easy=true,players=[],deck=[],discard=[],turn=0,phase="idle",pending=null,gameOver=false,dragIndex=null,selectedIndex=null,dragState=null;
 let audioCtx=null;
 function audio(){
   if(!audioCtx) audioCtx=new (window.AudioContext||window.webkitAudioContext)();
@@ -174,7 +176,7 @@ function spinRoulette(){
   },85)
 }
 function startTurn(){
-  if(gameOver)return;phase="discard";const p=players[turn];beep("turn");
+  if(gameOver)return;selectedIndex=null;phase="discard";const p=players[turn];beep("turn");
   setStatus(p.human?"てふだから 1まい すててね。":p.name+" の ばん！");render();
   if(!p.human)setTimeout(comDiscard,650)
 }
@@ -195,8 +197,11 @@ function renderSeat(p,i){
   const counter=counterHTML(p,i===0);
   let body='<div class="who"><span class="avatar">'+p.avatar+'</span>'+p.name+'<span class="turn">ばん</span></div>';
   if(i===0){
+    const canPlaceNow=turn===0&&phase==="discard"&&p.hand.some(k=>canUse(p,k));
+    const selectedCanPlace=selectedIndex!==null&&p.hand[selectedIndex]&&canUse(p,p.hand[selectedIndex]);
     body+='<div class="myHeader"><div class="myRecipeName">'+p.recipe.emoji+" "+p.recipe.name+'</div><div>'+p.placed.length+'/6</div></div>'+counter+
-      '<div class="handTitle">てふだ '+p.hand.length+'まい　<span style="font-weight:600">（ドラッグでならべかえ）</span></div><div class="hand" id="myHand">'+
+      '<div class="counterActionRow"><button class="counterAction '+(canPlaceNow?"ready ":"")+(canPlaceNow&&selectedCanPlace?"selectedReady":"")+'" onclick="placeSelectedToCounter()">カウンターに出す</button></div>'+
+      '<div class="handTitle">てふだ '+p.hand.length+'まい　<span style="font-weight:600">（タップで選択／ドラッグで移動）</span></div><div class="hand" id="myHand">'+
       p.hand.map((k,idx)=>handCardHTML(k,idx)).join("")+'</div>';
   }else{
     body+='<div class="recipeLabel">キッチンカウンター '+p.placed.length+'/6</div>'+counter+
@@ -220,38 +225,91 @@ function counterHTML(p,isMe){
 
 function handCardHTML(k,i){
   const need=easy&&canUse(players[0],k);
-  return '<button class="handCard '+(need?"need ":"")+(turn===0&&phase==="discard"?"canDiscard ":"")+(turn===0&&phase==="discard"&&canUse(players[0],k)?"needNow":"")+'" draggable="true" data-i="'+i+'" onclick="humanCardTap('+i+')">'+ITEMS[k]+'</button>'
+  const sel=selectedIndex===i;
+  return '<button class="handCard '+(need?"need ":"")+(turn===0&&phase==="discard"?"canDiscard ":"")+(turn===0&&phase==="discard"&&canUse(players[0],k)?"needNow ":"")+(sel?"selected":"")+'" data-i="'+i+'">'+ITEMS[k]+'</button>'
 }
 
+function clearDropHints(){
+  document.querySelectorAll(".dropReady").forEach(x=>x.classList.remove("dropReady"));
+}
 function bindDrag(){
   const cards=[...document.querySelectorAll("#myHand .handCard")];
   cards.forEach(c=>{
-    c.addEventListener("dragstart",()=>{dragIndex=+c.dataset.i;c.classList.add("dragging")});
-    c.addEventListener("dragend",()=>{c.classList.remove("dragging");dragIndex=null});
-    c.addEventListener("dragover",e=>e.preventDefault());
-    c.addEventListener("drop",e=>{
-      e.preventDefault();const to=+c.dataset.i;
-      if(dragIndex===null||to===dragIndex)return;
-      const [m]=players[0].hand.splice(dragIndex,1);players[0].hand.splice(to,0,m);render()
+    c.addEventListener("pointerdown",e=>{
+      if(gameOver)return;
+      dragIndex=+c.dataset.i;
+      dragState={id:e.pointerId,startX:e.clientX,startY:e.clientY,moved:false,ghost:null};
+      c.setPointerCapture?.(e.pointerId);
     });
-    c.addEventListener("touchstart",()=>{dragIndex=+c.dataset.i},{passive:true});
-    c.addEventListener("touchmove",e=>{
-      const x=e.touches[0].clientX,y=e.touches[0].clientY,target=document.elementFromPoint(x,y)?.closest(".handCard");
-      if(target&&target!==c){const to=+target.dataset.i;const [m]=players[0].hand.splice(dragIndex,1);players[0].hand.splice(to,0,m);dragIndex=to;render()}
-    },{passive:true})
+    c.addEventListener("pointermove",e=>{
+      if(!dragState||dragState.id!==e.pointerId||dragIndex===null)return;
+      const dx=e.clientX-dragState.startX,dy=e.clientY-dragState.startY;
+      if(!dragState.moved&&Math.hypot(dx,dy)<9)return;
+      if(!dragState.moved){
+        dragState.moved=true;c.classList.add("dragging");
+        const ghost=c.cloneNode(true);ghost.classList.remove("dragging","selected");ghost.classList.add("motionCard");
+        const r=c.getBoundingClientRect();ghost.style.width=r.width+"px";ghost.style.height=r.height+"px";ghost.style.left=(e.clientX-r.width/2)+"px";ghost.style.top=(e.clientY-r.height/2)+"px";ghost.style.transition="none";
+        document.body.appendChild(ghost);dragState.ghost=ghost;
+      }
+      e.preventDefault();
+      const g=dragState.ghost,r=g.getBoundingClientRect();g.style.left=(e.clientX-r.width/2)+"px";g.style.top=(e.clientY-r.height/2)+"px";
+      clearDropHints();
+      const under=document.elementFromPoint(e.clientX,e.clientY);
+      const card=players[0].hand[dragIndex];
+      if(under?.closest("#discardPile")&&turn===0&&phase==="discard")$("discardPile").classList.add("dropReady");
+      if(under?.closest("#seat0 .counter")&&turn===0&&phase==="discard"&&canUse(players[0],card))document.querySelector("#seat0 .counter")?.classList.add("dropReady");
+    });
+    c.addEventListener("pointerup",e=>{
+      if(!dragState||dragState.id!==e.pointerId)return;
+      const wasMoved=dragState.moved,idx=dragIndex;
+      dragState.ghost?.remove();c.classList.remove("dragging");clearDropHints();
+      const under=document.elementFromPoint(e.clientX,e.clientY);
+      dragState=null;dragIndex=null;
+      if(!wasMoved){humanCardTap(idx);return}
+      if(turn===0&&phase==="discard"&&under?.closest("#discardPile")){selectedIndex=null;discardFrom(0,idx);return}
+      if(turn===0&&phase==="discard"&&under?.closest("#seat0 .counter")){
+        if(canUse(players[0],players[0].hand[idx])){selectedIndex=null;placeFromHand(idx);return}
+        beep("error");setStatus("そのカードは カウンターに出せないよ。");render();return
+      }
+      const target=under?.closest("#myHand .handCard");
+      if(target){
+        const to=+target.dataset.i;
+        if(to!==idx){
+          const [m]=players[0].hand.splice(idx,1);players[0].hand.splice(to,0,m);
+          selectedIndex=null;render();return
+        }
+      }
+      render();
+    });
+    c.addEventListener("pointercancel",()=>{
+      dragState?.ghost?.remove();dragState=null;dragIndex=null;clearDropHints();render()
+    })
   })
 }
 
 function setStatus(t){$("status").textContent=t}
 function canUse(p,k){return p.recipe.need.includes(k)&&!p.placed.some(x=>x.card===k)}
 function humanCardTap(i){
-  if(turn!==0||phase!=="discard"||gameOver)return;
-  const p=players[0],card=p.hand[i];
-  if(canUse(p,card)){placeFromHand(i);return}
-  discardFrom(0,i)
+  if(gameOver)return;
+  selectedIndex=(selectedIndex===i?null:i);
+  if(turn===0&&phase==="discard"){
+    const card=players[0].hand[i];
+    setStatus(canUse(players[0],card)?ITEMS[card]+" をえらんだよ。カウンターに出すか、すてばへドラッグしてね。":ITEMS[card]+" をえらんだよ。すてばへドラッグできるよ。");
+  }
+  render()
+}
+function placeSelectedToCounter(){
+  if(turn!==0||phase!=="discard"||gameOver){beep("error");return}
+  const p=players[0];
+  if(selectedIndex===null||!p.hand[selectedIndex]||!canUse(p,p.hand[selectedIndex])){
+    if(p.hand.some(k=>canUse(p,k)))setStatus("カウンターに出したいカードを 1まいえらんでね。");
+    else setStatus("いま カウンターに出せるカードはないよ。");
+    beep("error");render();return
+  }
+  const i=selectedIndex;selectedIndex=null;placeFromHand(i)
 }
 function placeFromHand(i){
-  const p=players[0],card=p.hand[i];
+  const p=players[0],card=p.hand[i];selectedIndex=null;
   if(!canUse(p,card))return;
   const from=document.querySelector('#myHand .handCard[data-i="'+i+'"]');
   const to=document.querySelector('#seat0 .slot[data-key="'+card+'"]');
@@ -265,6 +323,7 @@ function placeFromHand(i){
 }
 
 function discardFrom(pid,i){
+  if(pid===0)selectedIndex=null;
   const p=players[pid],card=p.hand[i];
   const from=pid===0?document.querySelector('#myHand .handCard[data-i="'+i+'"]'):$("seat"+pid);
   const to=$("discardPile");
