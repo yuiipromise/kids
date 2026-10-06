@@ -37,6 +37,18 @@ h1{font-size:clamp(24px,7vw,36px);margin:0;flex:1;text-align:center}.screen{disp
 .status{margin-top:8px;padding:8px;border-radius:13px;background:#fff;min-height:44px;font-weight:900;line-height:1.4}
 .overlay{position:fixed;inset:0;background:#0007;display:none;align-items:center;justify-content:center;padding:12px;z-index:20}.overlay.show{display:flex}.modal{width:min(520px,100%);max-height:94svh;overflow:auto;background:#fff;border-radius:28px;padding:18px;text-align:center}.modal h2{font-size:28px;margin:4px}.modal button{border:0;border-radius:15px;padding:12px 15px;font-weight:1000;background:#ffd39c}.resultBoard{display:flex;flex-direction:column;gap:10px;align-items:center}.resultWinner{width:100%;padding:12px;border-radius:22px;background:linear-gradient(180deg,#fff8cf,#fff);box-shadow:0 5px 16px #0001}.resultWinnerChar{display:block;width:min(280px,90%);aspect-ratio:2/1;object-fit:cover;border-radius:18px;margin:0 auto 8px}.resultWinnerDish{display:block;width:150px;aspect-ratio:4/3;object-fit:cover;border-radius:16px;margin:0 auto 6px}.resultWinnerName{font-size:18px;font-weight:1000}.resultWinnerMenu{font-size:22px;font-weight:1000}.resultOthers{width:100%;display:flex;flex-direction:column;gap:8px}.resultLoser{display:grid;grid-template-columns:108px 62px 1fr;gap:8px;align-items:center;text-align:left;background:#faf7f5;border-radius:16px;padding:7px}.resultLoserChar{width:108px;aspect-ratio:2/1;object-fit:cover;border-radius:12px}.resultLoserDish{width:62px;aspect-ratio:1/1;object-fit:cover;border-radius:11px}.resultLoserName{font-size:12px;font-weight:900;opacity:.65}.resultLoserMenu{font-size:14px;font-weight:1000;line-height:1.25}
 @media(max-width:560px){.myPlay{grid-template-columns:70px minmax(0,1fr);gap:5px}.myDishBox{padding:4px}.myDishLabel{font-size:9px}.hand{height:114px;padding:8px 4px 7px}.handCard{flex-basis:78px;height:102px}.handCard+.handCard{margin-left:-38px}.hand.crowded .handCard+.handCard{margin-left:-43px}.hand.veryCrowded .handCard+.handCard{margin-left:-48px}.resultLoser{grid-template-columns:96px 54px 1fr;gap:6px}.resultLoserChar{width:96px}.resultLoserDish{width:54px}.slot .cardface{font-size:9px}.recipePick{grid-template-columns:repeat(2,1fr)}}
+.cutinLayer{position:fixed;inset:0;z-index:28;display:flex;align-items:center;justify-content:center;pointer-events:none;opacity:0;visibility:hidden;transition:opacity .13s; background:#fff8f070}
+.cutinLayer.show{opacity:1;visibility:visible}.cutinStage{position:relative;width:min(360px,95vw);height:335px;filter:drop-shadow(0 7px 12px #58445228);animation:cutinPop .3s cubic-bezier(.2,1.3,.3,1)}
+.cutinCard{position:absolute;width:172px;height:172px;object-fit:cover;top:77px;left:calc(50% - 70px);border-radius:17px;border:4px solid #fff;box-shadow:0 8px 18px #6e4e4b30;transform:rotate(-7deg)}
+.cutinCard.multi0{transform:translate(-29px,9px) rotate(-12deg)}.cutinCard.multi1{transform:translate(16px,-7px) rotate(8deg)}.cutinCard.multi2{transform:translate(0,0) rotate(-3deg)}
+.cutinActor{position:absolute;bottom:50px;left:9px;height:112px;max-width:146px;object-fit:contain;filter:drop-shadow(0 3px 2px #fff) drop-shadow(0 -3px 2px #fff) drop-shadow(3px 0 2px #fff) drop-shadow(-3px 0 2px #fff)}
+.cutinSurprise{position:absolute;right:4px;top:45px;width:139px;aspect-ratio:2/1;object-fit:cover;border:4px solid #fff;border-radius:18px;box-shadow:0 6px 15px #6e4e4b44;transform:rotate(5deg)}
+.cutinHeadline{position:absolute;top:0;left:0;right:0;text-align:center;font-size:29px;font-weight:1000;letter-spacing:.03em;color:#87587e;text-shadow:-2px -2px #fff,2px 2px #fff,2px -2px #fff,-2px 2px #fff}
+.cutinHeadline.claim{font-size:43px;color:#e9839d}.cutinSub{position:absolute;left:4px;right:4px;bottom:0;text-align:center;background:#fffffff2;border:2px solid #f3dce6;border-radius:16px;padding:7px 10px;font-weight:1000;font-size:15px}
+.cutinCount{position:absolute;top:215px;right:16px;font-size:18px;font-weight:1000;background:#fff;border-radius:20px;padding:5px 12px;color:#855a9b}
+.deck{background:#f7ecfb}.deckBack{width:62px;height:62px;object-fit:cover;border-radius:9px;display:block;margin:auto}
+@keyframes cutinPop{from{transform:translateY(24px) scale(.82)}to{transform:translateY(0) scale(1)}}
+@media(max-width:360px){.cutinStage{transform:scale(.87)}}
 </style>
 </head>
 <body>
@@ -64,9 +76,9 @@ h1{font-size:clamp(24px,7vw,36px);margin:0;flex:1;text-align:center}.screen{disp
       <div class="table">
         <div id="turnText" class="title" style="font-size:18px"></div>
         <div class="piles">
-          <button id="deckBtn" class="pile deck" onclick="humanDraw()">🂠<br>やまふだ<br><span id="deckCount"></span></button>
+          <button id="deckBtn" class="pile deck" onclick="humanDraw()"><img class="deckBack" src="assets/recipe/backs/card-back-flower-icon.webp" alt=""><span>やまふだ <span id="deckCount"></span></span></button>
           <button id="discardPile" class="pile discard" onclick="humanDiscardSelected()"><b>すてば</b></button>
-          <button id="recipeBtn" class="pile recipeBtn" onclick="humanRecipe()">レシピ！</button>
+          <button id="recipeBtn" class="pile recipeBtn" onclick="humanRecipe()">いただき！</button>
         </div>
         <div id="status" class="status"></div>
       </div>
@@ -75,6 +87,7 @@ h1{font-size:clamp(24px,7vw,36px);margin:0;flex:1;text-align:center}.screen{disp
   </section>
 </div>
 
+<div id="cutinLayer" class="cutinLayer" aria-live="polite"><div id="cutinStage" class="cutinStage"></div></div>
 <div id="overlay" class="overlay"><div class="modal"><div id="resultEmoji" class="big"></div><h2 id="resultTitle"></h2><p id="resultText"></p><button onclick="restart()">もういちど</button></div></div>
 
 <script>
@@ -98,6 +111,8 @@ function standingPath(p){const key=CHAR_KEY[p.name]||"you";return ASSET+"/chars/
 function charHTML(p,cls="avatarArt",expr="relaxed",standing=false){return '<img class="'+cls+'" src="'+(standing?standingPath(p):charPath(p,expr))+'" alt="'+p.name+'">'}
 function recipeCardPath(r){return ASSET+"/recipes/cards/recipe-"+r.file+".webp"}
 function recipeDishPath(r){return ASSET+"/recipes/dishes/recipe-"+r.file+"-dish.webp"}
+const CARD_BACK=ASSET+"/backs/card-back-cafe-mogumogu.webp";
+const MENU_BACK=ASSET+"/backs/menu-card-back-cafe-mogumogu.webp";
 
 const RECIPES=[
 {name:"カレー",emoji:"🍛",file:"curry",need:["rice","onion","carrot","potato","meat","curry"]},
@@ -130,6 +145,25 @@ const COMS=[
 
 let easy=true,players=[],deck=[],discard=[],turn=0,phase="idle",pending=null,gameOver=false,selectedIndex=null;
 let rouletteTimer=null,rouletteRunning=false,rouletteCurrent=0,rouletteStartedAt=0;
+let cutinTimer=null;
+function showCutin({actor,cards=[],hidden=false,title="",subtitle="",surprised=null,duration=850}){
+  const layer=$("cutinLayer"),stage=$("cutinStage");
+  clearTimeout(cutinTimer);
+  const shown=cards.slice(0,3);
+  const stack=shown.length>1;
+  const cardImgs=shown.map((card,i)=>'<img class="cutinCard'+(stack?' multi'+i:'')+'" src="'+(hidden?CARD_BACK:foodCardPath(card))+'" alt="'+(hidden?"うらむきカード":ITEMS[card])+'">').join("");
+  stage.innerHTML='<div class="cutinHeadline'+(surprised?" claim":"")+'">'+title+'</div>'+
+    cardImgs+
+    '<img class="cutinActor" src="'+standingPath(actor)+'" alt="'+actor.name+'">'+
+    (surprised?'<img class="cutinSurprise" src="'+charPath(surprised,"surprised")+'" alt="'+surprised.name+'のびっくりした顔">':'')+
+    (cards.length>3?'<span class="cutinCount">+'+(cards.length-3)+'まい</span>':'')+
+    '<div class="cutinSub">'+subtitle+'</div>';
+  layer.classList.remove("show");
+  void layer.offsetWidth;
+  layer.classList.add("show");
+  cutinTimer=setTimeout(()=>{layer.classList.remove("show");stage.innerHTML=""},duration);
+}
+function hideCutin(){clearTimeout(cutinTimer);$("cutinLayer").classList.remove("show");$("cutinStage").innerHTML=""}
 let audioCtx=null;
 function audio(){
   if(!audioCtx) audioCtx=new (window.AudioContext||window.webkitAudioContext)();
@@ -173,7 +207,7 @@ function toggleEasy(){easy=!easy;$("easySwitch").classList.toggle("on",easy);$("
 
 function showRecipePick(){
   const b=$("recipePick");b.innerHTML="";
-  for(let i=0;i<6;i++)b.innerHTML+='<button class="faceDown" onclick="chooseRecipe('+i+')">🍽️</button>';
+  for(let i=0;i<6;i++)b.innerHTML+='<button class="faceDown" onclick="chooseRecipe('+i+')"><img src="'+MENU_BACK+'" alt="うらむきメニューカード" style="height:130px;max-width:100%;object-fit:contain;border-radius:14px"></button>';
   show("pick")
 }
 
@@ -187,7 +221,7 @@ function chooseRecipe(i){
   show("reveal")
 }
 
-function startRoulette(){buildDeck();show("rouletteScreen");$("roulette").textContent="🎲";$("rouletteName").textContent="ルーレット！";$("rouletteBtn").disabled=false}
+function startRoulette(){hideCutin();buildDeck();show("rouletteScreen");$("roulette").textContent="🎲";$("rouletteName").textContent="ルーレット！";$("rouletteBtn").disabled=false}
 function buildDeck(){
   let a=[];Object.keys(ITEMS).forEach(k=>a.push(k,k,k,k));deck=shuffle(a);discard=[];gameOver=false;
   players.forEach(p=>{
@@ -214,7 +248,8 @@ function autoPlaceInitialNeeded(){
   players.forEach((p,i)=>{
     if(moved[i].length)flashEl($("seat"+i),"placeFlash");
   });
-  beep("place");
+  if(moved[0].length)showCutin({actor:players[0],cards:moved[0].reverse(),title:"じゅんび OK！",subtitle:"つかえる しょくざいを カウンターに いどうしたよ！",duration:950});
+  if(moved.some(a=>a.length))beep("place");
   setStatus("つかえる しょくざいを カウンターに いどうしたよ！");
 }
 function spinRoulette(){
