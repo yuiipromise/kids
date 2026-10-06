@@ -191,7 +191,19 @@ function chooseRecipe(i){
 function startRoulette(){buildDeck();show("rouletteScreen");$("roulette").textContent="🎲";$("rouletteName").textContent="ルーレット！";$("rouletteBtn").disabled=false}
 function buildDeck(){
   let a=[];Object.keys(ITEMS).forEach(k=>a.push(k,k,k,k));deck=shuffle(a);discard=[];gameOver=false;
-  players.forEach(p=>{p.hand=[];p.placed=[];for(let i=0;i<6;i++)p.hand.push(deck.pop())})
+  players.forEach(p=>{
+    p.hand=[];p.placed=[];
+    for(let i=0;i<6;i++)p.hand.push(deck.pop());
+    // 初期手札に自分のレシピの食材があれば、全員ぶん自動でカウンターへ移す。
+    // 初期手札から出したカードは「自分で手に入れたカード」なので非公開（裏向き）扱い。
+    for(let i=p.hand.length-1;i>=0;i--){
+      const card=p.hand[i];
+      if(canUse(p,card)){
+        p.hand.splice(i,1);
+        p.placed.push({card,public:false});
+      }
+    }
+  })
 }
 function spinRoulette(){
   const btn=$("rouletteBtn");
