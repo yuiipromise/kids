@@ -248,7 +248,7 @@ function autoPlaceInitialNeeded(){
   players.forEach((p,i)=>{
     if(moved[i].length)flashEl($("seat"+i),"placeFlash");
   });
-  if(moved[0].length)showCutin({actor:players[0],cards:moved[0].reverse(),title:"じゅんび OK！",subtitle:"つかえる しょくざいを カウンターに いどうしたよ！",duration:950});
+  if(moved[0].length)showCutin({actor:players[0],cards:moved[0].reverse(),title:"じゅんび OK！",subtitle:"つかえる しょくざいを カウンターに いどうしたよ！",duration:1800});
   if(moved.some(a=>a.length))beep("place");
   setStatus("つかえる しょくざいを カウンターに いどうしたよ！");
 }
@@ -282,7 +282,7 @@ function spinRoulette(){
     render();
     setTimeout(()=>{
       autoPlaceInitialNeeded();
-      setTimeout(()=>startTurn(),1100);
+      setTimeout(()=>startTurn(),1950);
     },1200);
   },650)
 }
@@ -388,9 +388,12 @@ function placeFromHand(i){
   flyCard(ITEMS[card],from,to,()=>{
     p.hand.splice(i,1);p.placed.push({card,public:false});beep("place");render();
     flashEl(document.querySelector('#seat0 .slot[data-key="'+card+'"]'),"placeFlash");
-    showCutin({actor:p,cards:[card],title:"やったね！",subtitle:ITEMS[card]+" を おいたよ！",duration:850});
-    if(checkWin(0,1050))return;
-    phase="discard";setStatus("つぎに てふだから 1まい すててね。");render();
+    showCutin({actor:p,cards:[card],title:"やったね！",subtitle:ITEMS[card]+" を おいたよ！",duration:2000});
+    if(checkWin(0,2200))return;
+    setTimeout(()=>{
+      if(gameOver)return;
+      phase="discard";setStatus("つぎに てふだから 1まい すててね。");render();
+    },2050);
   })
 }
 
@@ -463,13 +466,12 @@ function takeDiscard(pid,card,from){
     players[pid].placed.push({card,public:true});pending=null;
     setStatus("「いただき！」 "+players[pid].name+" が "+ITEMS[card]+" を とった！");
     render();flashEl($("seat"+pid),"placeFlash");
-    showCutin({actor:players[pid],cards:[card],title:"いただき！",subtitle:players[pid].name+" が "+ITEMS[card]+" を ゲット！",surprised:players[from],duration:1200});
-    if(checkWin(pid,1380))return;
+    showCutin({actor:players[pid],cards:[card],title:"いただき！",subtitle:players[pid].name+" が "+ITEMS[card]+" を ゲット！",surprised:players[from],duration:2500});
+    if(checkWin(pid,2700))return;
     if(wasWaitingForClaim){
-      setTimeout(()=>finishClaimWindow(from),1250)
+      setTimeout(()=>finishClaimWindow(from),2550)
     }else{
-      turn=resumeTurn;phase=resumePhase;
-      setTimeout(()=>render(),1250)
+      setTimeout(()=>{if(gameOver)return;turn=resumeTurn;phase=resumePhase;render()},2550)
     }
   })
 }
@@ -495,9 +497,9 @@ function drawFor(pid){
       p.hand.push(card);setStatus(p.human?ITEMS[card]+" を ひいた。":p.name+" は カードを ひいた。")
     }
     render();flashEl($("seat"+pid),"placeFlash");
-    if(placed)showCutin({actor:p,cards:[card],hidden:!p.human,title:"カウンターに おいたよ！",subtitle:p.human?ITEMS[card]+" を おいたよ！":p.name+" が 1まい おいたよ！",duration:900});
-    if(checkWin(pid,placed?1100:300))return;
-    setTimeout(nextTurn,placed?1250:900+rand(650))
+    if(placed)showCutin({actor:p,cards:[card],hidden:!p.human,title:"カウンターに おいたよ！",subtitle:p.human?ITEMS[card]+" を おいたよ！":p.name+" が 1まい おいたよ！",duration:1800});
+    if(checkWin(pid,placed?2000:300))return;
+    setTimeout(nextTurn,placed?1950:900+rand(650))
   })
 }
 
