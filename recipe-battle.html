@@ -23,10 +23,10 @@ h1{font-size:clamp(24px,7vw,36px);margin:0;flex:1;text-align:center}.screen{disp
 .seat{background:#fff;border:2px solid transparent;border-radius:18px;padding:8px;box-shadow:var(--shadow);min-width:0;transition:background .25s,border-color .25s,box-shadow .25s,transform .2s}.seat.active{background:color-mix(in srgb,var(--turnColor,#fff4c9) 50%,white);border-color:var(--turnBorder,#efbd42);box-shadow:0 0 0 3px var(--turnGlow,#ffd96b55),0 7px 22px #6d4b3520}.leftSeat{grid-area:left}.rightSeat{grid-area:right}.youSeat{grid-area:you;padding:10px;position:relative}
 .table{grid-area:table;background:color-mix(in srgb,var(--tableTurn,#fff9ef) 50%,white);position:relative;border-radius:20px;padding:10px;box-shadow:var(--shadow);text-align:center;transition:background .25s}
 .who{display:flex;align-items:center;gap:7px;font-weight:1000}.avatar{width:54px;height:36px;display:inline-flex;align-items:center;justify-content:center;flex:0 0 54px}.avatarArt{width:54px;height:36px;object-fit:cover;border-radius:12px;border:2px solid var(--turnBorder,#eadfd7);box-shadow:0 2px 7px #0001;background:#fff}.rouletteChar{width:132px;height:160px;object-fit:contain;display:block;margin:auto}.foodCardArt{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}.counterIcon{position:absolute;inset:3px;width:calc(100% - 6px);height:calc(100% - 6px);object-fit:cover;border-radius:7px}.discardArt{width:64px;height:72px;object-fit:cover;border-radius:10px}.recipeRevealImg{display:block;width:min(270px,80%);max-height:330px;object-fit:contain;margin:12px auto;border-radius:18px;box-shadow:0 5px 16px #0002}.resultChar{display:block;width:220px;max-width:80%;aspect-ratio:2/1;object-fit:cover;border-radius:22px;margin:0 auto 10px;border:4px solid #fff;box-shadow:0 4px 14px #0002}.resultDish{display:block;width:220px;max-width:80%;aspect-ratio:4/3;object-fit:cover;border-radius:20px;margin:8px auto}
-.counter{display:grid;grid-template-columns:repeat(6,1fr);gap:3px;margin-top:7px}.youSeat .counter{width:92%;margin:7px auto 0}.slot{position:relative;aspect-ratio:.78;border-radius:9px;border:1px solid #e2d5cc;background:#fff;overflow:hidden;display:flex;align-items:center;justify-content:center}
-.slot .cardface{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:3px;font-size:10px;font-weight:900;background:#fff9ed;overflow:hidden}
-.slot.empty{border:2px dashed #dbcfc6;background:#faf8f6}.slot.self-hidden .veil{position:absolute;inset:0;background:rgba(0,0,0,.50)}.slot.preview .veil{position:absolute;inset:0;background:rgba(255,255,255,.68)}.slot.public{border:2px solid #9dce9e}
-.comMeta{display:flex;justify-content:space-between;gap:5px;margin-top:5px;font-size:11px;opacity:.68}.recipeLabel{font-size:12px;font-weight:1000;margin-top:4px}
+.counter{display:grid;grid-template-columns:repeat(6,1fr);gap:5px;margin-top:7px;padding:8px 7px 10px;border-radius:14px;background:linear-gradient(180deg,#f6e7d4,#ead3b8);box-shadow:inset 0 2px 0 #fff8,0 3px 8px #8c644018;position:relative}.counter::after{content:"";position:absolute;left:7px;right:7px;bottom:4px;height:3px;border-radius:3px;background:#c99f76aa}.youSeat .counter{width:96%;margin:7px auto 0}.slot{position:relative;aspect-ratio:.78;border-radius:8px;border:0;background:#fffaf4aa;overflow:hidden;display:flex;align-items:center;justify-content:center;box-shadow:inset 0 0 0 1px #d9bea166}
+.slot .cardface{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:0;font-size:10px;font-weight:900;background:transparent;overflow:hidden}.slot .cardface img{width:100%;height:100%;object-fit:cover;border-radius:8px}
+.slot.empty{background:#fffaf45c;box-shadow:inset 0 0 0 1px #d8c0a577}.slot.empty .counterIcon{filter:sepia(.8) saturate(.35) contrast(.85) brightness(1.08);opacity:.32}.slot.hiddenCard{background:transparent;box-shadow:none}.slot.hiddenCard .counterBack{width:100%;height:100%;object-fit:cover;border-radius:8px;box-shadow:0 2px 5px #76552f22}.slot.public{box-shadow:0 0 0 2px #9dce9e}.slot.peek{box-shadow:0 0 0 2px #f0b89c,0 3px 8px #0001}
+.comMeta{display:flex;justify-content:space-between;gap:5px;margin-top:5px;font-size:11px;opacity:.68}.recipeLabel{font-size:12px;font-weight:1000;margin-top:4px}.setupPreviewBox{display:flex;flex-direction:column;align-items:center;gap:8px;margin:4px 0 8px}.setupRecipeCard{width:min(138px,42vw);max-height:236px;object-fit:contain;border-radius:14px;box-shadow:0 5px 14px #0001}.setupStartBtn{border:0;border-radius:16px;background:linear-gradient(135deg,#ffbd72,#ff93ac);color:#fff;padding:11px 24px;font-weight:1000;font-size:18px;box-shadow:0 5px 14px #ff9a8c3d}.setupNote{font-size:12px;font-weight:900;opacity:.7}
 .myPlay{display:block;margin-top:2px}.myDishBox{position:absolute;top:8px;right:8px;width:58px;padding:0;text-align:center;z-index:2}.myDishImg{display:block;width:58px;aspect-ratio:4/3;object-fit:cover;border-radius:10px;filter:saturate(.72) contrast(.94);opacity:.88;box-shadow:0 2px 7px #00000012}.myDishLabel{display:none}.handWrap{min-width:0;width:100%}.hand{display:flex;justify-content:center;align-items:flex-end;overflow:hidden;padding:10px 8px 8px;height:122px;width:100%;max-width:100%}
 .handCard{flex:0 0 84px;border:0;border-radius:12px;background:transparent;height:84px;padding:0;font-size:11px;font-weight:900;position:relative;transition:transform .12s,box-shadow .12s,filter .12s;z-index:1;overflow:visible}
 .handCard+.handCard{margin-left:6px}.hand.crowded .handCard+.handCard{margin-left:-22px}.hand.veryCrowded .handCard+.handCard{margin-left:-34px}.handCard.need::after{content:"★";position:absolute;right:1px;top:-2px;font-size:16px;z-index:3}.handCard.canDiscard{filter:drop-shadow(0 2px 4px #ffad6344)}.handCard.selected{transform:translateY(-10px);z-index:8;box-shadow:0 0 0 3px #ff8fa966,0 7px 16px #0002}.handCard.needNow.selected{box-shadow:0 0 0 3px #58bf7d88,0 7px 16px #0002}
@@ -144,6 +144,7 @@ const COMS=[
 ];
 
 let easy=true,players=[],deck=[],discard=[],turn=0,phase="idle",pending=null,gameOver=false,selectedIndex=null;
+let counterPeek=new Set(),counterPeekTimers={};
 let rouletteTimer=null,rouletteRunning=false,rouletteCurrent=0,rouletteStartedAt=0;
 let cutinTimer=null,cutinUntil=0;
 function waitForCutin(fn){
@@ -255,13 +256,21 @@ function autoPlaceInitialNeeded(){
     }
     moved.push(cards);
   });
+  phase="setupPreview";
   render();
   players.forEach((p,i)=>{
     if(moved[i].length)flashEl($("seat"+i),"placeFlash");
   });
-  if(moved[0].length)showCutin({actor:players[0],cards:moved[0].reverse(),title:"じゅんび OK！",subtitle:"つかえる しょくざいを カウンターに いどうしたよ！",duration:1800});
   if(moved.some(a=>a.length))beep("place");
-  setStatus("つかえる しょくざいを カウンターに いどうしたよ！");
+  setStatus("りょうりと そろっている しょくざいを かくにんしてね。");
+}
+
+function startGameFromPreview(){
+  if(phase!=="setupPreview"||gameOver)return;
+  counterPeek.clear();
+  Object.values(counterPeekTimers).forEach(clearTimeout);
+  counterPeekTimers={};
+  startTurn();
 }
 function spinRoulette(){
   const btn=$("rouletteBtn");
@@ -293,8 +302,7 @@ function spinRoulette(){
     render();
     setTimeout(()=>{
       autoPlaceInitialNeeded();
-      setTimeout(()=>startTurn(),1950);
-    },1200);
+    },900);
   },650)
 }
 function startTurn(){
@@ -332,11 +340,20 @@ function renderSeat(p,i){
   const counter=counterHTML(p,i===0);
   let body='<div class="who"><span class="avatar">'+charHTML(p)+'</span>'+p.name+'</div>';
   if(i===0){
-    body+='<div class="myPlay"><div class="myDishBox"><img class="myDishImg" src="'+recipeDishPath(p.recipe)+'" alt="'+p.recipe.name+'"></div>'+
-      '<div class="handWrap"><div class="hand '+(p.hand.length>=7?"veryCrowded":p.hand.length>=5?"crowded":"")+'" id="myHand">'+
-      p.hand.map((k,idx)=>handCardHTML(k,idx)).join("")+'</div></div></div>'+
-      '<div class="recipeLabel">キッチンカウンター '+p.placed.length+'/6</div>'+counter+
-      '<div class="counterHint">必要なカードをえらんだら、カウンターをタップ</div>';
+    if(phase==="setupPreview"){
+      body+='<div class="setupPreviewBox">'+
+        '<img class="setupRecipeCard" src="'+recipeCardPath(p.recipe)+'" alt="'+p.recipe.name+'">'+
+        '<div class="setupNote">いま そろっているカードは おもてむきだよ</div>'+
+        '<button class="setupStartBtn" onclick="startGameFromPreview()">スタート！</button>'+
+      '</div>'+
+      '<div class="recipeLabel">キッチンカウンター '+p.placed.length+'/6</div>'+counter;
+    }else{
+      body+='<div class="myPlay"><div class="myDishBox"><img class="myDishImg" src="'+recipeDishPath(p.recipe)+'" alt="'+p.recipe.name+'"></div>'+
+        '<div class="handWrap"><div class="hand '+(p.hand.length>=7?"veryCrowded":p.hand.length>=5?"crowded":"")+'" id="myHand">'+
+        p.hand.map((k,idx)=>handCardHTML(k,idx)).join("")+'</div></div></div>'+
+        '<div class="recipeLabel">キッチンカウンター '+p.placed.length+'/6</div>'+counter+
+        '<div class="counterHint">必要なカードをえらんだら、カウンターをタップ</div>';
+    }
   }else{
     body+='<div class="recipeLabel">キッチンカウンター '+p.placed.length+'/6</div>'+counter+
       '<div class="comMeta"><span>てふだ '+p.hand.length+'まい</span><span>レシピは ひみつ</span></div>';
@@ -345,16 +362,40 @@ function renderSeat(p,i){
 }
 
 function counterHTML(p,isMe){
-  return '<div class="counter" '+(isMe?'onclick="humanCounterTap()"':'')+'>'+p.recipe.need.map(k=>{
+  const setupOpen=isMe&&phase==="setupPreview";
+  return '<div class="counter" '+(isMe&&phase!=="setupPreview"?'onclick="humanCounterTap()"':'')+'>'+p.recipe.need.map(k=>{
     const x=p.placed.find(q=>q.card===k);
+
+    // 自分の未取得スロットだけ、必要食材をセピアの薄い見本として残す。
+    // 相手の未取得スロットはレシピを推測できないよう空欄のまま。
     if(!x){
-      if(isMe)return '<div class="slot preview" data-key="'+k+'"><div class="cardface"><img class="counterIcon" src="'+foodIconPath(k)+'" alt="'+ITEMS[k]+'"></div><div class="veil"></div></div>';
+      if(isMe)return '<div class="slot empty" data-key="'+k+'"><div class="cardface"><img class="counterIcon" src="'+foodIconPath(k)+'" alt="'+ITEMS[k]+'"></div></div>';
       return '<div class="slot empty"></div>';
     }
-    if(x.public)return '<div class="slot public" data-key="'+k+'"><div class="cardface"><img class="counterIcon" src="'+foodIconPath(k)+'" alt="'+ITEMS[k]+'"></div></div>';
-    if(isMe)return '<div class="slot self-hidden" data-key="'+k+'"><div class="cardface"><img class="counterIcon" src="'+foodIconPath(k)+'" alt="'+ITEMS[k]+'"></div><div class="veil"></div></div>';
-    return '<div class="slot self-hidden" data-key="'+k+'"><div class="cardface"></div><div class="veil"></div></div>';
+
+    const open=setupOpen||x.public||(isMe&&counterPeek.has(k));
+    if(open){
+      return '<div class="slot '+(x.public?"public ":"")+(isMe&&counterPeek.has(k)?"peek ":"")+'" data-key="'+k+'" '+(isMe&&phase!=="setupPreview"?'onclick="counterSlotTap(event,\''+k+'\')"':'')+'><div class="cardface"><img src="'+foodCardPath(k)+'" alt="'+ITEMS[k]+'"></div></div>';
+    }
+
+    return '<div class="slot hiddenCard" data-key="'+k+'" '+(isMe?'onclick="counterSlotTap(event,\''+k+'\')"':'')+'><img class="counterBack" src="'+CARD_BACK+'" alt="ふせたカード"></div>';
   }).join("")+'</div>'
+}
+
+function counterSlotTap(event,k){
+  event.stopPropagation();
+  if(phase==="setupPreview"||gameOver)return;
+  const p=players[0],x=p.placed.find(q=>q.card===k);
+  if(!x)return;
+  if(x.public)return;
+  counterPeek.add(k);
+  clearTimeout(counterPeekTimers[k]);
+  render();
+  counterPeekTimers[k]=setTimeout(()=>{
+    counterPeek.delete(k);
+    delete counterPeekTimers[k];
+    if($("game").classList.contains("active"))render();
+  },2400);
 }
 
 function handCardHTML(k,i){
@@ -377,6 +418,7 @@ function humanCardTap(i){
   render()
 }
 function humanCounterTap(){
+  if(phase==="setupPreview")return;
   if(turn!==0||phase!=="discard"||gameOver){beep("error");return}
   const p=players[0];
   if(selectedIndex===null||!p.hand[selectedIndex]){beep("error");setStatus("まず てふだを 1まいえらんでね。");return}
