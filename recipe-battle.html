@@ -194,16 +194,29 @@ function buildDeck(){
   players.forEach(p=>{
     p.hand=[];p.placed=[];
     for(let i=0;i<6;i++)p.hand.push(deck.pop());
-    // 初期手札に自分のレシピの食材があれば、全員ぶん自動でカウンターへ移す。
-    // 初期手札から出したカードは「自分で手に入れたカード」なので非公開（裏向き）扱い。
+  })
+}
+
+function autoPlaceInitialNeeded(){
+  const moved=[];
+  players.forEach(p=>{
+    const cards=[];
     for(let i=p.hand.length-1;i>=0;i--){
       const card=p.hand[i];
       if(canUse(p,card)){
         p.hand.splice(i,1);
         p.placed.push({card,public:false});
+        cards.push(card);
       }
     }
-  })
+    moved.push(cards);
+  });
+  render();
+  players.forEach((p,i)=>{
+    if(moved[i].length)flashEl($("seat"+i),"placeFlash");
+  });
+  beep("place");
+  setStatus("つかえる しょくざいを カウンターに いどうしたよ！");
 }
 function spinRoulette(){
   const btn=$("rouletteBtn");
@@ -228,7 +241,16 @@ function spinRoulette(){
   const p=players[turn];
   $("roulette").innerHTML=charHTML(p,"rouletteChar","relaxed",true);
   $("rouletteName").textContent=p.name+" から スタート！";
-  setTimeout(()=>{show("game");startTurn()},650)
+  setTimeout(()=>{
+    show("game");
+    phase="setup";
+    setStatus("さいしょの てふだを みてみよう！");
+    render();
+    setTimeout(()=>{
+      autoPlaceInitialNeeded();
+      setTimeout(()=>startTurn(),1100);
+    },1200);
+  },650)
 }
 function startTurn(){
   if(gameOver)return;
