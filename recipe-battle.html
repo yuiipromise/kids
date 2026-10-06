@@ -238,7 +238,18 @@ function chooseRecipe(i){
 
 function startRoulette(){hideCutin();buildDeck();show("rouletteScreen");$("roulette").textContent="🎲";$("rouletteName").textContent="ルーレット！";$("rouletteBtn").disabled=false}
 function buildDeck(){
-  let a=[];Object.keys(ITEMS).forEach(k=>a.push(k,k,k,k));deck=shuffle(a);discard=[];gameOver=false;
+  // 今回の3人のレシピに合わせて山札の出現率を調整する。
+  // アイスは現行レシピで未使用なので山札から外す。
+  // 各食材は基本2枚＋その食材を必要とするレシピ人数ぶん追加。
+  // 例: 誰も使わない=2枚、1人が使う=3枚、2人=4枚、3人=5枚。
+  let a=[];
+  Object.keys(ITEMS).forEach(k=>{
+    if(k==="icecream")return;
+    const demand=players.reduce((n,p)=>n+(p.recipe&&p.recipe.need.includes(k)?1:0),0);
+    const copies=2+demand;
+    for(let i=0;i<copies;i++)a.push(k);
+  });
+  deck=shuffle(a);discard=[];gameOver=false;
   players.forEach(p=>{
     p.hand=[];p.placed=[];
     for(let i=0;i<6;i++)p.hand.push(deck.pop());
