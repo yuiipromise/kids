@@ -56,7 +56,7 @@ h1{font-size:clamp(24px,7vw,36px);margin:0;flex:1;text-align:center}.screen{disp
 
   <section id="pick" class="screen"><div class="panel center"><div class="title">レシピカードを 1まい えらんでね</div><div class="sub">6まいとも うらむき</div><div id="recipePick" class="recipePick"></div></div></section>
   <section id="reveal" class="screen"><div class="panel center"><div class="title">あなたの レシピは…</div><div id="revealFood" class="reveal"></div><div id="revealName" class="title"></div><div id="revealNeeds" class="needList"></div><br><button class="bigbtn" onclick="startRoulette()">つぎへ</button></div></section>
-  <section id="rouletteScreen" class="screen"><div class="panel center"><div class="title">さいしょは だれ？</div><div id="roulette" class="roulette">🎲</div><div id="rouletteName" class="title">ルーレット！</div><br><button id="rouletteBtn" class="bigbtn" onclick="spinRoulette()">まわす！</button></div></section>
+  <section id="rouletteScreen" class="screen"><div class="panel center"><div class="title">さいしょは だれ？</div><div id="roulette" class="roulette">🎲</div><div id="rouletteName" class="title">ルーレット！</div><br><button id="rouletteBtn" class="bigbtn" onclick="spinRoulette()">スタート！</button></div></section>
 
   <section id="game" class="screen">
     <div class="board">
@@ -114,7 +114,7 @@ const COMS=[
 {name:"シェフ",avatar:"",human:false,skill:.97,color:"#dcefff",border:"#8fc5e8",glow:"#8fc5e855"}
 ];
 
-let easy=true,players=[],deck=[],discard=[],turn=0,phase="idle",pending=null,gameOver=false,selectedIndex=null;
+let easy=true,players=[],deck=[],discard=[],turn=0,phase="idle",pending=null,gameOver=false,selectedIndex=null;\nlet rouletteTimer=null,rouletteRunning=false,rouletteCurrent=0,rouletteStartedAt=0;
 let audioCtx=null;
 function audio(){
   if(!audioCtx) audioCtx=new (window.AudioContext||window.webkitAudioContext)();
@@ -178,15 +178,29 @@ function buildDeck(){
   players.forEach(p=>{p.hand=[];p.placed=[];for(let i=0;i<6;i++)p.hand.push(deck.pop())})
 }
 function spinRoulette(){
-  $("rouletteBtn").disabled=true;let t=0;
-  const tm=setInterval(()=>{
-    const p=players[t%players.length];$("roulette").innerHTML=charHTML(p,"rouletteChar");$("rouletteName").textContent=p.name;t++;
-    if(t>16+rand(8)){
-      clearInterval(tm);turn=rand(players.length);const p=players[turn];
-      $("roulette").innerHTML=charHTML(p,"rouletteChar");$("rouletteName").textContent=p.name+" から スタート！";
-      setTimeout(()=>{show("game");startTurn()},800)
-    }
-  },85)
+  const btn=$("rouletteBtn");
+  if(!rouletteRunning){
+    rouletteRunning=true;rouletteStartedAt=Date.now();btn.textContent="ストップ！";
+    rouletteTimer=setInterval(()=>{
+      rouletteCurrent=(rouletteCurrent+1)%players.length;
+      const p=players[rouletteCurrent];
+      $("roulette").innerHTML=charHTML(p,"rouletteChar");
+      $("rouletteName").textContent=p.name;
+    },95);
+    return;
+  }
+
+  // 子どものダブルタップで開始直後に止まらないよう、短い連打だけ無視する。
+  if(Date.now()-rouletteStartedAt<350)return;
+
+  rouletteRunning=false;
+  if(rouletteTimer){clearInterval(rouletteTimer);rouletteTimer=null}
+  btn.disabled=true;btn.textContent="ストップ！";
+  turn=rouletteCurrent;
+  const p=players[turn];
+  $("roulette").innerHTML=charHTML(p,"rouletteChar");
+  $("rouletteName").textContent=p.name+" から スタート！";
+  setTimeout(()=>{show("game");startTurn()},650)
 }
 function startTurn(){
   if(gameOver)return;
