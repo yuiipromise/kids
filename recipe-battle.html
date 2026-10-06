@@ -19,13 +19,13 @@ h1{font-size:clamp(24px,7vw,36px);margin:0;flex:1;text-align:center}.screen{disp
 .recipePick{display:flex;justify-content:center;align-items:flex-end;margin:18px auto 4px;min-height:188px;padding:10px 2px 4px;overflow:visible}.faceDown{width:86px;height:152px;flex:0 0 86px;border:0;background:transparent;padding:0;border-radius:14px;box-shadow:none;position:relative;transition:transform .15s ease,filter .15s ease;overflow:visible}.faceDown+.faceDown{margin-left:-12px}.faceDown:nth-child(1){transform:translateY(10px) rotate(-7deg)}.faceDown:nth-child(2){transform:translateY(3px) rotate(-3deg)}.faceDown:nth-child(3){transform:translateY(0) rotate(0deg)}.faceDown:nth-child(4){transform:translateY(3px) rotate(3deg)}.faceDown:nth-child(5){transform:translateY(10px) rotate(7deg)}.faceDown:active{transform:translateY(-8px) scale(1.04);z-index:8;filter:drop-shadow(0 6px 8px #0002)}.faceDown img{display:block;width:100%;height:100%;object-fit:cover;border-radius:14px}
 .reveal{font-size:68px;margin:12px}.needList{display:flex;flex-wrap:wrap;justify-content:center;gap:7px;margin:12px 0}.needChip{padding:6px 8px;border-radius:13px;background:#fff1d8;font-size:13px;font-weight:900}
 .roulette{font-size:78px;min-height:168px;margin:12px 0 6px;display:flex;align-items:center;justify-content:center}
-.board{display:grid;grid-template-columns:1fr 1fr;grid-template-areas:"left right" "table table" "you you";gap:6px;position:relative}.setupGuide{position:absolute;left:50%;top:8px;transform:translateX(-50%);z-index:15;width:min(250px,72vw);pointer-events:none;text-align:center}.setupGuide.hidden{display:none}.setupRecipeFloat{display:block;width:min(190px,60vw);margin:0 auto;border-radius:16px;box-shadow:0 8px 22px #6d4b3540}.setupGuideText{display:inline-block;margin-top:8px;padding:7px 12px;border-radius:15px;background:#fffaf4f2;box-shadow:0 4px 12px #6d4b3522;font-size:14px;font-weight:1000}.setupHandBack{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:12px}.handCard.setupChosen{transform:translateY(-10px);box-shadow:0 0 0 3px #f2b56f99,0 7px 16px #0002}.handCard.setupUsable{box-shadow:0 0 0 2px #f6d29f88}.setupChoiceBtns{display:flex;justify-content:center;gap:10px;margin-top:10px}.setupChoiceBtn{border:0;border-radius:15px;padding:9px 16px;font-size:15px;font-weight:1000;box-shadow:0 4px 10px #0001}.setupChoiceBtn.ok{background:#ffd7a8}.setupChoiceBtn.none{background:#efe7dc}.setupFeedback{position:fixed;inset:0;z-index:40;display:flex;align-items:center;justify-content:center;background:#fff8f0dc;pointer-events:auto}.setupFeedbackCard{width:min(310px,88vw);border-radius:24px;background:#fffaf5;padding:18px;box-shadow:0 10px 32px #6d4b3540;text-align:center}.setupFeedbackFace{width:122px;height:122px;object-fit:cover;border-radius:22px;margin:0 auto 10px;display:block}.setupFeedbackTitle{font-size:24px;font-weight:1000;margin-bottom:10px}.setupTileGrid{display:grid;grid-template-columns:repeat(2,74px);justify-content:center;gap:8px}.setupTileGrid.one{grid-template-columns:82px}.setupTileGrid.two{grid-template-columns:repeat(2,82px)}.setupTile{width:74px;height:74px;object-fit:cover;border-radius:12px;box-shadow:0 3px 8px #0002}.setupTileGrid.one .setupTile,.setupTileGrid.two .setupTile{width:82px;height:82px}.setupFeedbackSub{margin-top:10px;font-size:13px;font-weight:900;opacity:.72}
+.board{display:grid;grid-template-columns:1fr 1fr;grid-template-areas:"left right" "table table" "you you";gap:6px;position:relative}.setupGuide{position:absolute;left:50%;top:8px;transform:translateX(-50%);z-index:15;width:min(250px,72vw);pointer-events:none;text-align:center}.setupGuide.hidden{display:none}.setupRecipeFloat{display:block;width:min(190px,60vw);margin:0 auto;border-radius:16px;box-shadow:0 8px 22px #6d4b3540}.setupGuideText{display:inline-block;margin-top:8px;padding:7px 12px;border-radius:15px;background:#fffaf4f2;box-shadow:0 4px 12px #6d4b3522;font-size:14px;font-weight:1000}.setupHandBack{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:12px}.handCard.setupChosen{transform:translateY(-10px);box-shadow:0 0 0 3px #f2b56f99,0 7px 16px #0002}.handCard.setupUsable{box-shadow:0 0 0 2px #f6d29f88}.setupChoiceBtns{display:flex;justify-content:center;gap:10px;margin-top:10px}.setupChoiceBtn{border:0;border-radius:15px;padding:9px 16px;font-size:15px;font-weight:1000;box-shadow:0 4px 10px #0001}.setupChoiceBtn.ok{background:#ffd7a8}.setupChoiceBtn.none{background:#efe7dc}.setupFeedback{position:fixed;inset:0;z-index:40;display:flex;align-items:center;justify-content:center;background:#fff8f0dc;pointer-events:auto}.setupFeedbackCard{width:min(310px,88vw);border-radius:24px;background:#fffaf5;padding:18px;box-shadow:0 10px 32px #6d4b3540;text-align:center}.setupFeedbackFace{width:122px;height:122px;object-fit:cover;border-radius:22px;margin:0 auto 10px;display:block}.setupFeedbackTitle{font-size:24px;font-weight:1000;margin-bottom:10px}.setupTileGrid{display:grid;grid-template-columns:repeat(2,74px);justify-content:center;gap:8px}.setupTileGrid.one{grid-template-columns:82px}.setupTileGrid.two{grid-template-columns:repeat(2,82px)}.setupTile{width:74px;height:74px;object-fit:cover;border-radius:12px;box-shadow:0 3px 8px #0002}.setupTileGrid.one .setupTile,.setupTileGrid.two .setupTile{width:82px;height:82px}.setupFeedbackSub{margin-top:10px;font-size:13px;font-weight:900;opacity:.72}.setupFanCard{position:absolute;width:116px;height:116px;object-fit:cover;border-radius:14px;border:3px solid #fff;box-shadow:0 7px 15px #6d4b3530;top:96px;left:126px;transform-origin:50% 115%}.setupFanCard.f0{transform:translateX(-68px) rotate(-18deg)}.setupFanCard.f1{transform:translateX(-24px) translateY(-10px) rotate(-6deg)}.setupFanCard.f2{transform:translateX(24px) translateY(-10px) rotate(6deg)}.setupFanCard.f3{transform:translateX(68px) rotate(18deg)}.setupFanActor{position:absolute;left:8px;bottom:45px;height:118px;max-width:145px;object-fit:contain;filter:drop-shadow(0 3px 2px #fff) drop-shadow(0 -3px 2px #fff)}.recipeFailToast{position:fixed;left:50%;top:44%;transform:translate(-50%,-50%);z-index:45;width:min(230px,76vw);padding:12px;border-radius:20px;background:#fffaf6f2;box-shadow:0 8px 24px #5e403f35;text-align:center;pointer-events:none;animation:cutinPop .22s ease-out}.recipeFailFace{width:86px;height:86px;object-fit:cover;border-radius:18px;display:block;margin:0 auto 6px}.recipeFailTitle{font-size:21px;font-weight:1000}.recipeFailSub{font-size:12px;font-weight:900;opacity:.68;margin-top:3px}
 .seat{background:#fff;border:2px solid transparent;border-radius:18px;padding:8px;box-shadow:var(--shadow);min-width:0;transition:background .25s,border-color .25s,box-shadow .25s,transform .2s}.seat.active{background:color-mix(in srgb,var(--turnColor,#fff4c9) 50%,white);border-color:var(--turnBorder,#efbd42);box-shadow:0 0 0 3px var(--turnGlow,#ffd96b55),0 7px 22px #6d4b3520}.leftSeat{grid-area:left}.rightSeat{grid-area:right}.youSeat{grid-area:you;padding:10px;position:relative}
 .table{grid-area:table;background:color-mix(in srgb,var(--tableTurn,#fff9ef) 50%,white);position:relative;border-radius:20px;padding:10px;box-shadow:var(--shadow);text-align:center;transition:background .25s}
 .who{display:flex;align-items:center;gap:7px;font-weight:1000}.avatar{width:54px;height:36px;display:inline-flex;align-items:center;justify-content:center;flex:0 0 54px}.avatarArt{width:54px;height:36px;object-fit:cover;border-radius:12px;border:2px solid var(--turnBorder,#eadfd7);box-shadow:0 2px 7px #0001;background:#fff}.rouletteChar{width:132px;height:160px;object-fit:contain;display:block;margin:auto}.foodCardArt{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}.counterIcon{position:absolute;inset:3px;width:calc(100% - 6px);height:calc(100% - 6px);object-fit:cover;border-radius:7px}.discardArt{width:64px;height:72px;object-fit:cover;border-radius:10px}.recipeRevealImg{display:block;width:min(270px,80%);max-height:330px;object-fit:contain;margin:12px auto;border-radius:18px;box-shadow:0 5px 16px #0002}.resultChar{display:block;width:220px;max-width:80%;aspect-ratio:2/1;object-fit:cover;border-radius:22px;margin:0 auto 10px;border:4px solid #fff;box-shadow:0 4px 14px #0002}.resultDish{display:block;width:220px;max-width:80%;aspect-ratio:4/3;object-fit:cover;border-radius:20px;margin:8px auto}
-.counter{display:grid;grid-template-columns:repeat(6,1fr);gap:5px;margin-top:7px;padding:8px 7px 10px;border-radius:14px;background:linear-gradient(180deg,#f6e7d4,#ead3b8);box-shadow:inset 0 2px 0 #fff8,0 3px 8px #8c644018;position:relative}.counter::after{content:"";position:absolute;left:7px;right:7px;bottom:4px;height:3px;border-radius:3px;background:#c99f76aa}.youSeat .counter{width:96%;margin:7px auto 0}.slot{position:relative;aspect-ratio:.78;border-radius:8px;border:0;background:#fffaf4aa;overflow:hidden;display:flex;align-items:center;justify-content:center;box-shadow:inset 0 0 0 1px #d9bea166}
+.counter{display:grid;grid-template-columns:repeat(6,1fr);gap:7px;margin-top:7px;padding:9px 8px 12px;border-radius:14px;background:linear-gradient(180deg,#fbf1e6,#f3e2cf);box-shadow:inset 0 2px 0 #fff9,0 3px 8px #8c644014;position:relative;overflow:visible}.counter::after{content:"";position:absolute;left:7px;right:7px;bottom:4px;height:3px;border-radius:3px;background:#d7b49399}.youSeat .counter{width:96%;margin:7px auto 0}.slot{position:relative;aspect-ratio:.78;border-radius:8px;border:0;background:#fffaf4aa;overflow:hidden;display:flex;align-items:center;justify-content:center;box-shadow:inset 0 0 0 1px #ddc9b377}
 .slot .cardface{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:0;font-size:10px;font-weight:900;background:transparent;overflow:hidden}.slot .cardface img{width:100%;height:100%;object-fit:cover;border-radius:8px}
-.slot.empty{background:#fffaf45c;box-shadow:inset 0 0 0 1px #d8c0a577}.slot.empty .counterIcon{filter:sepia(.8) saturate(.35) contrast(.85) brightness(1.08);opacity:.32}.slot.hiddenCard{background:transparent;box-shadow:none}.slot.hiddenCard .counterBack{width:100%;height:100%;object-fit:cover;border-radius:8px;box-shadow:0 2px 5px #76552f22}.slot.public{box-shadow:0 0 0 2px #9dce9e}.slot.peek{box-shadow:0 0 0 2px #f0b89c,0 3px 8px #0001}
+.slot.empty{background:#fffaf46e;box-shadow:inset 0 0 0 1px #decbb677}.slot.empty .counterIcon{filter:sepia(.8) saturate(.35) contrast(.85) brightness(1.08);opacity:.32}.slot.hiddenCard{background:transparent;box-shadow:none;overflow:visible;transform:translateY(-3px)}.slot.hiddenCard:nth-child(odd){transform:translateY(-3px) rotate(-1.5deg)}.slot.hiddenCard:nth-child(even){transform:translateY(-3px) rotate(1.5deg)}.slot.hiddenCard .counterBack{width:108%;height:108%;object-fit:cover;border-radius:9px;border:2px solid #fff;box-shadow:0 5px 10px #6f4a2f38,0 1px 2px #0002}.slot.public{box-shadow:0 0 0 2px #9dce9e}.slot.peek{box-shadow:0 0 0 2px #f0b89c,0 3px 8px #0001}
 .comMeta{display:flex;justify-content:space-between;gap:5px;margin-top:5px;font-size:11px;opacity:.68}.recipeLabel{font-size:12px;font-weight:1000;margin-top:4px}.setupPreviewBox{display:flex;flex-direction:column;align-items:center;gap:8px;margin:4px 0 8px}.setupRecipeCard{width:min(138px,42vw);max-height:236px;object-fit:contain;border-radius:14px;box-shadow:0 5px 14px #0001}.setupStartBtn{border:0;border-radius:16px;background:linear-gradient(135deg,#ffbd72,#ff93ac);color:#fff;padding:11px 24px;font-weight:1000;font-size:18px;box-shadow:0 5px 14px #ff9a8c3d}.setupNote{font-size:12px;font-weight:900;opacity:.7}
 .myPlay{display:block;margin-top:2px}.myDishBox{position:absolute;top:8px;right:8px;width:58px;padding:0;text-align:center;z-index:2}.myDishImg{display:block;width:58px;aspect-ratio:4/3;object-fit:cover;border-radius:10px;filter:saturate(.72) contrast(.94);opacity:.88;box-shadow:0 2px 7px #00000012}.myDishLabel{display:none}.handWrap{min-width:0;width:100%}.hand{display:flex;justify-content:center;align-items:flex-end;overflow:hidden;padding:10px 8px 8px;height:122px;width:100%;max-width:100%}
 .handCard{flex:0 0 84px;border:0;border-radius:12px;background:transparent;height:84px;padding:0;font-size:11px;font-weight:900;position:relative;transition:transform .12s,box-shadow .12s,filter .12s;z-index:1;overflow:visible}
@@ -145,7 +145,8 @@ const COMS=[
 
 let easy=true,players=[],deck=[],discard=[],turn=0,phase="idle",pending=null,gameOver=false,selectedIndex=null;
 let turnEpoch=0;
-let recipeHintTimer=null,recipeHintReady=false,recipePenaltyUntil=0;
+let recipeHintTimer=null,recipeHintReady=false;
+let recipePenaltyArmed=false,recipeSkipActive=false;
 let setupSelected=new Set();
 let counterPeek=new Set(),counterPeekTimers={};
 let rouletteTimer=null,rouletteRunning=false,rouletteCurrent=0,rouletteStartedAt=0;
@@ -237,7 +238,8 @@ function chooseRecipe(i){
 function startRoulette(){hideCutin();buildDeck();show("rouletteScreen");$("roulette").textContent="🎲";$("rouletteName").textContent="ルーレット！";$("rouletteBtn").disabled=false}
 function buildDeck(){
   clearRecipeHint();
-  recipePenaltyUntil=0;
+  recipePenaltyArmed=false;
+  recipeSkipActive=false;
   // 今回の3人のレシピに合わせて山札の出現率を調整する。
   // アイスは現行レシピで未使用なので山札から外す。
   // 各食材は基本2枚＋その食材を必要とするレシピ人数ぶん追加。
@@ -258,43 +260,17 @@ function buildDeck(){
 
 function beginSetupSequence(){
   setupSelected.clear();
-  phase="setupRecipe";
-  setStatus("あなたの レシピを かくにんしよう！");
+  phase="setupSelect";
+  setStatus("これを つくるよ！ つかえる しょくざいを えらぼう。");
   render();
-
-  setTimeout(()=>{
-    if(phase!=="setupRecipe")return;
-    phase="setupHandBack";
-    setStatus("てふだを くばるよ。");
-    render();
-
-    setTimeout(()=>{
-      if(phase!=="setupHandBack")return;
-      phase="setupSelect";
-      setStatus("あなたのカードはこれ！ つかえる しょくざいを えらぼう。");
-      render();
-
-
-    },900);
-  },1300);
 }
 
 function updateSetupGuide(){
   const g=$("setupGuide");
   if(!g)return;
-  if(phase==="setupRecipe"){
-    g.classList.remove("hidden");
-    g.innerHTML='<img class="setupRecipeFloat" src="'+recipeCardPath(players[0].recipe)+'" alt="'+players[0].recipe.name+'"><div class="setupGuideText">この りょうりを つくるよ！</div>';
-    return;
-  }
-  if(phase==="setupHandBack"){
-    g.classList.remove("hidden");
-    g.innerHTML='<div class="setupGuideText">あなたのカードはこれ</div>';
-    return;
-  }
   if(phase==="setupSelect"){
     g.classList.remove("hidden");
-    g.innerHTML='<img class="setupRecipeFloat" src="'+recipeCardPath(players[0].recipe)+'" alt="'+players[0].recipe.name+'"><div class="setupGuideText">つかえる しょくざいを ぜんぶ えらぼう！</div>';
+    g.innerHTML='<img class="setupRecipeFloat" src="'+recipeCardPath(players[0].recipe)+'" alt="'+players[0].recipe.name+'"><div class="setupGuideText">これを つくるよ！ つかえる しょくざいを えらぼう</div>';
     return;
   }
   g.classList.add("hidden");
@@ -325,6 +301,22 @@ function showSetupFeedback(cards,none=false){
   document.body.appendChild(wrap);
   return wrap;
 }
+function showSetupPlacedCutin(cards){
+  const layer=$("cutinLayer"),stage=$("cutinStage");
+  clearTimeout(cutinTimer);
+  const shown=cards.slice(0,4);
+  const imgs=shown.map((card,i)=>'<img class="setupFanCard f'+i+'" src="'+foodCardPath(card)+'" alt="'+ITEMS[card]+'">').join("");
+  stage.innerHTML='<div class="cutinHeadline">カウンターに おいたよ！</div>'+
+    imgs+
+    '<img class="setupFanActor" src="'+standingPath(players[0])+'" alt="'+players[0].name+'">'+
+    '<div class="cutinSub">'+shown.map(k=>ITEMS[k]).join("・")+'</div>';
+  layer.classList.remove("show");
+  void layer.offsetWidth;
+  layer.classList.add("show");
+  cutinUntil=Date.now()+1850;
+  cutinTimer=setTimeout(()=>{layer.classList.remove("show");stage.innerHTML="";cutinUntil=0},1850);
+}
+
 
 function confirmSetupSelection(){
   if(phase!=="setupSelect")return;
@@ -384,11 +376,17 @@ function finishInitialSelection(none=false){
   render();
   beep("place");
 
-  const feedback=showSetupFeedback(movedUser.slice().reverse(),none);
+  const ordered=movedUser.slice().reverse();
+  let feedback=null;
+  if(none){
+    feedback=showSetupFeedback([],true);
+  }else{
+    showSetupPlacedCutin(ordered);
+  }
   setStatus(none?"つかえる しょくざいは なかったよ。":"カウンターに おいたよ！");
 
   setTimeout(()=>{
-    feedback.remove();
+    if(feedback)feedback.remove();
     if(gameOver)return;
     setStatus("りょうり スタート！");
     startTurn();
@@ -448,18 +446,22 @@ function scheduleRecipeHint(from,card){
     render();
   },1400);
 }
+function showRecipeFail(){
+  const old=document.querySelector(".recipeFailToast");
+  if(old)old.remove();
+  const box=document.createElement("div");
+  box.className="recipeFailToast";
+  box.innerHTML='<img class="recipeFailFace" src="'+charPath(players[0],"sad")+'" alt="">'+
+    '<div class="recipeFailTitle">できないよ！</div>'+
+    '<div class="recipeFailSub">つぎは いっかい おやすみ</div>';
+  document.body.appendChild(box);
+  setTimeout(()=>box.remove(),1150);
+}
 function recipeOops(){
-  recipePenaltyUntil=Date.now()+2000;
-  const btn=$("recipeBtn");
-  btn.classList.add("penalty");
-  setStatus("おてつき！ 2びょう おやすみ！");
+  recipePenaltyArmed=true;
+  showRecipeFail();
+  setStatus("できないよ！ つぎは いっかい おやすみ。");
   beep("error");
-  setTimeout(()=>{
-    if(Date.now()>=recipePenaltyUntil){
-      recipePenaltyUntil=0;
-      btn.classList.remove("penalty");
-    }
-  },2050);
 }
 
 function render(){
@@ -471,8 +473,9 @@ function render(){
   $("turnText").textContent=players[turn].name+" の ばん";
   document.querySelector(".table").style.setProperty("--tableTurn",players[turn].color);
   $("deckBtn").disabled=!(turn===0&&phase==="draw");
-  $("recipeBtn").classList.toggle("ready",recipeHintReady);
-  $("recipeBtn").classList.toggle("penalty",Date.now()<recipePenaltyUntil);
+  $("recipeBtn").classList.toggle("ready",recipeHintReady&&!recipeSkipActive);
+  $("recipeBtn").classList.toggle("penalty",recipeSkipActive);
+  $("recipeBtn").disabled=recipeSkipActive;
 
   const selectedCard=selectedIndex!==null?players[0].hand[selectedIndex]:null;
   const canAct=turn===0&&phase==="discard"&&selectedCard;
@@ -483,7 +486,7 @@ function render(){
 
 function renderSeat(p,i){
   const el=$("seat"+i);
-  el.classList.toggle("active",i===turn&&!["setupRecipe","setupHandBack","setupSelect","setupPlacing"].includes(phase));
+  el.classList.toggle("active",i===turn&&!["setupSelect","setupPlacing"].includes(phase));
   el.style.setProperty("--turnColor",p.color);
   el.style.setProperty("--turnBorder",p.border);
   el.style.setProperty("--turnGlow",p.glow);
@@ -519,7 +522,7 @@ function renderSeat(p,i){
 }
 
 function counterHTML(p,isMe){
-  const prePlacement=["setupRecipe","setupHandBack","setupSelect"].includes(phase);
+  const prePlacement=phase==="setupSelect";
   return '<div class="counter" '+(isMe&&!prePlacement?'onclick="humanCounterTap()"':'')+'>'+p.recipe.need.map(k=>{
     const x=p.placed.find(q=>q.card===k);
 
@@ -634,6 +637,7 @@ function discardFrom(pid,i){
   // 新しい捨て札を出し始めた時点で、ひとつ前の権利だけを締め切る。
   pending=null;
   clearRecipeHint();
+  recipeSkipActive=false;
 
   const p=players[pid],card=p.hand[i];
   const from=pid===0?document.querySelector('#myHand .handCard[data-i="'+i+'"]'):$("seat"+pid);
@@ -641,6 +645,10 @@ function discardFrom(pid,i){
   phase="animating";setStatus(p.name+" が カードを すてます。");
   flyCard(ITEMS[card],from,to,()=>{
     p.hand.splice(i,1);discard.push(card);pending={from:pid,card};beep("discard");
+    if(pid!==0&&recipePenaltyArmed){
+      recipePenaltyArmed=false;
+      recipeSkipActive=true;
+    }
     if(pid===0){
       phase="draw";
       setStatus(ITEMS[card]+" を すてた。すぐに やまふだから ひけるよ！");
@@ -649,7 +657,7 @@ function discardFrom(pid,i){
       setStatus(p.name+" が "+ITEMS[card]+" を すてた！");
     }
     render();flashEl($("discardPile"));
-    scheduleRecipeHint(pid,card);
+    if(!recipeSkipActive)scheduleRecipeHint(pid,card);
     setTimeout(()=>resolveClaims(pid,card),520)
   })
 }
@@ -681,9 +689,9 @@ function resolveClaims(from,card){
 
 function humanRecipe(){
   if(gameOver)return;
-  if(Date.now()<recipePenaltyUntil){
+  if(recipeSkipActive){
     beep("error");
-    setStatus("おてつき中！ ちょっと まってね。");
+    setStatus("いまは おやすみ！");
     return;
   }
 
