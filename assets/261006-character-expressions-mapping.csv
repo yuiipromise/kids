@@ -1,0 +1,17 @@
+﻿キャラクター名,表情,ファイル名,保存先,画像サイズ,確認結果
+あなた,リラックス,char-you-relaxed.webp,recipe-game/assets/chars/you/expressions/,300x150,OK
+あなた,嬉しい,char-you-happy.webp,recipe-game/assets/chars/you/expressions/,300x150,OK
+あなた,びっくり,char-you-surprised.webp,recipe-game/assets/chars/you/expressions/,300x150,OK
+あなた,悲しい,char-you-sad.webp,recipe-game/assets/chars/you/expressions/,300x150,OK
+ねこさん,リラックス,char-cat-relaxed.webp,recipe-game/assets/chars/cat/expressions/,300x150,OK
+ねこさん,嬉しい,char-cat-happy.webp,recipe-game/assets/chars/cat/expressions/,300x150,OK
+ねこさん,びっくり,char-cat-surprised.webp,recipe-game/assets/chars/cat/expressions/,300x150,OK
+ねこさん,悲しい,char-cat-sad.webp,recipe-game/assets/chars/cat/expressions/,300x150,OK
+おねえさん,リラックス,char-sister-relaxed.webp,recipe-game/assets/chars/sister/expressions/,300x150,OK
+おねえさん,嬉しい,char-sister-happy.webp,recipe-game/assets/chars/sister/expressions/,300x150,OK
+おねえさん,びっくり,char-sister-surprised.webp,recipe-game/assets/chars/sister/expressions/,300x150,OK
+おねえさん,悲しい,char-sister-sad.webp,recipe-game/assets/chars/sister/expressions/,300x150,OK
+シェフ,リラックス,char-chef-relaxed.webp,recipe-game/assets/chars/chef/expressions/,300x150,OK
+シェフ,嬉しい,char-chef-happy.webp,recipe-game/assets/chars/chef/expressions/,300x150,OK
+シェフ,びっくり,char-chef-surprised.webp,recipe-game/assets/chars/chef/expressions/,300x150,OK
+シェフ,悲しい,char-chef-sad.webp,recipe-game/assets/chars/chef/expressions/,300x150,OK
