@@ -42,7 +42,7 @@ h1{font-size:clamp(24px,7vw,36px);margin:0;flex:1;text-align:center}.screen{disp
 .cutinCard{position:absolute;width:172px;height:172px;object-fit:cover;top:77px;left:calc(50% - 70px);border-radius:17px;border:4px solid #fff;box-shadow:0 8px 18px #6e4e4b30;transform:rotate(-7deg)}
 .cutinCard.multi0{transform:translate(-29px,9px) rotate(-12deg)}.cutinCard.multi1{transform:translate(16px,-7px) rotate(8deg)}.cutinCard.multi2{transform:translate(0,0) rotate(-3deg)}
 .cutinActor{position:absolute;bottom:50px;left:9px;height:112px;max-width:146px;object-fit:contain;filter:drop-shadow(0 3px 2px #fff) drop-shadow(0 -3px 2px #fff) drop-shadow(3px 0 2px #fff) drop-shadow(-3px 0 2px #fff)}
-.cutinSurprise{position:absolute;right:0;top:53px;width:158px;aspect-ratio:2/1;object-fit:cover;border:4px solid #fff;border-radius:18px;box-shadow:0 6px 15px #6e4e4b44;transform:rotate(5deg)}
+.cutinSurprise{position:absolute;right:0;top:53px;width:158px;aspect-ratio:2/1;object-fit:cover;border:4px solid #fff;border-radius:18px;box-shadow:0 6px 15px #6e4e4b44;transform:rotate(5deg)}.cutinSad{position:absolute;right:12px;top:164px;width:124px;aspect-ratio:2/1;object-fit:cover;border:4px solid #fff;border-radius:16px;box-shadow:0 5px 13px #6e4e4b33;transform:rotate(-4deg)}
 .cutinHeadline{position:absolute;top:0;left:0;right:0;text-align:center;font-size:29px;font-weight:1000;letter-spacing:.03em;color:#87587e;text-shadow:-2px -2px #fff,2px 2px #fff,2px -2px #fff,-2px 2px #fff}
 .cutinHeadline.claim{font-size:43px;color:#e9839d}.cutinSub{position:absolute;left:4px;right:4px;bottom:0;text-align:center;background:#fffffff2;border:2px solid #f3dce6;border-radius:16px;padding:7px 10px;font-weight:1000;font-size:15px}
 .cutinCount{position:absolute;top:215px;right:16px;font-size:18px;font-weight:1000;background:#fff;border-radius:20px;padding:5px 12px;color:#855a9b}
@@ -146,7 +146,7 @@ const COMS=[
 let easy=true,players=[],deck=[],discard=[],turn=0,phase="idle",pending=null,gameOver=false,selectedIndex=null;
 let rouletteTimer=null,rouletteRunning=false,rouletteCurrent=0,rouletteStartedAt=0;
 let cutinTimer=null;
-function showCutin({actor,cards=[],hidden=false,title="",subtitle="",surprised=null,duration=850}){
+function showCutin({actor,cards=[],hidden=false,title="",subtitle="",surprised=null,sad=null,duration=850}){
   const layer=$("cutinLayer"),stage=$("cutinStage");
   clearTimeout(cutinTimer);
   const shown=cards.slice(0,3);
@@ -156,6 +156,7 @@ function showCutin({actor,cards=[],hidden=false,title="",subtitle="",surprised=n
     cardImgs+
     '<img class="cutinActor" src="'+standingPath(actor)+'" alt="'+actor.name+'">'+
     (surprised?'<img class="cutinSurprise" src="'+charPath(surprised,"surprised")+'" alt="'+surprised.name+'のびっくりした顔">':'')+
+    (sad?'<img class="cutinSad" src="'+charPath(sad,"sad")+'" alt="'+sad.name+'のかなしい顔">':'')+
     (cards.length>3?'<span class="cutinCount">+'+(cards.length-3)+'まい</span>':'')+
     '<div class="cutinSub">'+subtitle+'</div>';
   layer.classList.remove("show");
@@ -446,34 +447,47 @@ function resolveClaims(from,card){
 }
 
 function humanRecipe(){
-  const canClaim=!!(pending&&pending.from!==0&&canUse(players[0],pending.card));
-  if(easy&&!canClaim){beep("error");return;}
-  if(!pending||pending.from===0){beep("error");setStatus("いまは とれないよ！");return}
-  const card=pending.card;
-  if(!canUse(players[0],card)){beep("error");setStatus("これは とれないよ！");return}
-  takeDiscard(0,card,pending.from)
-}
+  const canClaim=!!(pending&&pending.from!==0&&canUsfunction takeDiscard(pid,card,from){
+  // 最初に「いただき！」を成立させた1人だけが取れる。
+  // pending をアニメーション完了前に消して、同じ捨て札への二重取得を即座にロックする。
+  if(!pending||pending.from!==from||pending.card!==card)return false;
 
-function takeDiscard(pid,card,from){
   const fromEl=$("discardPile"),toEl=$("seat"+pid);
-
-  // 「いただき！」は前の捨て札に対する割り込み。
-  // 進行中の現在ターンを止めたり、数秒後に古い phase/turn を書き戻したりしない。
-  // これをしてしまうと、カットイン後に次の自分の番へ進んでいても
-  // 古い "draw"/"animating" が上書きされ、手札を捨てられなくなることがある。
   const claimWasBlockingTurn=(turn===from&&phase==="claim");
+  const sadLoser=players.find((p,i)=>i!==pid&&i!==from&&canUse(p,card))||null;
 
+  pending=null;
   setStatus("「いただき！」 "+players[pid].name+"！");
+  render();
   beep("recipe");
+
   flyCard(ITEMS[card],fromEl,toEl,()=>{
     if(discard.at(-1)===card)discard.pop();
     players[pid].placed.push({card,public:true});
-    pending=null;
 
     setStatus("「いただき！」 "+players[pid].name+" が "+ITEMS[card]+" を とった！");
     render();flashEl($("seat"+pid),"placeFlash");
-    showCutin({actor:players[pid],cards:[card],title:"いただき！",subtitle:players[pid].name+" が "+ITEMS[card]+" を ゲット！",surprised:players[from],duration:2500});
+    showCutin({
+      actor:players[pid],
+      cards:[card],
+      title:"いただき！",
+      subtitle:players[pid].name+" が "+ITEMS[card]+" を ゲット！",
+      surprised:players[from],
+      sad:sadLoser,
+      duration:2500
+    });
     if(checkWin(pid,2700))return;
+
+    if(claimWasBlockingTurn){
+      setTimeout(()=>{
+        if(gameOver)return;
+        if(turn===from&&phase==="claim")finishClaimWindow(from);
+      },2550);
+    }
+  });
+  return true;
+}
+Win(pid,2700))return;
 
     // COMが自分の捨て札について待っていたケースだけ、そのCOMのドローへ進める。
     // それ以外（特に人間のターン進行中）は現在の turn/phase をそのまま維持する。
