@@ -456,21 +456,32 @@ function humanRecipe(){
 
 function takeDiscard(pid,card,from){
   const fromEl=$("discardPile"),toEl=$("seat"+pid);
-  const resumeTurn=turn,resumePhase=phase;
-  const wasWaitingForClaim=(resumeTurn===from&&resumePhase==="claim");
-  phase="animating";setStatus("「いただき！」 "+players[pid].name+"！");
+
+  // 「いただき！」は前の捨て札に対する割り込み。
+  // 進行中の現在ターンを止めたり、数秒後に古い phase/turn を書き戻したりしない。
+  // これをしてしまうと、カットイン後に次の自分の番へ進んでいても
+  // 古い "draw"/"animating" が上書きされ、手札を捨てられなくなることがある。
+  const claimWasBlockingTurn=(turn===from&&phase==="claim");
+
+  setStatus("「いただき！」 "+players[pid].name+"！");
   beep("recipe");
   flyCard(ITEMS[card],fromEl,toEl,()=>{
     if(discard.at(-1)===card)discard.pop();
-    players[pid].placed.push({card,public:true});pending=null;
+    players[pid].placed.push({card,public:true});
+    pending=null;
+
     setStatus("「いただき！」 "+players[pid].name+" が "+ITEMS[card]+" を とった！");
     render();flashEl($("seat"+pid),"placeFlash");
     showCutin({actor:players[pid],cards:[card],title:"いただき！",subtitle:players[pid].name+" が "+ITEMS[card]+" を ゲット！",surprised:players[from],duration:2500});
     if(checkWin(pid,2700))return;
-    if(wasWaitingForClaim){
-      setTimeout(()=>finishClaimWindow(from),2550)
-    }else{
-      setTimeout(()=>{if(gameOver)return;turn=resumeTurn;phase=resumePhase;render()},2550)
+
+    // COMが自分の捨て札について待っていたケースだけ、そのCOMのドローへ進める。
+    // それ以外（特に人間のターン進行中）は現在の turn/phase をそのまま維持する。
+    if(claimWasBlockingTurn){
+      setTimeout(()=>{
+        if(gameOver)return;
+        if(turn===from&&phase==="claim")finishClaimWindow(from);
+      },2550);
     }
   })
 }
