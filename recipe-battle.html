@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <title>レシピたいせん</title>
 <style>
-:root{--ink:#342d29;--line:#eadfd7;--shadow:0 7px 22px #6d4b3520;--sprite:url('assets/recipe-sprite.webp')}
+:root{--ink:#342d29;--line:#eadfd7;--shadow:0 7px 22px #6d4b3520}
 *{box-sizing:border-box}
 body{margin:0;min-height:100svh;font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic",sans-serif;color:var(--ink);background:linear-gradient(160deg,#fff8ec,#fff1f5)}
 button{font:inherit}.app{width:min(860px,100%);margin:auto;padding:8px 8px 24px}
@@ -18,11 +18,11 @@ h1{font-size:clamp(24px,7vw,36px);margin:0;flex:1;text-align:center}.screen{disp
 .switch span{position:absolute;width:26px;height:26px;border-radius:50%;background:#fff;top:4px;left:4px;transition:.18s;box-shadow:0 2px 6px #0002}.switch.on{background:#8bd08b}.switch.on span{left:28px}
 .recipePick{display:grid;grid-template-columns:repeat(3,1fr);gap:11px;margin-top:17px}.faceDown{min-height:125px;border:4px solid #fff;border-radius:21px;background:repeating-linear-gradient(45deg,#ffc8d7,#ffc8d7 10px,#ffe5eb 10px,#ffe5eb 20px);font-size:40px;box-shadow:0 5px 15px #0002}
 .reveal{font-size:68px;margin:12px}.needList{display:flex;flex-wrap:wrap;justify-content:center;gap:7px;margin:12px 0}.needChip{padding:6px 8px;border-radius:13px;background:#fff1d8;font-size:13px;font-weight:900}
-.roulette{font-size:78px;min-height:96px;margin:16px 0 6px}
+.roulette{font-size:78px;min-height:168px;margin:12px 0 6px;display:flex;align-items:center;justify-content:center}
 .board{display:grid;grid-template-columns:1fr 1fr;grid-template-areas:"left right" "table table" "you you";gap:6px}
 .seat{background:#fff;border:2px solid transparent;border-radius:18px;padding:8px;box-shadow:var(--shadow);min-width:0;transition:background .25s,border-color .25s,box-shadow .25s,transform .2s}.seat.active{background:var(--turnColor,#fff4c9);border-color:var(--turnBorder,#efbd42);box-shadow:0 0 0 3px var(--turnGlow,#ffd96b55),0 7px 22px #6d4b3520}.leftSeat{grid-area:left}.rightSeat{grid-area:right}.youSeat{grid-area:you;padding:10px}
 .table{grid-area:table;background:var(--tableTurn,#fff9ef);position:relative;border-radius:20px;padding:10px;box-shadow:var(--shadow);text-align:center;transition:background .25s}
-.who{display:flex;align-items:center;gap:6px;font-weight:1000}.avatar{width:36px;height:36px;display:inline-flex;align-items:center;justify-content:center;flex:0 0 36px}.sprite{background-image:var(--sprite);background-size:600% 900%;background-repeat:no-repeat}.avatarArt{width:36px;height:36px;border-radius:50%;box-shadow:0 2px 7px #0001}.rouletteChar{width:92px;height:92px;margin:auto;border-radius:24px}.foodCardArt{position:absolute;inset:0;background-image:var(--sprite);background-size:600% 900%;background-repeat:no-repeat}.counterIcon{position:absolute;inset:3px;background-image:var(--sprite);background-size:600% 900%;background-repeat:no-repeat;border-radius:7px}.discardArt{width:64px;height:72px;background-image:var(--sprite);background-size:600% 900%;background-repeat:no-repeat;border-radius:10px}
+.who{display:flex;align-items:center;gap:7px;font-weight:1000}.avatar{width:54px;height:36px;display:inline-flex;align-items:center;justify-content:center;flex:0 0 54px}.avatarArt{width:54px;height:36px;object-fit:cover;border-radius:12px;border:2px solid var(--turnBorder,#eadfd7);box-shadow:0 2px 7px #0001;background:#fff}.rouletteChar{width:132px;height:160px;object-fit:contain;display:block;margin:auto}.foodCardArt{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}.counterIcon{position:absolute;inset:3px;width:calc(100% - 6px);height:calc(100% - 6px);object-fit:cover;border-radius:7px}.discardArt{width:64px;height:72px;object-fit:cover;border-radius:10px}.recipeRevealImg{display:block;width:min(270px,80%);max-height:330px;object-fit:contain;margin:12px auto;border-radius:18px;box-shadow:0 5px 16px #0002}.resultChar{display:block;width:220px;max-width:80%;aspect-ratio:2/1;object-fit:cover;border-radius:22px;margin:0 auto 10px;border:4px solid #fff;box-shadow:0 4px 14px #0002}.resultDish{display:block;width:220px;max-width:80%;aspect-ratio:4/3;object-fit:cover;border-radius:20px;margin:8px auto}
 .counter{display:grid;grid-template-columns:repeat(6,1fr);gap:3px;margin-top:7px}.slot{position:relative;aspect-ratio:.78;border-radius:9px;border:1px solid #e2d5cc;background:#fff;overflow:hidden;display:flex;align-items:center;justify-content:center}
 .slot .cardface{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:3px;font-size:10px;font-weight:900;background:#fff9ed;overflow:hidden}
 .slot.empty{border:2px dashed #dbcfc6;background:#faf8f6}.slot.self-hidden .veil{position:absolute;inset:0;background:rgba(0,0,0,.50)}.slot.preview .veil{position:absolute;inset:0;background:rgba(255,255,255,.68)}.slot.public{border:2px solid #9dce9e}
@@ -79,33 +79,48 @@ h1{font-size:clamp(24px,7vw,36px);margin:0;flex:1;text-align:center}.screen{disp
 <div id="overlay" class="overlay"><div class="modal"><div id="resultEmoji" class="big"></div><h2 id="resultTitle"></h2><p id="resultText"></p><button onclick="restart()">もういちど</button></div></div>
 
 <script>
+const ASSET="assets/recipe";
 const ITEMS={
-rice:"ごはん",onion:"たまねぎ",carrot:"にんじん",potato:"じゃがいも",meat:"おにく",curry:"カレールウ",
-egg:"たまご",ketchup:"ケチャップ",chicken:"とりにく",butter:"バター",milk:"ぎゅうにゅう",cheese:"チーズ",
-pasta:"パスタ",tomato:"トマト",mushroom:"きのこ",bacon:"ベーコン",bread:"パン",lettuce:"レタス",
-ham:"ハム",cucumber:"きゅうり",flour:"こむぎこ",sugar:"さとう",strawberry:"いちご",cream:"クリーム"
+rice:"ごはん",bread:"パン",pasta:"パスタ",flour:"こむぎこ",egg:"たまご",milk:"ぎゅうにゅう",cream:"クリーム",butter:"バター",cheese:"チーズ",icecream:"アイス",
+onion:"たまねぎ",carrot:"にんじん",potato:"じゃがいも",tomato:"トマト",cucumber:"きゅうり",lettuce:"レタス",mushroom:"きのこ",
+meat:"おにく",chicken:"とりにく",bacon:"ベーコン",ham:"ハム",ketchup:"ケチャップ",curry:"カレールウ",sugar:"さとう",
+strawberry:"いちご",banana:"バナナ",shrimp:"エビ",squid:"イカ"
 };
-const SPRITE_ORDER=["onion","carrot","bread","egg","milk","cream","cheese","strawberry","rice","potato","meat","curry","ketchup","chicken","butter","pasta","tomato","mushroom","bacon","lettuce","ham","cucumber","flour","sugar"];
-const CHAR_INDEX={"あなた":24,"ねこさん":25,"おねえさん":26,"シェフ":27};
-function spritePos(col,row){return "background-position:"+(col*20)+"% "+(row*12.5)+"%"}
-function foodStyle(k,icon=false){
-  const i=SPRITE_ORDER.indexOf(k);if(i<0)return "";
-  const col=i%6,row=(icon?5:0)+Math.floor(i/6);
-  return spritePos(col,row)
-}
-function avatarStyle(p){
-  const i=CHAR_INDEX[p.name]??24;
-  return spritePos(i%6,Math.floor(i/6))
-}
-function charHTML(p,cls="avatarArt"){return '<span class="'+cls+' sprite" style="'+avatarStyle(p)+'"></span>'}
+const FOOD_SLUG={
+rice:"rice",bread:"bread",pasta:"pasta",flour:"flour",egg:"egg",milk:"milk",cream:"cream",butter:"butter",cheese:"cheese",icecream:"icecream",
+onion:"onion",carrot:"carrot",potato:"potato",tomato:"tomato",cucumber:"cucumber",lettuce:"lettuce",mushroom:"mushroom",
+meat:"meat",chicken:"chicken",bacon:"bacon",ham:"ham",ketchup:"ketchup",curry:"curryroux",sugar:"sugar",strawberry:"strawberry",banana:"banana",shrimp:"shrimp",squid:"squid"
+};
+const CHAR_KEY={"あなた":"you","ねこさん":"cat","おねえさん":"sister","シェフ":"chef"};
+function foodCardPath(k){return ASSET+"/ingredients/cards/ingredient-"+FOOD_SLUG[k]+".webp"}
+function foodIconPath(k){return ASSET+"/ingredients/icons/ingredient-"+FOOD_SLUG[k]+"-icon.webp"}
+function charPath(p,expr="relaxed"){const key=CHAR_KEY[p.name]||"you";return ASSET+"/chars/"+key+"/expressions/char-"+key+"-"+expr+".webp"}
+function standingPath(p){const key=CHAR_KEY[p.name]||"you";return ASSET+"/chars/"+key+"/standing/char-"+key+"-standing.png"}
+function charHTML(p,cls="avatarArt",expr="relaxed",standing=false){return '<img class="'+cls+'" src="'+(standing?standingPath(p):charPath(p,expr))+'" alt="'+p.name+'">'}
+function recipeCardPath(r){return ASSET+"/recipes/cards/recipe-"+r.file+".webp"}
+function recipeDishPath(r){return ASSET+"/recipes/dishes/recipe-"+r.file+"-dish.webp"}
 
 const RECIPES=[
-{name:"カレー",emoji:"🍛",need:["rice","onion","carrot","potato","meat","curry"]},
-{name:"オムライス",emoji:"🍳",need:["rice","egg","onion","chicken","ketchup","butter"]},
-{name:"グラタン",emoji:"🧀",need:["milk","cheese","onion","mushroom","butter","flour"]},
-{name:"ナポリタン",emoji:"🍝",need:["pasta","tomato","onion","mushroom","bacon","ketchup"]},
-{name:"サンドイッチ",emoji:"🥪",need:["bread","lettuce","ham","cucumber","egg","cheese"]},
-{name:"いちごケーキ",emoji:"🍰",need:["flour","egg","milk","sugar","strawberry","cream"]}
+{name:"カレー",emoji:"🍛",file:"curry",need:["rice","onion","carrot","potato","meat","curry"]},
+{name:"オムライス",emoji:"🍳",file:"omelet-rice",need:["rice","egg","onion","chicken","ketchup","butter"]},
+{name:"グラタン",emoji:"🧀",file:"gratin",need:["milk","cheese","onion","mushroom","butter","flour"]},
+{name:"ナポリタン",emoji:"🍝",file:"napolitan",need:["pasta","tomato","onion","mushroom","bacon","ketchup"]},
+{name:"サンドイッチ",emoji:"🥪",file:"sandwich",need:["bread","lettuce","ham","cucumber","egg","cheese"]},
+{name:"いちごケーキ",emoji:"🍰",file:"strawberry-cake",need:["flour","egg","milk","sugar","strawberry","cream"]},
+{name:"パンケーキ",emoji:"🥞",file:"pancake",need:["flour","egg","milk","butter","strawberry","cream"]},
+{name:"フルーツサンド",emoji:"🥪",file:"fruit-sandwich",need:["bread","cream","strawberry","banana","milk","sugar"]},
+{name:"プリンアラモード",emoji:"🍮",file:"pudding-a-la-mode",need:["egg","milk","sugar","cream","strawberry","banana"]},
+{name:"フレンチトースト",emoji:"🍞",file:"french-toast",need:["bread","egg","milk","butter","sugar","strawberry"]},
+{name:"ピザトースト",emoji:"🍕",file:"pizza-toast",need:["bread","tomato","cheese","onion","bacon","ketchup"]},
+{name:"クリームパスタ",emoji:"🍝",file:"cream-pasta",need:["pasta","cream","milk","cheese","bacon","mushroom"]},
+{name:"バナナパンケーキ",emoji:"🥞",file:"banana-pancake",need:["flour","egg","milk","butter","banana","cream"]},
+{name:"ポテトグラタン",emoji:"🥔",file:"potato-gratin",need:["potato","cream","milk","cheese","onion","bacon"]},
+{name:"ハムチーズトースト",emoji:"🍞",file:"ham-cheese-toast",need:["bread","ham","cheese","butter","tomato","lettuce"]},
+{name:"シーフードカレー",emoji:"🍛",file:"seafood-curry",need:["rice","onion","carrot","shrimp","squid","curry"]},
+{name:"シーフードグラタン",emoji:"🧀",file:"seafood-gratin",need:["milk","cheese","onion","shrimp","squid","flour"]},
+{name:"シーフードクリームパスタ",emoji:"🍝",file:"seafood-cream-pasta",need:["pasta","cream","milk","shrimp","squid","mushroom"]},
+{name:"シーフードピザ",emoji:"🍕",file:"seafood-pizza",need:["flour","tomato","cheese","onion","shrimp","squid"]},
+{name:"ミックスピザ",emoji:"🍕",file:"mixed-pizza",need:["flour","tomato","cheese","onion","bacon","mushroom"]}
 ];
 const USER={name:"あなた",avatar:"",human:true,skill:1,color:"#ffe0ea",border:"#f3a9c1",glow:"#f3a9c155"};
 const COMS=[
