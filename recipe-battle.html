@@ -145,6 +145,7 @@ const COMS=[
 ];
 
 let easy=true,players=[],deck=[],discard=[],turn=0,phase="idle",pending=null,gameOver=false,selectedIndex=null;
+let turnEpoch=0;
 let setupSelected=new Set();
 let counterPeek=new Set(),counterPeekTimers={};
 let rouletteTimer=null,rouletteRunning=false,rouletteCurrent=0,rouletteStartedAt=0;
@@ -413,10 +414,12 @@ function spinRoulette(){
 }
 function startTurn(){
   if(gameOver)return;
+  turnEpoch++;
+  const epoch=turnEpoch,currentTurn=turn;
   document.querySelectorAll(".motionCard").forEach(x=>x.remove());
   selectedIndex=null;phase="discard";const p=players[turn];beep("turn");
   setStatus(p.human?"てふだから 1まい すててね。":p.name+" の ばん！");render();
-  if(!p.human)setTimeout(comDiscard,cpuThinkDelay(p,1300,900))
+  if(!p.human)setTimeout(()=>comDiscard(currentTurn,epoch),cpuThinkDelay(p,1300,900))
 }
 
 function render(){
@@ -566,6 +569,7 @@ function humanDiscardSelected(){
   const i=selectedIndex;selectedIndex=null;discardFrom(0,i)
 }
 function placeFromHand(i){
+  const epoch=turnEpoch;
   const p=players[0],card=p.hand[i];selectedIndex=null;
   if(!canUse(p,card))return;
   const from=document.querySelector('#myHand .handCard[data-i="'+i+'"]');
@@ -577,7 +581,7 @@ function placeFromHand(i){
     showCutin({actor:p,cards:[card],title:"やったね！",subtitle:ITEMS[card]+" を おいたよ！",duration:2000});
     if(checkWin(0,2200))return;
     setTimeout(()=>{
-      if(gameOver)return;
+      if(gameOver||turn!==0||turnEpoch!==epoch||phase!=="animating")return;
       phase="discard";setStatus("つぎに てふだから 1まい すててね。");render();
     },2050);
   })
@@ -686,12 +690,13 @@ function takeDiscard(pid,card,from){
 function finishClaimWindow(from){
   turn=from;phase="draw";const p=players[turn];
   setStatus(p.human?"やまふだから 1まい ひいてね。":p.name+" が やまふだから ひきます。");render();
-  if(!p.human)setTimeout(()=>drawFor(turn),cpuThinkDelay(p,900,650))
+  if(!p.human){const epoch=turnEpoch,currentTurn=turn;setTimeout(()=>drawFor(currentTurn,epoch),cpuThinkDelay(p,900,650))}
 }
 
-function humanDraw(){if(turn===0&&phase==="draw")drawFor(0)}
-function drawFor(pid){
-  if(waitForCutin(()=>drawFor(pid)))return;
+function humanDraw(){if(turn===0&&phase==="draw")drawFor(0,turnEpoch)}
+function drawFor(pid,epoch=turnEpoch){
+  if(waitForCutin(()=>drawFor(pid,epoch)))return;
+  if(gameOver||turn!==pid||turnEpoch!==epoch)return;
   if(deck.length===0)refillDeck();if(deck.length===0)return;
   const p=players[pid],card=deck[deck.length-1],fromEl=$("deckBtn"),toEl=$("seat"+pid);
   phase="animating";setStatus(p.name+" が やまふだから ひきます。");beep("draw");
@@ -707,12 +712,13 @@ function drawFor(pid){
     render();flashEl($("seat"+pid),"placeFlash");
     if(placed)showCutin({actor:p,cards:[card],hidden:!p.human,title:"カウンターに おいたよ！",subtitle:p.human?ITEMS[card]+" を おいたよ！":p.name+" が 1まい おいたよ！",duration:1800});
     if(checkWin(pid,placed?2000:300))return;
-    setTimeout(nextTurn,placed?1950:900+rand(650))
+    setTimeout(()=>nextTurn(pid,epoch),placed?1950:900+rand(650))
   })
 }
 
-function comDiscard(){
-  if(waitForCutin(comDiscard))return;
+function comDiscard(expectedTurn=turn,epoch=turnEpoch){
+  if(waitForCutin(()=>comDiscard(expectedTurn,epoch)))return;
+  if(gameOver||turn!==expectedTurn||turnEpoch!==epoch||phase!=="discard")return;
   const p=players[turn];let choices=p.hand.map((k,i)=>({k,i}));
   let bad=choices.filter(x=>!canUse(p,x.k));if(!bad.length)bad=choices;
   if(p.name==="シェフ"){
@@ -721,7 +727,12 @@ function comDiscard(){
   }
   discardFrom(turn,bad[rand(bad.length)].i)
 }
-function nextTurn(){if(waitForCutin(nextTurn))return;turn=(turn+1)%players.length;startTurn()}
+function nextTurn(expectedTurn=turn,epoch=turnEpoch){
+  if(waitForCutin(()=>nextTurn(expectedTurn,epoch)))return;
+  if(gameOver||turn!==expectedTurn||turnEpoch!==epoch||phase!=="animating")return;
+  turn=(turn+1)%players.length;
+  startTurn()
+}
 function refillDeck(){if(discard.length>1){const top=discard.pop();deck=shuffle(discard.splice(0));discard=[top]}}
 function checkWin(pid,delay=300){
   const p=players[pid];if(p.placed.length<6)return false;gameOver=true;beep("win");
