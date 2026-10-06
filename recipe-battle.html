@@ -19,7 +19,7 @@ h1{font-size:clamp(24px,7vw,36px);margin:0;flex:1;text-align:center}.screen{disp
 .recipePick{display:flex;justify-content:center;align-items:flex-end;margin:18px auto 4px;min-height:188px;padding:10px 2px 4px;overflow:visible}.faceDown{width:86px;height:152px;flex:0 0 86px;border:0;background:transparent;padding:0;border-radius:14px;box-shadow:none;position:relative;transition:transform .15s ease,filter .15s ease;overflow:visible}.faceDown+.faceDown{margin-left:-12px}.faceDown:nth-child(1){transform:translateY(10px) rotate(-7deg)}.faceDown:nth-child(2){transform:translateY(3px) rotate(-3deg)}.faceDown:nth-child(3){transform:translateY(0) rotate(0deg)}.faceDown:nth-child(4){transform:translateY(3px) rotate(3deg)}.faceDown:nth-child(5){transform:translateY(10px) rotate(7deg)}.faceDown:active{transform:translateY(-8px) scale(1.04);z-index:8;filter:drop-shadow(0 6px 8px #0002)}.faceDown img{display:block;width:100%;height:100%;object-fit:cover;border-radius:14px}
 .reveal{font-size:68px;margin:12px}.needList{display:flex;flex-wrap:wrap;justify-content:center;gap:7px;margin:12px 0}.needChip{padding:6px 8px;border-radius:13px;background:#fff1d8;font-size:13px;font-weight:900}
 .roulette{font-size:78px;min-height:168px;margin:12px 0 6px;display:flex;align-items:center;justify-content:center}
-.board{display:grid;grid-template-columns:1fr 1fr;grid-template-areas:"left right" "table table" "you you";gap:6px;position:relative}.setupGuide{position:absolute;left:50%;top:8px;transform:translateX(-50%);z-index:15;width:min(250px,72vw);pointer-events:none;text-align:center}.setupGuide.hidden{display:none}.setupRecipeFloat{display:block;width:min(190px,60vw);margin:0 auto;border-radius:16px;box-shadow:0 8px 22px #6d4b3540}.setupGuideText{display:inline-block;margin-top:8px;padding:7px 12px;border-radius:15px;background:#fffaf4f2;box-shadow:0 4px 12px #6d4b3522;font-size:14px;font-weight:1000}.setupHandBack{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:12px}.handCard.setupChosen{transform:translateY(-10px);box-shadow:0 0 0 3px #f2b56f99,0 7px 16px #0002}.handCard.setupUsable{box-shadow:0 0 0 2px #f6d29f88}
+.board{display:grid;grid-template-columns:1fr 1fr;grid-template-areas:"left right" "table table" "you you";gap:6px;position:relative}.setupGuide{position:absolute;left:50%;top:8px;transform:translateX(-50%);z-index:15;width:min(250px,72vw);pointer-events:none;text-align:center}.setupGuide.hidden{display:none}.setupRecipeFloat{display:block;width:min(190px,60vw);margin:0 auto;border-radius:16px;box-shadow:0 8px 22px #6d4b3540}.setupGuideText{display:inline-block;margin-top:8px;padding:7px 12px;border-radius:15px;background:#fffaf4f2;box-shadow:0 4px 12px #6d4b3522;font-size:14px;font-weight:1000}.setupHandBack{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:12px}.handCard.setupChosen{transform:translateY(-10px);box-shadow:0 0 0 3px #f2b56f99,0 7px 16px #0002}.handCard.setupUsable{box-shadow:0 0 0 2px #f6d29f88}.setupChoiceBtns{display:flex;justify-content:center;gap:10px;margin-top:10px}.setupChoiceBtn{border:0;border-radius:15px;padding:9px 16px;font-size:15px;font-weight:1000;box-shadow:0 4px 10px #0001}.setupChoiceBtn.ok{background:#ffd7a8}.setupChoiceBtn.none{background:#efe7dc}.setupFeedback{position:fixed;inset:0;z-index:40;display:flex;align-items:center;justify-content:center;background:#fff8f0dc;pointer-events:auto}.setupFeedbackCard{width:min(310px,88vw);border-radius:24px;background:#fffaf5;padding:18px;box-shadow:0 10px 32px #6d4b3540;text-align:center}.setupFeedbackFace{width:122px;height:122px;object-fit:cover;border-radius:22px;margin:0 auto 10px;display:block}.setupFeedbackTitle{font-size:24px;font-weight:1000;margin-bottom:10px}.setupTileGrid{display:grid;grid-template-columns:repeat(2,74px);justify-content:center;gap:8px}.setupTileGrid.one{grid-template-columns:82px}.setupTileGrid.two{grid-template-columns:repeat(2,82px)}.setupTile{width:74px;height:74px;object-fit:cover;border-radius:12px;box-shadow:0 3px 8px #0002}.setupTileGrid.one .setupTile,.setupTileGrid.two .setupTile{width:82px;height:82px}.setupFeedbackSub{margin-top:10px;font-size:13px;font-weight:900;opacity:.72}
 .seat{background:#fff;border:2px solid transparent;border-radius:18px;padding:8px;box-shadow:var(--shadow);min-width:0;transition:background .25s,border-color .25s,box-shadow .25s,transform .2s}.seat.active{background:color-mix(in srgb,var(--turnColor,#fff4c9) 50%,white);border-color:var(--turnBorder,#efbd42);box-shadow:0 0 0 3px var(--turnGlow,#ffd96b55),0 7px 22px #6d4b3520}.leftSeat{grid-area:left}.rightSeat{grid-area:right}.youSeat{grid-area:you;padding:10px;position:relative}
 .table{grid-area:table;background:color-mix(in srgb,var(--tableTurn,#fff9ef) 50%,white);position:relative;border-radius:20px;padding:10px;box-shadow:var(--shadow);text-align:center;transition:background .25s}
 .who{display:flex;align-items:center;gap:7px;font-weight:1000}.avatar{width:54px;height:36px;display:inline-flex;align-items:center;justify-content:center;flex:0 0 54px}.avatarArt{width:54px;height:36px;object-fit:cover;border-radius:12px;border:2px solid var(--turnBorder,#eadfd7);box-shadow:0 2px 7px #0001;background:#fff}.rouletteChar{width:132px;height:160px;object-fit:contain;display:block;margin:auto}.foodCardArt{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}.counterIcon{position:absolute;inset:3px;width:calc(100% - 6px);height:calc(100% - 6px);object-fit:cover;border-radius:7px}.discardArt{width:64px;height:72px;object-fit:cover;border-radius:10px}.recipeRevealImg{display:block;width:min(270px,80%);max-height:330px;object-fit:contain;margin:12px auto;border-radius:18px;box-shadow:0 5px 16px #0002}.resultChar{display:block;width:220px;max-width:80%;aspect-ratio:2/1;object-fit:cover;border-radius:22px;margin:0 auto 10px;border:4px solid #fff;box-shadow:0 4px 14px #0002}.resultDish{display:block;width:220px;max-width:80%;aspect-ratio:4/3;object-fit:cover;border-radius:20px;margin:8px auto}
@@ -262,8 +262,7 @@ function beginSetupSequence(){
       setStatus("あなたのカードはこれ！ つかえる しょくざいを えらぼう。");
       render();
 
-      const usable=players[0].hand.map((k,i)=>canUse(players[0],k)?i:null).filter(i=>i!==null);
-      if(usable.length===0)setTimeout(finishInitialSelection,700);
+
     },900);
   },1300);
 }
@@ -290,12 +289,65 @@ function updateSetupGuide(){
   g.innerHTML="";
 }
 
-function finishInitialSelection(){
+function setupUsableIndexes(){
+  const p=players[0];
+  return p.hand.map((k,i)=>canUse(p,k)?i:null).filter(i=>i!==null);
+}
+
+function showSetupFeedback(cards,none=false){
+  const old=document.querySelector(".setupFeedback");
+  if(old)old.remove();
+
+  const wrap=document.createElement("div");
+  wrap.className="setupFeedback";
+  const face=charPath(players[0],none?"sad":"happy");
+  const countClass=cards.length===1?" one":cards.length===2?" two":"";
+  const tiles=cards.map(k=>'<img class="setupTile" src="'+foodIconPath(k)+'" alt="'+ITEMS[k]+'">').join("");
+
+  wrap.innerHTML='<div class="setupFeedbackCard">'+
+    '<img class="setupFeedbackFace" src="'+face+'" alt="">'+
+    '<div class="setupFeedbackTitle">'+(none?"なかったね！":"カウンターに おいたよ！")+'</div>'+
+    (cards.length?'<div class="setupTileGrid'+countClass+'">'+tiles+'</div>':'')+
+    '<div class="setupFeedbackSub">'+(none?"つかえる しょくざいは なかったよ":"えらんだ しょくざいを ぜんぶ おいたよ")+'</div>'+
+  '</div>';
+  document.body.appendChild(wrap);
+  return wrap;
+}
+
+function confirmSetupSelection(){
+  if(phase!=="setupSelect")return;
+  const usable=setupUsableIndexes();
+  if(usable.length===0){
+    beep("error");
+    setStatus("つかえる しょくざいは なさそう。『ない！』を おしてみよう！");
+    return;
+  }
+  if(!usable.every(i=>setupSelected.has(i))){
+    beep("error");
+    setStatus("まだ つかえる しょくざいが あるかも。もういちど みてみよう！");
+    return;
+  }
+  finishInitialSelection(false);
+}
+
+function confirmSetupNone(){
+  if(phase!=="setupSelect")return;
+  const usable=setupUsableIndexes();
+  if(usable.length){
+    beep("error");
+    setStatus("ほんとうかな？ つかえる しょくざいを もういちど みてみよう！");
+    return;
+  }
+  finishInitialSelection(true);
+}
+
+function finishInitialSelection(none=false){
   if(phase!=="setupSelect")return;
 
   const user=players[0];
-  const chosen=[...setupSelected].sort((a,b)=>b-a);
+  const chosen=none?[]:[...setupSelected].sort((a,b)=>b-a);
   const movedUser=[];
+
   chosen.forEach(i=>{
     const card=user.hand[i];
     if(card&&canUse(user,card)){
@@ -305,7 +357,6 @@ function finishInitialSelection(){
     }
   });
 
-  // CPUは初期手札の使える食材を同じタイミングで自動配置。
   players.slice(1).forEach(p=>{
     for(let i=p.hand.length-1;i>=0;i--){
       const card=p.hand[i];
@@ -321,20 +372,17 @@ function finishInitialSelection(){
   render();
   beep("place");
 
-  showCutin({
-    actor:user,
-    cards:movedUser.reverse(),
-    title:"カウンターに おいたよ！",
-    subtitle:movedUser.length?movedUser.map(k=>ITEMS[k]).join("・")+" を おいたよ！":"さいしょは おけるカードが なかったよ",
-    duration:1800
-  });
+  const feedback=showSetupFeedback(movedUser.slice().reverse(),none);
+  setStatus(none?"つかえる しょくざいは なかったよ。":"カウンターに おいたよ！");
 
   setTimeout(()=>{
+    feedback.remove();
     if(gameOver)return;
     setStatus("りょうり スタート！");
     startTurn();
   },1850);
 }
+
 function spinRoulette(){
   const btn=$("rouletteBtn");
   if(!rouletteRunning){
@@ -410,7 +458,8 @@ function renderSeat(p,i){
         '<div class="recipeLabel">キッチンカウンター 0/6</div>'+counter;
     }else if(phase==="setupSelect"){
       body+='<div class="myPlay"><div class="handWrap"><div class="hand '+(p.hand.length>=7?"veryCrowded":p.hand.length>=5?"crowded":"")+'" id="myHand">'+
-        p.hand.map((k,idx)=>setupHandCardHTML(k,idx)).join("")+'</div></div></div>'+
+        p.hand.map((k,idx)=>setupHandCardHTML(k,idx)).join("")+'</div></div>'+
+        '<div class="setupChoiceBtns"><button class="setupChoiceBtn ok" onclick="confirmSetupSelection()">えらんだよ！</button><button class="setupChoiceBtn none" onclick="confirmSetupNone()">ない！</button></div></div>'+
         '<div class="recipeLabel">キッチンカウンター 0/6</div>'+counter;
     }else{
       body+='<div class="myPlay"><div class="myDishBox"><img class="myDishImg" src="'+recipeDishPath(p.recipe)+'" alt="'+p.recipe.name+'"></div>'+
@@ -477,10 +526,9 @@ function setupHandTap(i){
   if(setupSelected.has(i))setupSelected.delete(i);else setupSelected.add(i);
   render();
 
-  const usable=p.hand.map((k,idx)=>canUse(p,k)?idx:null).filter(idx=>idx!==null);
+  const usable=setupUsableIndexes();
   if(usable.length>0&&usable.every(idx=>setupSelected.has(idx))){
-    setStatus("ぜんぶ えらべたよ！");
-    setTimeout(finishInitialSelection,350);
+    setStatus("ぜんぶ えらべたよ！ 『えらんだよ！』を おしてね。");
   }
 }
 
