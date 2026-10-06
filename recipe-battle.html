@@ -33,7 +33,7 @@ h1{font-size:clamp(24px,7vw,36px);margin:0;flex:1;text-align:center}.screen{disp
 .discard.targetReady{border-color:#ff9f62;background:#fff4e8;box-shadow:0 0 0 4px #ffb17755}.counter.targetReady{border-radius:12px;background:#f2fff4;box-shadow:0 0 0 4px #6fca8d55}.counterHint{font-size:11px;font-weight:900;opacity:.72;margin-top:5px}
 .piles{display:flex;justify-content:center;gap:12px;align-items:flex-end}.pile{width:82px;height:98px;border-radius:14px;display:flex;align-items:center;justify-content:center;flex-direction:column;font-weight:1000}
 .deck{border:0;background:transparent;padding:0}.discard{background:transparent;border:0;padding:0;text-align:center}.deck span,.discard small,.discard b{font-size:11px;line-height:1.15;margin-top:4px}.discardArt{display:block;width:74px;height:74px;object-fit:cover;border-radius:10px;box-shadow:0 3px 8px #00000018}
-.recipeBtn{border:0;font-size:17px;font-weight:1000;background:#ff9db4;color:#fff;box-shadow:0 4px 12px #ff9db455;transition:.18s}.recipeBtn.ready{animation:recipePulse .8s ease-in-out infinite alternate}.recipeBtn.easyDisabled{filter:grayscale(1);opacity:.42}.handCard.needNow{box-shadow:0 0 0 3px #9bdc9b55}.motionCard{position:fixed;z-index:1000;pointer-events:none;display:flex;align-items:center;justify-content:center;text-align:center;background:#fff;border:2px solid #d9cec6;border-radius:12px;padding:4px;font-size:11px;font-weight:900;box-shadow:0 7px 18px #0003;transition:transform .32s ease-in-out,opacity .32s}.flash{animation:flash .35s ease-out}.placeFlash{animation:placeFlash .4s ease-out}@keyframes recipePulse{from{transform:scale(1)}to{transform:scale(1.05)}}@keyframes flash{50%{transform:scale(1.08);background:#fff1b8}}@keyframes placeFlash{50%{transform:scale(1.04);box-shadow:0 0 0 5px #9bdc9b55}}
+.recipeBtn{border:0;font-size:17px;font-weight:1000;background:#ff9db4;color:#fff;box-shadow:0 4px 12px #ff9db455;transition:.18s}.recipeBtn.ready{animation:recipePulse .65s ease-in-out infinite alternate;box-shadow:0 0 0 5px #ffd16a88,0 5px 16px #ff8aa966}.recipeBtn.penalty{animation:recipeOops .18s ease-in-out 2;filter:saturate(.6);opacity:.62}.handCard.needNow{box-shadow:0 0 0 3px #9bdc9b55}@keyframes recipeOops{50%{transform:translateX(5px)}}.motionCard{position:fixed;z-index:1000;pointer-events:none;display:flex;align-items:center;justify-content:center;text-align:center;background:#fff;border:2px solid #d9cec6;border-radius:12px;padding:4px;font-size:11px;font-weight:900;box-shadow:0 7px 18px #0003;transition:transform .32s ease-in-out,opacity .32s}.flash{animation:flash .35s ease-out}.placeFlash{animation:placeFlash .4s ease-out}@keyframes recipePulse{from{transform:scale(1)}to{transform:scale(1.05)}}@keyframes flash{50%{transform:scale(1.08);background:#fff1b8}}@keyframes placeFlash{50%{transform:scale(1.04);box-shadow:0 0 0 5px #9bdc9b55}}
 .status{margin-top:8px;padding:7px 10px;border-radius:13px;background:#fff;height:54px;min-height:54px;font-size:13px;font-weight:900;line-height:1.25;display:flex;align-items:center;justify-content:center;text-align:center;overflow:hidden}
 .overlay{position:fixed;inset:0;background:#0007;display:none;align-items:center;justify-content:center;padding:12px;z-index:20}.overlay.show{display:flex}.modal{width:min(520px,100%);max-height:94svh;overflow:auto;background:#fff;border-radius:28px;padding:18px;text-align:center}.modal h2{font-size:28px;margin:4px}.modal button{border:0;border-radius:15px;padding:12px 15px;font-weight:1000;background:#ffd39c}.resultBoard{display:flex;flex-direction:column;gap:10px;align-items:center}.resultWinner{width:100%;padding:12px;border-radius:22px;background:linear-gradient(180deg,#fff8cf,#fff);box-shadow:0 5px 16px #0001}.resultWinnerChar{display:block;width:min(280px,90%);aspect-ratio:2/1;object-fit:cover;border-radius:18px;margin:0 auto 8px}.resultWinnerDish{display:block;width:150px;aspect-ratio:4/3;object-fit:cover;border-radius:16px;margin:0 auto 6px}.resultWinnerName{font-size:18px;font-weight:1000}.resultWinnerMenu{font-size:22px;font-weight:1000}.resultOthers{width:100%;display:flex;flex-direction:column;gap:8px}.resultLoser{display:grid;grid-template-columns:108px 62px 1fr;gap:8px;align-items:center;text-align:left;background:#faf7f5;border-radius:16px;padding:7px}.resultLoserChar{width:108px;aspect-ratio:2/1;object-fit:cover;border-radius:12px}.resultLoserDish{width:62px;aspect-ratio:1/1;object-fit:cover;border-radius:11px}.resultLoserName{font-size:12px;font-weight:900;opacity:.65}.resultLoserMenu{font-size:14px;font-weight:1000;line-height:1.25}
 @media(max-width:560px){.myDishBox{top:8px;right:8px;width:54px}.myDishImg{width:54px}.hand{height:90px;padding:8px 4px 7px}.handCard{flex-basis:70px;height:70px}.handCard+.handCard{margin-left:4px}.hand.crowded .handCard+.handCard{margin-left:-14px}.hand.veryCrowded .handCard+.handCard{margin-left:-20px}.recipePick{min-height:178px;padding-left:0;padding-right:0}.faceDown{width:78px;height:138px;flex-basis:78px}.faceDown+.faceDown{margin-left:-9px}.status{height:54px;min-height:54px;font-size:12.5px}.resultLoser{grid-template-columns:96px 54px 1fr;gap:6px}.resultLoserChar{width:96px}.resultLoserDish{width:54px}.slot .cardface{font-size:9px}.recipePick{grid-template-columns:repeat(2,1fr)}}
@@ -59,8 +59,7 @@ h1{font-size:clamp(24px,7vw,36px);margin:0;flex:1;text-align:center}.screen{disp
     <div class="panel center">
       <div class="title">3にんで レシピたいせん！</div>
       <div class="sub">ねこさん・おねえさん・シェフ から、対戦相手がランダムで2人えらばれるよ</div>
-      <div class="toggle"><b>かんたんモード</b><button id="easySwitch" class="switch on" onclick="toggleEasy()"><span></span></button><span id="easyText">ON</span></div>
-      <div class="sub">ON：必要な手札に★。取れないときの「レシピ！」はグレーになります。</div>
+      <div class="sub">ひつような しょくざいには ★ がつくよ</div>
       <br><button class="bigbtn" onclick="showRecipePick()">ゲームスタート</button>
     </div>
   </section>
@@ -146,6 +145,7 @@ const COMS=[
 
 let easy=true,players=[],deck=[],discard=[],turn=0,phase="idle",pending=null,gameOver=false,selectedIndex=null;
 let turnEpoch=0;
+let recipeHintTimer=null,recipeHintReady=false,recipePenaltyUntil=0;
 let setupSelected=new Set();
 let counterPeek=new Set(),counterPeekTimers={};
 let rouletteTimer=null,rouletteRunning=false,rouletteCurrent=0,rouletteStartedAt=0;
@@ -218,8 +218,6 @@ function $(id){return document.getElementById(id)}
 function rand(n){return Math.floor(Math.random()*n)}
 function shuffle(a){for(let i=a.length-1;i>0;i--){const j=rand(i+1);[a[i],a[j]]=[a[j],a[i]]}return a}
 function show(id){document.querySelectorAll(".screen").forEach(x=>x.classList.remove("active"));$(id).classList.add("active")}
-function toggleEasy(){easy=!easy;$("easySwitch").classList.toggle("on",easy);$("easyText").textContent=easy?"ON":"OFF";if($("game").classList.contains("active"))render()}
-
 function showRecipePick(){
   const b=$("recipePick");b.innerHTML="";
   for(let i=0;i<5;i++)b.innerHTML+='<button class="faceDown" onclick="chooseRecipe('+i+')"><img src="'+MENU_BACK+'" alt="うらむきメニューカード"></button>';
@@ -238,6 +236,8 @@ function chooseRecipe(i){
 
 function startRoulette(){hideCutin();buildDeck();show("rouletteScreen");$("roulette").textContent="🎲";$("rouletteName").textContent="ルーレット！";$("rouletteBtn").disabled=false}
 function buildDeck(){
+  clearRecipeHint();
+  recipePenaltyUntil=0;
   // 今回の3人のレシピに合わせて山札の出現率を調整する。
   // アイスは現行レシピで未使用なので山札から外す。
   // 各食材は基本2枚＋その食材を必要とするレシピ人数ぶん追加。
@@ -433,6 +433,35 @@ function startTurn(){
   if(!p.human)setTimeout(()=>comDiscard(currentTurn,epoch),cpuThinkDelay(p,1300,900))
 }
 
+function clearRecipeHint(){
+  clearTimeout(recipeHintTimer);
+  recipeHintTimer=null;
+  recipeHintReady=false;
+}
+function scheduleRecipeHint(from,card){
+  clearRecipeHint();
+  if(from===0||!canUse(players[0],card))return;
+  recipeHintTimer=setTimeout(()=>{
+    if(gameOver||!pending||pending.from!==from||pending.card!==card)return;
+    if(!canUse(players[0],card))return;
+    recipeHintReady=true;
+    render();
+  },1400);
+}
+function recipeOops(){
+  recipePenaltyUntil=Date.now()+2000;
+  const btn=$("recipeBtn");
+  btn.classList.add("penalty");
+  setStatus("おてつき！ 2びょう おやすみ！");
+  beep("error");
+  setTimeout(()=>{
+    if(Date.now()>=recipePenaltyUntil){
+      recipePenaltyUntil=0;
+      btn.classList.remove("penalty");
+    }
+  },2050);
+}
+
 function render(){
   players.forEach((p,i)=>renderSeat(p,i));
   updateSetupGuide();
@@ -442,8 +471,8 @@ function render(){
   $("turnText").textContent=players[turn].name+" の ばん";
   document.querySelector(".table").style.setProperty("--tableTurn",players[turn].color);
   $("deckBtn").disabled=!(turn===0&&phase==="draw");
-  const canRecipe=!!(pending&&pending.from!==0&&canUse(players[0],pending.card));
-  $("recipeBtn").classList.toggle("easyDisabled",easy&&!canRecipe);$("recipeBtn").classList.toggle("ready",canRecipe);
+  $("recipeBtn").classList.toggle("ready",recipeHintReady);
+  $("recipeBtn").classList.toggle("penalty",Date.now()<recipePenaltyUntil);
 
   const selectedCard=selectedIndex!==null?players[0].hand[selectedIndex]:null;
   const canAct=turn===0&&phase==="discard"&&selectedCard;
@@ -604,6 +633,7 @@ function discardFrom(pid,i){
   // 前の人の捨て札への「レシピ！」は、この人が次の捨て札を選ぶ瞬間まで有効。
   // 新しい捨て札を出し始めた時点で、ひとつ前の権利だけを締め切る。
   pending=null;
+  clearRecipeHint();
 
   const p=players[pid],card=p.hand[i];
   const from=pid===0?document.querySelector('#myHand .handCard[data-i="'+i+'"]'):$("seat"+pid);
@@ -619,6 +649,7 @@ function discardFrom(pid,i){
       setStatus(p.name+" が "+ITEMS[card]+" を すてた！");
     }
     render();flashEl($("discardPile"));
+    scheduleRecipeHint(pid,card);
     setTimeout(()=>resolveClaims(pid,card),520)
   })
 }
@@ -649,12 +680,22 @@ function resolveClaims(from,card){
 }
 
 function humanRecipe(){
-  const canClaim=!!(pending&&pending.from!==0&&canUse(players[0],pending.card));
-  if(easy&&!canClaim){beep("error");return;}
-  if(!pending||pending.from===0){beep("error");setStatus("いまは とれないよ！");return}
-  const card=pending.card;
-  if(!canUse(players[0],card)){beep("error");setStatus("これは とれないよ！");return}
-  takeDiscard(0,card,pending.from)
+  if(gameOver)return;
+  if(Date.now()<recipePenaltyUntil){
+    beep("error");
+    setStatus("おてつき中！ ちょっと まってね。");
+    return;
+  }
+
+  const valid=!!(pending&&pending.from!==0&&canUse(players[0],pending.card));
+  if(!valid){
+    recipeOops();
+    return;
+  }
+
+  const card=pending.card,from=pending.from;
+  clearRecipeHint();
+  takeDiscard(0,card,from)
 }
 
 function takeDiscard(pid,card,from){
@@ -667,6 +708,7 @@ function takeDiscard(pid,card,from){
 
   // アニメーション開始時点でロックする。
   pending=null;
+  clearRecipeHint();
   setStatus("「いただき！」 "+players[pid].name+"！");
   render();
   beep("recipe");
