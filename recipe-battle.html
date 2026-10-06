@@ -182,7 +182,7 @@ function chooseRecipe(i){
   const opponents=shuffle([...COMS]).slice(0,2);
   players=[USER,...opponents].map((p,idx)=>({...p,id:idx,recipe:null,hand:[],placed:[]}));
   players[0].recipe=mine;players[1].recipe=rest[0];players[2].recipe=rest[1];
-  $("revealFood").textContent=mine.emoji;$("revealName").textContent=mine.name;
+  $("revealFood").innerHTML='<img class="recipeRevealImg" src="'+recipeCardPath(mine)+'" alt="'+mine.name+'">';$("revealName").textContent=mine.name;
   $("revealNeeds").innerHTML=mine.need.map(k=>'<span class="needChip">'+ITEMS[k]+'</span>').join("");
   show("reveal")
 }
@@ -199,7 +199,7 @@ function spinRoulette(){
     rouletteTimer=setInterval(()=>{
       rouletteCurrent=(rouletteCurrent+1)%players.length;
       const p=players[rouletteCurrent];
-      $("roulette").innerHTML=charHTML(p,"rouletteChar");
+      $("roulette").innerHTML=charHTML(p,"rouletteChar","relaxed",true);
       $("rouletteName").textContent=p.name;
     },95);
     return;
@@ -213,7 +213,7 @@ function spinRoulette(){
   btn.disabled=true;btn.textContent="ストップ！";
   turn=rouletteCurrent;
   const p=players[turn];
-  $("roulette").innerHTML=charHTML(p,"rouletteChar");
+  $("roulette").innerHTML=charHTML(p,"rouletteChar","relaxed",true);
   $("rouletteName").textContent=p.name+" から スタート！";
   setTimeout(()=>{show("game");startTurn()},650)
 }
@@ -228,7 +228,7 @@ function startTurn(){
 function render(){
   players.forEach((p,i)=>renderSeat(p,i));
   const d=discard.at(-1);
-  $("discardPile").innerHTML=d?'<span class="discardArt" style="'+foodStyle(d,false)+'"></span><small>すてば</small>':'<b>すてば</b>';
+  $("discardPile").innerHTML=d?'<img class="discardArt" src="'+foodCardPath(d)+'" alt="'+ITEMS[d]+'"><small>すてば</small>':'<b>すてば</b>';
   $("deckCount").textContent=deck.length+"まい";
   $("turnText").textContent=players[turn].name+" の ばん";
   document.querySelector(".table").style.setProperty("--tableTurn",players[turn].color);
@@ -268,11 +268,11 @@ function counterHTML(p,isMe){
   return '<div class="counter" '+(isMe?'onclick="humanCounterTap()"':'')+'>'+p.recipe.need.map(k=>{
     const x=p.placed.find(q=>q.card===k);
     if(!x){
-      if(isMe)return '<div class="slot preview" data-key="'+k+'"><div class="cardface"><span class="counterIcon" style="'+foodStyle(k,true)+'"></span></div><div class="veil"></div></div>';
+      if(isMe)return '<div class="slot preview" data-key="'+k+'"><div class="cardface"><img class="counterIcon" src="'+foodIconPath(k)+'" alt="'+ITEMS[k]+'"></div><div class="veil"></div></div>';
       return '<div class="slot empty"></div>';
     }
-    if(x.public)return '<div class="slot public" data-key="'+k+'"><div class="cardface"><span class="counterIcon" style="'+foodStyle(k,true)+'"></span></div></div>';
-    if(isMe)return '<div class="slot self-hidden" data-key="'+k+'"><div class="cardface"><span class="counterIcon" style="'+foodStyle(k,true)+'"></span></div><div class="veil"></div></div>';
+    if(x.public)return '<div class="slot public" data-key="'+k+'"><div class="cardface"><img class="counterIcon" src="'+foodIconPath(k)+'" alt="'+ITEMS[k]+'"></div></div>';
+    if(isMe)return '<div class="slot self-hidden" data-key="'+k+'"><div class="cardface"><img class="counterIcon" src="'+foodIconPath(k)+'" alt="'+ITEMS[k]+'"></div><div class="veil"></div></div>';
     return '<div class="slot self-hidden" data-key="'+k+'"><div class="cardface"></div><div class="veil"></div></div>';
   }).join("")+'</div>'
 }
@@ -280,7 +280,7 @@ function counterHTML(p,isMe){
 function handCardHTML(k,i){
   const need=easy&&canUse(players[0],k);
   const sel=selectedIndex===i;
-  return '<button aria-label="'+ITEMS[k]+'" title="'+ITEMS[k]+'" class="handCard '+(need?"need ":"")+(turn===0&&phase==="discard"?"canDiscard ":"")+(turn===0&&phase==="discard"&&canUse(players[0],k)?"needNow ":"")+(sel?"selected":"")+'" data-i="'+i+'" onclick="humanCardTap('+i+')"><span class="foodCardArt" style="'+foodStyle(k,false)+'"></span></button>'
+  return '<button aria-label="'+ITEMS[k]+'" title="'+ITEMS[k]+'" class="handCard '+(need?"need ":"")+(turn===0&&phase==="discard"?"canDiscard ":"")+(turn===0&&phase==="discard"&&canUse(players[0],k)?"needNow ":"")+(sel?"selected":"")+'" data-i="'+i+'" onclick="humanCardTap('+i+')"><img class="foodCardArt" src="'+foodCardPath(k)+'" alt="'+ITEMS[k]+'"></button>'
 }
 
 function setStatus(t){$("status").textContent=t}
@@ -440,7 +440,7 @@ function nextTurn(){turn=(turn+1)%players.length;startTurn()}
 function refillDeck(){if(discard.length>1){const top=discard.pop();deck=shuffle(discard.splice(0));discard=[top]}}
 function checkWin(pid){
   const p=players[pid];if(p.placed.length<6)return false;gameOver=true;beep("win");
-  $("resultEmoji").innerHTML=charHTML(p,"rouletteChar")+"<div>"+p.recipe.emoji+"</div>";$("resultTitle").textContent="できあがり！";$("resultText").textContent=p.name+" が "+p.recipe.name+" を かんせい！";
+  $("resultEmoji").innerHTML='<img class="resultChar" src="'+charPath(p,"happy")+'" alt="'+p.name+'"><img class="resultDish" src="'+recipeDishPath(p.recipe)+'" alt="'+p.recipe.name+'">';$("resultTitle").textContent="できあがり！";$("resultText").textContent=p.name+" が "+p.recipe.name+" を かんせい！";
   setTimeout(()=>$("overlay").classList.add("show"),300);return true
 }
 function restart(){$("overlay").classList.remove("show");show("start")}
