@@ -283,7 +283,7 @@ function updateSetupGuide(){
   }
   if(phase==="setupSelect"){
     g.classList.remove("hidden");
-    g.innerHTML='<div class="setupGuideText">つかえる しょくざいを ぜんぶ えらぼう！</div>';
+    g.innerHTML='<img class="setupRecipeFloat" src="'+recipeCardPath(players[0].recipe)+'" alt="'+players[0].recipe.name+'"><div class="setupGuideText">つかえる しょくざいを ぜんぶ えらぼう！</div>';
     return;
   }
   g.classList.add("hidden");
