@@ -42,7 +42,7 @@ h1{font-size:clamp(24px,7vw,36px);margin:0;flex:1;text-align:center}.screen{disp
 .cutinCard{position:absolute;width:172px;height:172px;object-fit:cover;top:77px;left:calc(50% - 70px);border-radius:17px;border:4px solid #fff;box-shadow:0 8px 18px #6e4e4b30;transform:rotate(-7deg)}
 .cutinCard.multi0{transform:translate(-29px,9px) rotate(-12deg)}.cutinCard.multi1{transform:translate(16px,-7px) rotate(8deg)}.cutinCard.multi2{transform:translate(0,0) rotate(-3deg)}
 .cutinActor{position:absolute;bottom:50px;left:9px;height:112px;max-width:146px;object-fit:contain;filter:drop-shadow(0 3px 2px #fff) drop-shadow(0 -3px 2px #fff) drop-shadow(3px 0 2px #fff) drop-shadow(-3px 0 2px #fff)}
-.cutinSurprise{position:absolute;right:4px;top:45px;width:139px;aspect-ratio:2/1;object-fit:cover;border:4px solid #fff;border-radius:18px;box-shadow:0 6px 15px #6e4e4b44;transform:rotate(5deg)}
+.cutinSurprise{position:absolute;right:0;top:53px;width:158px;aspect-ratio:2/1;object-fit:cover;border:4px solid #fff;border-radius:18px;box-shadow:0 6px 15px #6e4e4b44;transform:rotate(5deg)}
 .cutinHeadline{position:absolute;top:0;left:0;right:0;text-align:center;font-size:29px;font-weight:1000;letter-spacing:.03em;color:#87587e;text-shadow:-2px -2px #fff,2px 2px #fff,2px -2px #fff,-2px 2px #fff}
 .cutinHeadline.claim{font-size:43px;color:#e9839d}.cutinSub{position:absolute;left:4px;right:4px;bottom:0;text-align:center;background:#fffffff2;border:2px solid #f3dce6;border-radius:16px;padding:7px 10px;font-weight:1000;font-size:15px}
 .cutinCount{position:absolute;top:215px;right:16px;font-size:18px;font-weight:1000;background:#fff;border-radius:20px;padding:5px 12px;color:#855a9b}
@@ -388,7 +388,8 @@ function placeFromHand(i){
   flyCard(ITEMS[card],from,to,()=>{
     p.hand.splice(i,1);p.placed.push({card,public:false});beep("place");render();
     flashEl(document.querySelector('#seat0 .slot[data-key="'+card+'"]'),"placeFlash");
-    if(checkWin(0))return;
+    showCutin({actor:p,cards:[card],title:"やったね！",subtitle:ITEMS[card]+" を おいたよ！",duration:850});
+    if(checkWin(0,1050))return;
     phase="discard";setStatus("つぎに てふだから 1まい すててね。");render();
   })
 }
@@ -455,19 +456,20 @@ function takeDiscard(pid,card,from){
   const fromEl=$("discardPile"),toEl=$("seat"+pid);
   const resumeTurn=turn,resumePhase=phase;
   const wasWaitingForClaim=(resumeTurn===from&&resumePhase==="claim");
-  phase="animating";setStatus("「レシピ！」 "+players[pid].name+"！");
+  phase="animating";setStatus("「いただき！」 "+players[pid].name+"！");
   beep("recipe");
   flyCard(ITEMS[card],fromEl,toEl,()=>{
     if(discard.at(-1)===card)discard.pop();
     players[pid].placed.push({card,public:true});pending=null;
-    setStatus("「レシピ！」 "+players[pid].name+" が "+ITEMS[card]+" を とった！");
+    setStatus("「いただき！」 "+players[pid].name+" が "+ITEMS[card]+" を とった！");
     render();flashEl($("seat"+pid),"placeFlash");
-    if(checkWin(pid))return;
+    showCutin({actor:players[pid],cards:[card],title:"いただき！",subtitle:players[pid].name+" が "+ITEMS[card]+" を ゲット！",surprised:players[from],duration:1200});
+    if(checkWin(pid,1380))return;
     if(wasWaitingForClaim){
-      setTimeout(()=>finishClaimWindow(from),700)
+      setTimeout(()=>finishClaimWindow(from),1250)
     }else{
       turn=resumeTurn;phase=resumePhase;
-      setTimeout(()=>render(),350)
+      setTimeout(()=>render(),1250)
     }
   })
 }
@@ -485,15 +487,17 @@ function drawFor(pid){
   phase="animating";setStatus(p.name+" が やまふだから ひきます。");beep("draw");
   flyCard(pid===0?ITEMS[card]:"カード",fromEl,toEl,()=>{
     deck.pop();
-    if(canUse(p,card)){
+    const placed=canUse(p,card);
+    if(placed){
       p.placed.push({card,public:false});beep("place");
       setStatus(p.name+" は ひいたカードを キッチンカウンターに おいた。");
     }else{
       p.hand.push(card);setStatus(p.human?ITEMS[card]+" を ひいた。":p.name+" は カードを ひいた。")
     }
     render();flashEl($("seat"+pid),"placeFlash");
-    if(checkWin(pid))return;
-    setTimeout(nextTurn,900+rand(650))
+    if(placed)showCutin({actor:p,cards:[card],hidden:!p.human,title:"カウンターに おいたよ！",subtitle:p.human?ITEMS[card]+" を おいたよ！":p.name+" が 1まい おいたよ！",duration:900});
+    if(checkWin(pid,placed?1100:300))return;
+    setTimeout(nextTurn,placed?1250:900+rand(650))
   })
 }
 
@@ -508,7 +512,7 @@ function comDiscard(){
 }
 function nextTurn(){turn=(turn+1)%players.length;startTurn()}
 function refillDeck(){if(discard.length>1){const top=discard.pop();deck=shuffle(discard.splice(0));discard=[top]}}
-function checkWin(pid){
+function checkWin(pid,delay=300){
   const p=players[pid];if(p.placed.length<6)return false;gameOver=true;beep("win");
   const others=players.filter((_,i)=>i!==pid);
   $("resultEmoji").innerHTML=
@@ -516,9 +520,9 @@ function checkWin(pid){
     '<div class="resultOthers">'+others.map(o=>'<div class="resultLoser"><img class="resultLoserChar" src="'+charPath(o,"sad")+'" alt="'+o.name+'"><img class="resultLoserDish" src="'+recipeDishPath(o.recipe)+'" alt="'+o.recipe.name+'"><div><div class="resultLoserName">'+o.name+'</div><div class="resultLoserMenu">'+o.recipe.name+'</div></div></div>').join("")+'</div>';
   $("resultTitle").textContent="できあがり！";
   $("resultText").textContent="みんなが つくっていた りょうりも みてみよう！";
-  setTimeout(()=>$("overlay").classList.add("show"),300);return true
+  setTimeout(()=>{hideCutin();$("overlay").classList.add("show")},delay);return true
 }
-function restart(){$("overlay").classList.remove("show");show("start")}
+function restart(){hideCutin();$("overlay").classList.remove("show");show("start")}
 </script>
 </body>
 </html>
