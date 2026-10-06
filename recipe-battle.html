@@ -129,7 +129,8 @@ const COMS=[
 {name:"シェフ",avatar:"",human:false,skill:.97,color:"#dcefff",border:"#8fc5e8",glow:"#8fc5e855"}
 ];
 
-let easy=true,players=[],deck=[],discard=[],turn=0,phase="idle",pending=null,gameOver=false,selectedIndex=null;\nlet rouletteTimer=null,rouletteRunning=false,rouletteCurrent=0,rouletteStartedAt=0;
+let easy=true,players=[],deck=[],discard=[],turn=0,phase="idle",pending=null,gameOver=false,selectedIndex=null;
+let rouletteTimer=null,rouletteRunning=false,rouletteCurrent=0,rouletteStartedAt=0;
 let audioCtx=null;
 function audio(){
   if(!audioCtx) audioCtx=new (window.AudioContext||window.webkitAudioContext)();
