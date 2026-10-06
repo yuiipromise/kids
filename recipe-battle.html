@@ -500,15 +500,23 @@ function resolveClaims(from,card){
 }
 
 function humanRecipe(){
-  const canClaim=!!(pending&&pending.from!==0&&canUsfunction takeDiscard(pid,card,from){
+  const canClaim=!!(pending&&pending.from!==0&&canUse(players[0],pending.card));
+  if(easy&&!canClaim){beep("error");return;}
+  if(!pending||pending.from===0){beep("error");setStatus("いまは とれないよ！");return}
+  const card=pending.card;
+  if(!canUse(players[0],card)){beep("error");setStatus("これは とれないよ！");return}
+  takeDiscard(0,card,pending.from)
+}
+
+function takeDiscard(pid,card,from){
   // 最初に「いただき！」を成立させた1人だけが取れる。
-  // pending をアニメーション完了前に消して、同じ捨て札への二重取得を即座にロックする。
   if(!pending||pending.from!==from||pending.card!==card)return false;
 
   const fromEl=$("discardPile"),toEl=$("seat"+pid);
   const claimWasBlockingTurn=(turn===from&&phase==="claim");
   const sadLoser=players.find((p,i)=>i!==pid&&i!==from&&canUse(p,card))||null;
 
+  // アニメーション開始時点でロックする。
   pending=null;
   setStatus("「いただき！」 "+players[pid].name+"！");
   render();
@@ -539,18 +547,6 @@ function humanRecipe(){
     }
   });
   return true;
-}
-Win(pid,2700))return;
-
-    // COMが自分の捨て札について待っていたケースだけ、そのCOMのドローへ進める。
-    // それ以外（特に人間のターン進行中）は現在の turn/phase をそのまま維持する。
-    if(claimWasBlockingTurn){
-      setTimeout(()=>{
-        if(gameOver)return;
-        if(turn===from&&phase==="claim")finishClaimWindow(from);
-      },2550);
-    }
-  })
 }
 
 function finishClaimWindow(from){
