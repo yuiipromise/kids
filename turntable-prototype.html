@@ -63,7 +63,6 @@ h1{font-size:24px;margin:4px 0 3px}
   border:5px solid #fff;
   box-shadow:0 6px 18px #644a3b2f,inset 0 0 0 2px #d9c2ad;
   z-index:8;
-  transition:transform 2.25s cubic-bezier(.14,.78,.16,1);
 }
 .dial::before,.dial::after{
   content:"";position:absolute;background:#d9c6b7;opacity:.75;
@@ -78,18 +77,21 @@ h1{font-size:24px;margin:4px 0 3px}
 }
 .label{
   position:absolute;
-  width:64px;height:34px;
+  width:34px;height:70px;
   display:flex;align-items:center;justify-content:center;
   font-weight:1000;font-size:14px;
-  line-height:1;border-radius:999px;
+  line-height:1.05;border-radius:999px;
   background:#fffdf8;border:2px solid #e5d4c6;
   box-shadow:0 2px 6px #654a3b18;
+  writing-mode:vertical-rl;
+  text-orientation:upright;
+  letter-spacing:-1px;
   transform-origin:center;
 }
-.l0{right:10%;top:20%}
-.l1{right:10%;bottom:20%}
-.l2{left:10%;bottom:20%}
-.l3{left:10%;top:20%}
+.l0{right:17%;top:9%}
+.l1{right:17%;bottom:9%}
+.l2{left:17%;bottom:9%}
+.l3{left:17%;top:9%}
 .label.rest{font-size:12px;color:#8f7568}
 
 .char{
@@ -102,32 +104,40 @@ h1{font-size:24px;margin:4px 0 3px}
   justify-content:center;
   pointer-events:none;
 }
+.char{--scale:1}
 .char img{
   display:block;
   max-width:100%;
   max-height:100%;
   object-fit:contain;
   transform-origin:50% 86%;
+  transform:scale(var(--scale));
   filter:drop-shadow(0 3px 4px #5f463522);
 }
-.char .name{
+.cat{left:2%;top:0;--scale:.94}
+.sister{right:1%;top:0;--scale:1.10}
+.you{left:2%;bottom:0;--scale:1.04}
+.chef{right:1%;bottom:0;--scale:1.03}
+
+.nameRow{
   position:absolute;
   bottom:0;
   left:50%;
   transform:translate(-50%,55%);
+  display:flex;
+  align-items:center;
+  gap:5px;
+  z-index:20;
+  white-space:nowrap;
+}
+.char .name{
   min-width:70px;
   padding:5px 11px;
   border-radius:999px;
   font-size:13px;
   font-weight:1000;
   box-shadow:0 2px 7px #5f46351e;
-  z-index:3;
-  white-space:nowrap;
 }
-.cat{left:2%;top:0}
-.sister{right:1%;top:0}
-.you{left:2%;bottom:0}
-.chef{right:1%;bottom:0}
 .cat .name{background:var(--cat)}
 .sister .name{background:var(--sister)}
 .you .name{background:var(--you)}
@@ -138,31 +148,25 @@ h1{font-size:24px;margin:4px 0 3px}
 .stage.spinning .you img{animation-duration:3.4s;animation-delay:-1.4s}
 .stage.spinning .chef img{animation-duration:4s;animation-delay:-.4s}
 @keyframes sway{
-  0%{transform:translateY(1px) rotate(-2.2deg)}
-  50%{transform:translateY(-5px) rotate(.7deg)}
-  100%{transform:translateY(2px) rotate(2.1deg)}
+  0%{transform:translateY(1px) rotate(-2.2deg) scale(var(--scale))}
+  50%{transform:translateY(-5px) rotate(.7deg) scale(var(--scale))}
+  100%{transform:translateY(2px) rotate(2.1deg) scale(var(--scale))}
 }
 
 .resultTag{
-  position:absolute;
-  z-index:20;
-  min-width:58px;
+  min-width:44px;
   padding:4px 7px;
   border-radius:999px;
-  background:#fff;
+  background:#fffdfb;
   border:2px solid #fff;
   box-shadow:0 3px 9px #5f46352c;
-  font-size:12px;
+  font-size:11px;
   font-weight:1000;
   opacity:0;
   transform:scale(.7);
   transition:opacity .18s,transform .22s cubic-bezier(.2,1.4,.3,1);
 }
 .stage.done .resultTag{opacity:1;transform:scale(1)}
-.r-cat{left:22%;top:24%}
-.r-sister{right:20%;top:24%}
-.r-you{left:22%;bottom:21%}
-.r-chef{right:20%;bottom:21%}
 
 .controls{display:flex;justify-content:center;gap:10px;margin-top:6px}
 button{
@@ -178,10 +182,9 @@ button:disabled{opacity:.5}
   .stage{width:96vw}
   .char{width:35%;height:40%}
   .name{font-size:12px!important}
-  .label{width:56px;font-size:12px}
+  .label{width:32px;height:64px;font-size:12px}
 }
 @media(prefers-reduced-motion:reduce){
-  .dial{transition-duration:.01s}
   .stage.spinning .char img{animation:none}
 }
 </style>
@@ -196,19 +199,19 @@ button:disabled{opacity:.5}
 
     <div class="char cat">
       <img src="assets/recipe/chars/cat/standing/char-cat-standing.png" alt="ねこさん">
-      <span class="name">ねこさん</span>
+      <div class="nameRow"><span class="name">ねこさん</span><span id="resCat" class="resultTag"></span></div>
     </div>
     <div class="char sister">
       <img src="assets/recipe/chars/sister/standing/char-sister-standing.png" alt="おねえさん">
-      <span class="name">おねえさん</span>
+      <div class="nameRow"><span class="name">おねえさん</span><span id="resSister" class="resultTag"></span></div>
     </div>
     <div class="char you">
       <img src="assets/recipe/chars/you/standing/char-you-standing.png" alt="あなた">
-      <span class="name">あなた</span>
+      <div class="nameRow"><span class="name">あなた</span><span id="resYou" class="resultTag"></span></div>
     </div>
     <div class="char chef">
       <img src="assets/recipe/chars/chef/standing/char-chef-standing.png" alt="シェフ">
-      <span class="name">シェフ</span>
+      <div class="nameRow"><span class="name">シェフ</span><span id="resChef" class="resultTag"></span></div>
     </div>
 
     <div id="dial" class="dial" aria-label="とうばんひょう">
@@ -219,10 +222,6 @@ button:disabled{opacity:.5}
       <span class="hub"></span>
     </div>
 
-    <span id="resCat" class="resultTag r-cat"></span>
-    <span id="resSister" class="resultTag r-sister"></span>
-    <span id="resYou" class="resultTag r-you"></span>
-    <span id="resChef" class="resultTag r-chef"></span>
   </div>
 
   <div class="controls">
@@ -245,7 +244,13 @@ const resultEls=[
 // dial slot order clockwise: TR, BR, BL, TL
 // character sector order is the same: sister, chef, you, cat
 const base=["1ばん","2ばん","3ばん","おやすみ"];
-let totalDeg=0;
+let labelsData=[...base];
+let angle=0;
+let raf=0;
+let lastTime=0;
+let spinning=false;
+let stopping=false;
+const speed=220; // deg/sec
 
 function shuffle(a){
   const x=[...a];
@@ -266,34 +271,69 @@ function renderLabels(arr){
   });
 }
 function showResults(finalBySector){
-  finalBySector.forEach((v,i)=>{
-    resultEls[i].textContent=v;
-  });
+  finalBySector.forEach((v,i)=>{ resultEls[i].textContent=v; });
 }
-function spin(){
-  if(btn.disabled)return;
-  btn.disabled=true;
+function tick(t){
+  if(!spinning)return;
+  if(!lastTime)lastTime=t;
+  const dt=Math.min((t-lastTime)/1000,.04);
+  lastTime=t;
+  angle+=speed*dt;
+  dial.style.transform="rotate("+angle+"deg)";
+  raf=requestAnimationFrame(tick);
+}
+function startSpin(){
+  labelsData=shuffle(base);
+  renderLabels(labelsData);
   stage.classList.remove("done");
   stage.classList.add("spinning");
+  resultEls.forEach(el=>el.textContent="");
+  dial.style.transition="none";
+  spinning=true;
+  stopping=false;
+  lastTime=0;
+  btn.textContent="とめる！";
+  raf=requestAnimationFrame(tick);
+}
+function stopSpin(){
+  if(!spinning||stopping)return;
+  stopping=true;
+  spinning=false;
+  cancelAnimationFrame(raf);
 
-  const shuffled=shuffle(base);
-  renderLabels(shuffled);
+  // Continue forward, then settle onto the nearest allowed quarter-turn.
+  // "あなた" is sector 2 and must never land on おやすみ.
+  const minTarget=angle+420;
+  let target=Math.ceil(minTarget/90)*90;
+  while(true){
+    const step=((Math.round(target/90)%4)+4)%4;
+    if(rotateArray(labelsData,step)[2]!=="おやすみ")break;
+    target+=90;
+  }
 
-  // Choose a quarter-turn that never puts "おやすみ" on YOU (sector index 2).
-  const valid=[0,1,2,3].filter(step=>rotateArray(shuffled,step)[2]!=="おやすみ");
-  const step=valid[Math.floor(Math.random()*valid.length)];
-  const rounds=4+Math.floor(Math.random()*3);
-  totalDeg += rounds*360 + step*90;
-  dial.style.transform="rotate("+totalDeg+"deg)";
+  const distance=target-angle;
+  const duration=Math.max(1.7,Math.min(2.8,distance/230+1.0));
+  dial.style.transition="transform "+duration+"s cubic-bezier(.12,.72,.18,1)";
+  angle=target;
+  dial.style.transform="rotate("+angle+"deg)";
+  btn.disabled=true;
+  btn.textContent="とまるよ…";
 
-  const finalBySector=rotateArray(shuffled,step);
   setTimeout(()=>{
+    const step=((Math.round(angle/90)%4)+4)%4;
+    const finalBySector=rotateArray(labelsData,step);
     showResults(finalBySector);
     stage.classList.remove("spinning");
     stage.classList.add("done");
     btn.disabled=false;
     btn.textContent="もういちど！";
-  },2350);
+    stopping=false;
+  },duration*1000+40);
+}
+function spin(){
+  if(stopping)return;
+  if(spinning) stopSpin();
+  else startSpin();
 }
 btn.addEventListener("click",spin);
 </script>
