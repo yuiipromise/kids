@@ -59,6 +59,51 @@ h1{font-size:clamp(24px,7vw,36px);margin:0;flex:1;text-align:center}.screen{disp
 .status{margin-top:auto;padding:7px 10px;border-radius:13px;background:#fff;height:54px;min-height:54px;font-size:13px;font-weight:900;line-height:1.25;display:flex;align-items:center;justify-content:center;text-align:center;overflow:hidden}
 .overlay{position:fixed;inset:0;background:#0007;display:none;align-items:center;justify-content:center;padding:12px;z-index:20}.overlay.show{display:flex}.modal{width:min(520px,100%);max-height:94svh;overflow:auto;background:#fff;border-radius:28px;padding:18px;text-align:center}.modal h2{font-size:28px;margin:4px}.modal button{border:0;border-radius:15px;padding:12px 15px;font-weight:1000;background:#ffd39c}.resultBoard{display:flex;flex-direction:column;gap:10px;align-items:center}.resultWinner{width:100%;padding:12px;border-radius:22px;background:linear-gradient(180deg,#fff8cf,#fff);box-shadow:0 5px 16px #0001}.resultWinnerChar{display:block;width:min(280px,90%);aspect-ratio:2/1;object-fit:cover;border-radius:18px;margin:0 auto 8px}.resultWinnerDish{display:block;width:150px;aspect-ratio:4/3;object-fit:cover;border-radius:16px;margin:0 auto 6px}.resultWinnerName{font-size:18px;font-weight:1000}.resultWinnerMenu{font-size:22px;font-weight:1000}.resultOthers{width:100%;display:flex;flex-direction:column;gap:8px}.resultLoser{display:grid;grid-template-columns:108px 62px 1fr;gap:8px;align-items:center;text-align:left;background:#faf7f5;border-radius:16px;padding:7px}.resultLoserChar{width:108px;aspect-ratio:2/1;object-fit:cover;border-radius:12px}.resultLoserDish{width:62px;aspect-ratio:1/1;object-fit:cover;border-radius:11px}.resultLoserName{font-size:12px;font-weight:900;opacity:.65}.resultLoserMenu{font-size:14px;font-weight:1000;line-height:1.25}
 @media(max-width:560px){.table{height:228px;min-height:228px;max-height:228px;padding:6px}.piles{height:116px;gap:13px}.pile{width:82px;height:106px}.deckStack{width:84px;height:84px}.deckStack .deckBack,.discardArt{width:76px;height:76px}.myDishBox{top:8px;right:8px;width:50px}.myDishImg{width:50px}.cpuTopline{height:21px;min-height:21px}.cpuNameBadge{font-size:11px;max-width:72px}.handPill,.progressPill{font-size:8.5px;padding:2px 6px}.progressPill.finish{font-size:9.5px}.cpuBody{grid-template-columns:minmax(56px,.66fr) minmax(0,1.34fr);gap:3px;min-height:94px}.cpuPortraitCrop{height:94px}.cpuStanding{height:152px;width:134%;margin-top:-2px}.cpuCounter{max-width:130px}.selfProgress{grid-template-columns:minmax(120px,.90fr) minmax(0,1.10fr);gap:4px}.selfPortraitCrop{height:146px}.selfStanding{height:216px;width:128%;margin-top:-8px}.selfNameBadge{font-size:14px;padding:4px 12px;bottom:-5px}.selfCounterFooter{gap:6px;margin-top:5px;transform:translateY(7px);min-height:24px}.selfMenuName{font-size:12px}.selfCounterFooter .progressPill{font-size:10.5px;min-height:22px;padding:3px 8px}.selfCounter{max-width:184px;height:110px;min-height:110px;max-height:110px;transform:translateY(4px)}.selfCounterPanel{height:132px}.hand{height:96px;padding:4px 4px 3px}.setupPickPlay{padding-top:0;margin-top:0}.setupPickHand{height:82px;padding-top:1px;padding-bottom:1px}.setupReadyBtn{font-size:14px;padding:9px 15px}.handCard{flex-basis:80px;height:80px}.handCard+.handCard{margin-left:3px}.hand.crowded .handCard+.handCard{margin-left:-12px}.hand.veryCrowded .handCard+.handCard{margin-left:-18px}.recipePick{min-height:178px;padding-left:0;padding-right:0}.faceDown{width:78px;height:138px;flex-basis:78px}.faceDown+.faceDown{margin-left:-9px}.status{height:54px;min-height:54px;font-size:12.5px}.resultLoser{grid-template-columns:96px 54px 1fr;gap:6px}.resultLoserChar{width:96px}.resultLoserDish{width:54px}.slot .cardface{font-size:9px}.recipePick{grid-template-columns:repeat(2,1fr)}}
+
+/* 4-person order roulette */
+.roundRouletteWrap{width:min(430px,100%);margin:0 auto;padding:18px 12px 26px;text-align:center}
+.roundRouletteTitle{font-size:24px;margin:2px 0 3px}
+.roundRouletteStage{position:relative;width:min(390px,96vw);aspect-ratio:1/1;margin:10px auto 8px}
+.roundColorWheel{position:absolute;inset:8%;border-radius:50%;background:conic-gradient(from 0deg,#e4f2bd 0 25%,#dcefff 25% 50%,#ffe0ea 50% 75%,#fff0ad 75% 100%);box-shadow:0 9px 24px #805f4b24,inset 0 0 0 6px #fff9;overflow:hidden}
+.roundColorWheel::before,.roundColorWheel::after{content:"";position:absolute;background:#fff9;z-index:1}.roundColorWheel::before{left:50%;top:0;bottom:0;width:3px;transform:translateX(-50%)}.roundColorWheel::after{top:50%;left:0;right:0;height:3px;transform:translateY(-50%)}
+.roundDial{position:absolute;left:50%;top:50%;width:45%;aspect-ratio:1/1;margin:-22.5% 0 0 -22.5%;border-radius:50%;background:conic-gradient(from 0deg,#fff7e9 0 25%,#f6eadc 25% 50%,#fff7e9 50% 75%,#f6eadc 75% 100%);border:5px solid #fff;box-shadow:0 6px 18px #644a3b2f,inset 0 0 0 2px #d9c2ad;z-index:8}
+.roundDial::before,.roundDial::after{content:"";position:absolute;background:#d9c6b7;opacity:.75}.roundDial::before{left:50%;top:0;bottom:0;width:2px;transform:translateX(-50%)}.roundDial::after{top:50%;left:0;right:0;height:2px;transform:translateY(-50%)}
+.roundHub{position:absolute;left:50%;top:50%;width:24px;height:24px;margin:-12px;border-radius:50%;background:#f4c5ad;border:4px solid #fff;box-shadow:0 2px 5px #75513f38;z-index:5}
+.roundLabel{position:absolute;width:34px;height:70px;display:flex;align-items:center;justify-content:center;font-weight:1000;font-size:14px;line-height:1.05;border-radius:999px;background:#fffdf8;border:2px solid #e5d4c6;box-shadow:0 2px 6px #654a3b18;writing-mode:vertical-rl;text-orientation:upright;letter-spacing:-1px;transform-origin:center}
+.rl0{right:17%;top:9%;transform:rotate(45deg)}.rl1{right:17%;bottom:9%;transform:rotate(135deg)}.rl2{left:17%;bottom:9%;transform:rotate(225deg)}.rl3{left:17%;top:9%;transform:rotate(315deg)}
+.roundChar{position:absolute;z-index:12;width:34%;height:41%;display:flex;align-items:flex-end;justify-content:center;pointer-events:none;--roundScale:1}
+.roundChar img{display:block;max-width:100%;max-height:100%;object-fit:contain;transform-origin:50% 86%;transform:scale(var(--roundScale));filter:drop-shadow(0 3px 4px #5f463522)}
+.roundCat{left:2%;top:0;--roundScale:.82}.roundSister{right:1%;top:0;--roundScale:1.10}.roundYou{left:2%;bottom:0;--roundScale:1.04}.roundChef{right:1%;bottom:0;--roundScale:.90}
+.roundNameRow{position:absolute;bottom:0;left:50%;transform:translate(-50%,55%);z-index:20;white-space:nowrap}.roundName{display:inline-flex;align-items:center;justify-content:center;min-width:70px;padding:5px 11px;border-radius:999px;font-size:13px;font-weight:1000;box-shadow:0 2px 7px #5f46351e;color:#6f4d3d}
+.roundCat .roundName{background:#fff0ad}.roundSister .roundName{background:#e4f2bd}.roundYou .roundName{background:#ffe0ea}.roundChef .roundName{background:#dcefff}
+.roundResult{position:absolute;top:50%;width:42px;height:42px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:#f3e4cf;border:2px solid #cdb79e;box-shadow:0 3px 8px #6a4d3c2b,inset 0 1px 0 #fff8;color:#684d3e;font-size:17px;font-weight:1000;opacity:0;transform:translateY(-50%) scale(.7);transition:opacity .18s,transform .22s cubic-bezier(.2,1.4,.3,1)}
+.roundCat .roundResult,.roundYou .roundResult{left:-34px}.roundSister .roundResult,.roundChef .roundResult{right:-34px}.roundRouletteStage.done .roundResult{opacity:1;transform:translateY(-50%) scale(1)}
+.roundRouletteStage.spinning .roundChar img{animation:roundSway 3.1s ease-in-out infinite alternate}.roundRouletteStage.spinning .roundSister img{animation-duration:3.7s;animation-delay:-.8s}.roundRouletteStage.spinning .roundYou img{animation-duration:3.4s;animation-delay:-1.4s}.roundRouletteStage.spinning .roundChef img{animation-duration:4s;animation-delay:-.4s}
+@keyframes roundSway{0%{transform:translateY(1px) rotate(-2.2deg) scale(var(--roundScale))}50%{transform:translateY(-5px) rotate(.7deg) scale(var(--roundScale))}100%{transform:translateY(2px) rotate(2.1deg) scale(var(--roundScale))}}
+.roundChar.resting img{filter:brightness(.78) saturate(.72) drop-shadow(0 3px 4px #5f463522)}.roundChar.resting .roundName{filter:brightness(.86) saturate(.72)}
+.roundColorWheel.rest-0 .roundRestWash{position:absolute;inset:0;border-radius:50%;background:conic-gradient(from 0deg,rgba(78,66,60,.18) 0 25%,transparent 25% 100%)}
+.roundColorWheel.rest-1 .roundRestWash{position:absolute;inset:0;border-radius:50%;background:conic-gradient(from 0deg,transparent 0 25%,rgba(78,66,60,.18) 25% 50%,transparent 50% 100%)}
+.roundColorWheel.rest-2 .roundRestWash{position:absolute;inset:0;border-radius:50%;background:conic-gradient(from 0deg,transparent 0 50%,rgba(78,66,60,.18) 50% 75%,transparent 75% 100%)}
+.roundColorWheel.rest-3 .roundRestWash{position:absolute;inset:0;border-radius:50%;background:conic-gradient(from 0deg,transparent 0 75%,rgba(78,66,60,.18) 75% 100%)}
+.roundSpinBtn.doneBtn{background:linear-gradient(135deg,#f3dcc4,#edd4d9);color:#8c776b;box-shadow:none;opacity:.72}
+
+/* Seamless recipe/setup states inside the battle board */
+.setupGuide.menuPick{width:min(360px,94vw);pointer-events:auto;height:190px}
+.setupMenuFan{position:relative;width:100%;height:188px;margin:0 auto}
+.setupMenuChoice{position:absolute;top:0;left:50%;width:96px;height:170px;border:0;background:transparent;padding:0;border-radius:15px;box-shadow:none;transform-origin:50% 112%;transition:transform .18s ease,filter .18s ease,opacity .18s;touch-action:manipulation}
+.setupMenuChoice img{width:100%;height:100%;display:block;object-fit:cover;border-radius:15px;box-shadow:0 6px 15px #6d4b3530}
+.setupMenuChoice.m0{transform:translateX(-126px) translateY(17px) rotate(-12deg)}.setupMenuChoice.m1{transform:translateX(-80px) translateY(6px) rotate(-6deg)}.setupMenuChoice.m2{transform:translateX(-48px) translateY(0) rotate(0deg);z-index:4}.setupMenuChoice.m3{transform:translateX(-16px) translateY(6px) rotate(6deg);z-index:3}.setupMenuChoice.m4{transform:translateX(30px) translateY(17px) rotate(12deg);z-index:2}
+.setupMenuChoice:active{filter:brightness(1.04);z-index:20}
+.setupRecipeFloat.revealPop{animation:recipeFlipIn .62s cubic-bezier(.18,.8,.2,1)}
+@keyframes recipeFlipIn{0%{transform:rotateY(90deg) scale(.88);opacity:.2}100%{transform:rotateY(0) scale(1);opacity:1}}
+.prepHandBacks{height:96px;padding:4px 4px 3px;display:flex;align-items:flex-end;justify-content:center;overflow:visible}
+.prepBackCard,.prepRevealCard{flex:0 0 80px;height:80px;border:0;background:transparent;padding:0;border-radius:12px;position:relative;transform:translateY(var(--hand-y,0px)) rotate(var(--hand-r,0deg))}
+.prepBackCard+.prepBackCard,.prepRevealCard+.prepRevealCard{margin-left:3px}.prepHandBacks.crowded .prepBackCard+.prepBackCard,.prepHandBacks.crowded .prepRevealCard+.prepRevealCard{margin-left:-12px}
+.prepBackCard img{width:100%;height:100%;object-fit:cover;border-radius:12px;box-shadow:0 4px 9px #0002}
+.prepRevealCard{perspective:700px}.prepRevealInner{position:absolute;inset:0;transform-style:preserve-3d;animation:prepCardFlip .52s ease forwards;animation-delay:var(--flip-delay);transform:rotateY(0deg)}.prepRevealFace{position:absolute;inset:0;width:100%;height:100%;backface-visibility:hidden;border-radius:12px;object-fit:cover;box-shadow:0 4px 9px #0002}.prepRevealFront{transform:rotateY(180deg)}@keyframes prepCardFlip{to{transform:rotateY(180deg)}}
+.setupNarration{display:inline-block;margin-top:8px;padding:7px 12px;border-radius:15px;background:#fffaf4f2;box-shadow:0 4px 12px #6d4b3522;font-size:14px;font-weight:1000}
+@media(max-width:360px){.roundLabel{width:32px;height:64px;font-size:12px}.setupMenuChoice{width:88px;height:156px}.setupMenuChoice.m0{transform:translateX(-116px) translateY(17px) rotate(-12deg)}.setupMenuChoice.m1{transform:translateX(-75px) translateY(6px) rotate(-6deg)}.setupMenuChoice.m2{transform:translateX(-44px)}.setupMenuChoice.m3{transform:translateX(-13px) translateY(6px) rotate(6deg)}.setupMenuChoice.m4{transform:translateX(28px) translateY(17px) rotate(12deg)}}
+
 .cutinLayer{position:fixed;inset:0;z-index:28;display:flex;align-items:center;justify-content:center;pointer-events:none;opacity:0;visibility:hidden;transition:opacity .13s; background:#fff8f070}
 .cutinLayer.show{opacity:1;visibility:visible;pointer-events:auto}.cutinStage{position:relative;width:min(360px,95vw);height:335px;filter:drop-shadow(0 7px 12px #58445228);animation:cutinPop .3s cubic-bezier(.2,1.3,.3,1)}
 .cutinCard{position:absolute;width:172px;height:172px;object-fit:cover;top:77px;left:calc(50% - 70px);border-radius:17px;border:4px solid #fff;box-shadow:0 8px 18px #6e4e4b30;transform:rotate(-7deg)}
@@ -80,13 +125,47 @@ h1{font-size:clamp(24px,7vw,36px);margin:0;flex:1;text-align:center}.screen{disp
       <div class="title">3にんで レシピたいせん！</div>
       <div class="sub">ねこさん・おねえさん・シェフ から、対戦相手がランダムで2人えらばれるよ</div>
       <div class="sub">ひつような しょくざいには ★ がつくよ</div>
-      <br><button class="bigbtn" onclick="showRecipePick()">ゲームスタート</button>
+      <br><button class="bigbtn" onclick="startRoundRoulette()">ゲームスタート</button>
     </div>
   </section>
 
   <section id="pick" class="screen"><div class="panel center"><div class="title">レシピカードを 1まい えらんでね</div><div class="sub">どれがでるかな？</div><div id="recipePick" class="recipePick"></div></div></section>
   <section id="reveal" class="screen"><div class="panel center"><div class="title">あなたの レシピは…</div><div id="revealFood" class="reveal"></div><div id="revealName" class="title"></div><div id="revealNeeds" class="needList"></div><br><button class="bigbtn" onclick="startRoulette()">つぎへ</button></div></section>
-  <section id="rouletteScreen" class="screen"><div class="panel center"><div class="title">さいしょは だれ？</div><div id="roulette" class="roulette">🎲</div><div id="rouletteName" class="title">ルーレット！</div><br><button id="rouletteBtn" class="bigbtn" onclick="spinRoulette()">スタート！</button></div></section>
+  <section id="rouletteScreen" class="screen">
+    <div class="roundRouletteWrap">
+      <div class="title roundRouletteTitle">じゅんばんをきめよう！</div>
+      <div class="sub">とうばんひょうを まわして きめよう！</div>
+      <div id="roundRouletteStage" class="roundRouletteStage">
+        <div id="roundColorWheel" class="roundColorWheel"><div class="roundRestWash"></div></div>
+
+        <div class="roundChar roundCat" data-round-name="ねこさん">
+          <img src="assets/recipe/chars/cat/standing/char-cat-standing.png" alt="ねこさん">
+          <div class="roundNameRow"><span class="roundName">ねこさん</span><span class="roundResult"></span></div>
+        </div>
+        <div class="roundChar roundSister" data-round-name="おねえさん">
+          <img src="assets/recipe/chars/sister/standing/char-sister-standing.png" alt="おねえさん">
+          <div class="roundNameRow"><span class="roundName">おねえさん</span><span class="roundResult"></span></div>
+        </div>
+        <div class="roundChar roundYou" data-round-name="あなた">
+          <img src="assets/recipe/chars/you/standing/char-you-standing.png" alt="あなた">
+          <div class="roundNameRow"><span class="roundName">あなた</span><span class="roundResult"></span></div>
+        </div>
+        <div class="roundChar roundChef" data-round-name="シェフ">
+          <img src="assets/recipe/chars/chef/standing/char-chef-standing.png" alt="シェフ">
+          <div class="roundNameRow"><span class="roundName">シェフ</span><span class="roundResult"></span></div>
+        </div>
+
+        <div id="roundDial" class="roundDial" aria-label="とうばんひょう">
+          <span class="roundLabel rl0">1ばん</span>
+          <span class="roundLabel rl1">2ばん</span>
+          <span class="roundLabel rl2">3ばん</span>
+          <span class="roundLabel rl3">おやすみ</span>
+          <span class="roundHub"></span>
+        </div>
+      </div>
+      <button id="rouletteBtn" class="bigbtn roundSpinBtn" onclick="spinRoundRoulette()">まわす！</button>
+    </div>
+  </section>
 
   <section id="game" class="screen">
     <div class="board">
@@ -172,6 +251,8 @@ let recipePenaltyArmed=false,recipeSkipActive=false;
 let setupSelected=new Set(),setupNotice="",setupNoticeTimer=null,setupToast="";
 let counterPeek=new Set(),counterPeekTimers={};
 let rouletteTimer=null,rouletteRunning=false,rouletteCurrent=0,rouletteStartedAt=0;
+let roundAngle=0,roundRAF=0,roundLastTime=0,roundStopping=false,roundLabelsData=["1ばん","2ばん","3ばん","おやすみ"],roundAssignments=null;
+let setupRecipeChoices=[];
 let cutinTimer=null,cutinUntil=0;
 function waitForCutin(fn){
   const wait=cutinUntil-Date.now();
@@ -241,6 +322,100 @@ function $(id){return document.getElementById(id)}
 function rand(n){return Math.floor(Math.random()*n)}
 function shuffle(a){for(let i=a.length-1;i>0;i--){const j=rand(i+1);[a[i],a[j]]=[a[j],a[i]]}return a}
 function show(id){document.querySelectorAll(".screen").forEach(x=>x.classList.remove("active"));$(id).classList.add("active")}
+function startRoundRoulette(){
+  hideCutin();
+  document.querySelector(".setupFeedback")?.remove();
+  document.querySelector(".recipeFailToast")?.remove();
+  gameOver=false;pending=null;clearRecipeHint();
+  roundAngle=0;roundLastTime=0;roundStopping=false;roundAssignments=null;rouletteRunning=false;
+  const stage=$("roundRouletteStage"),wheel=$("roundColorWheel"),btn=$("rouletteBtn"),dial=$("roundDial");
+  stage.classList.remove("spinning","done");
+  wheel.className="roundColorWheel";
+  document.querySelectorAll(".roundChar").forEach(x=>x.classList.remove("resting"));
+  document.querySelectorAll(".roundResult").forEach(x=>{x.textContent="";x.style.display="flex"});
+  roundLabelsData=["1ばん","2ばん","3ばん","おやすみ"];
+  document.querySelectorAll(".roundLabel").forEach((el,i)=>{el.textContent=roundLabelsData[i]});
+  dial.style.transform="rotate(0deg)";
+  btn.disabled=false;btn.classList.remove("doneBtn");btn.textContent="まわす！";
+  show("rouletteScreen");
+}
+function roundRotateArray(a,steps){
+  const n=((steps%a.length)+a.length)%a.length;
+  return a.map((_,i)=>a[(i-n+a.length)%a.length]);
+}
+function roundTick(t){
+  if(!rouletteRunning)return;
+  if(!roundLastTime)roundLastTime=t;
+  const dt=Math.min((t-roundLastTime)/1000,.04);
+  roundLastTime=t;
+  roundAngle+=430*dt;
+  $("roundDial").style.transform="rotate("+roundAngle+"deg)";
+  roundRAF=requestAnimationFrame(roundTick);
+}
+function spinRoundRoulette(){
+  const btn=$("rouletteBtn");
+  if(roundStopping||btn.classList.contains("doneBtn"))return;
+  if(!rouletteRunning){
+    roundLabelsData=shuffle(["1ばん","2ばん","3ばん","おやすみ"]);
+    document.querySelectorAll(".roundLabel").forEach((el,i)=>el.textContent=roundLabelsData[i]);
+    $("roundRouletteStage").classList.remove("done");
+    $("roundRouletteStage").classList.add("spinning");
+    rouletteRunning=true;roundLastTime=0;
+    btn.textContent="とめる！";
+    roundRAF=requestAnimationFrame(roundTick);
+    return;
+  }
+
+  rouletteRunning=false;roundStopping=true;cancelAnimationFrame(roundRAF);
+  const spinSpeed=430,desiredDecel=190;
+  const naturalDistance=(spinSpeed*spinSpeed)/(2*desiredDecel);
+  let target=Math.round((roundAngle+naturalDistance)/90)*90;
+  if(target<=roundAngle+180)target+=90;
+  while(true){
+    const step=((Math.round(target/90)%4)+4)%4;
+    if(roundRotateArray(roundLabelsData,step)[2]!=="おやすみ")break;
+    target+=90;
+  }
+  const startAngle=roundAngle,distance=target-startAngle;
+  const decel=(spinSpeed*spinSpeed)/(2*distance),duration=spinSpeed/decel,startTime=performance.now();
+  btn.disabled=true;btn.textContent="とまるよ…";
+
+  function coast(now){
+    const t=Math.min((now-startTime)/1000,duration);
+    roundAngle=startAngle+spinSpeed*t-.5*decel*t*t;
+    $("roundDial").style.transform="rotate("+roundAngle+"deg)";
+    if(t<duration){roundRAF=requestAnimationFrame(coast);return}
+    roundAngle=target;$("roundDial").style.transform="rotate("+roundAngle+"deg)";
+    const step=((Math.round(roundAngle/90)%4)+4)%4;
+    const finalBySector=roundRotateArray(roundLabelsData,step);
+    const sectorNames=["おねえさん","シェフ","あなた","ねこさん"];
+    roundAssignments={};
+    finalBySector.forEach((v,i)=>roundAssignments[sectorNames[i]]=v);
+
+    const stage=$("roundRouletteStage"),wheel=$("roundColorWheel");
+    const chars=[document.querySelector(".roundSister"),document.querySelector(".roundChef"),document.querySelector(".roundYou"),document.querySelector(".roundCat")];
+    const results=[document.querySelector(".roundSister .roundResult"),document.querySelector(".roundChef .roundResult"),document.querySelector(".roundYou .roundResult"),document.querySelector(".roundCat .roundResult")];
+    finalBySector.forEach((v,i)=>{
+      results[i].textContent=v==="おやすみ"?"":v[0];
+      results[i].style.display=v==="おやすみ"?"none":"flex";
+    });
+    const restIndex=finalBySector.indexOf("おやすみ");
+    if(restIndex>=0){wheel.classList.add("rest-"+restIndex);chars[restIndex].classList.add("resting")}
+    stage.classList.remove("spinning");stage.classList.add("done");
+    btn.textContent="きまり！";btn.classList.add("doneBtn");btn.disabled=true;roundStopping=false;
+
+    const activeComs=COMS.filter(c=>roundAssignments[c.name]!=="おやすみ");
+    players=[USER,...activeComs].map((p,idx)=>({...p,id:idx,recipe:null,hand:[],placed:[]}));
+    const firstName=Object.keys(roundAssignments).find(name=>roundAssignments[name]==="1ばん");
+    turn=Math.max(0,players.findIndex(p=>p.name===firstName));
+    setTimeout(()=>{
+      show("game");
+      beginSetupSequence();
+    },850);
+  }
+  roundRAF=requestAnimationFrame(coast);
+}
+
 function showRecipePick(){
   hideCutin();
   document.querySelector(".setupFeedback")?.remove();
@@ -290,17 +465,54 @@ function beginSetupSequence(){
   clearTimeout(setupNoticeTimer);
   setupNotice="";
   setupToast="";
-  phase="setupSelect";
-  setStatus("つかえるしょくざいがあったら、えらんでOKをおそう！");
+  setupRecipeChoices=shuffle([...RECIPES]).slice(0,5);
+  phase="menuSelect";
+  setStatus("レシピカードを 1まい えらんでね！");
   render();
+}
+
+function chooseSetupRecipe(i){
+  if(phase!=="menuSelect"||!setupRecipeChoices[i])return;
+  claimSeq++;pending=null;clearRecipeHint();
+  const mine=setupRecipeChoices[i];
+  const restRecipes=shuffle(RECIPES.filter(r=>r!==mine));
+  players[0].recipe=mine;
+  players[1].recipe=restRecipes[0];
+  players[2].recipe=restRecipes[1];
+  phase="recipeReveal";
+  setStatus(mine.name+"を つくろう！");
+  render();
+  beep("place");
+
+  setTimeout(()=>{
+    if(gameOver||phase!=="recipeReveal")return;
+    buildDeck();
+    phase="handReveal";
+    setStatus("つかえる ざいりょうを えらんでね！");
+    render();
+    setTimeout(()=>{
+      if(gameOver||phase!=="handReveal")return;
+      setupSelected.clear();
+      phase="setupSelect";
+      setStatus("つかえるしょくざいがあったら、えらんでOKをおそう！");
+      render();
+    },1050);
+  },900);
 }
 
 function updateSetupGuide(){
   const g=$("setupGuide");
   if(!g)return;
-  if(phase==="setupSelect"){
+  g.classList.remove("menuPick");
+  if(phase==="menuSelect"){
     g.classList.remove("hidden");
-    g.innerHTML='<img class="setupRecipeFloat" src="'+recipeCardPath(players[0].recipe)+'" alt="'+players[0].recipe.name+'">';
+    g.classList.add("menuPick");
+    g.innerHTML='<div class="setupMenuFan">'+setupRecipeChoices.map((r,i)=>'<button type="button" class="setupMenuChoice m'+i+'" onclick="chooseSetupRecipe('+i+')" aria-label="レシピカードをえらぶ"><img src="'+MENU_BACK+'" alt="うらむきメニューカード"></button>').join("")+'</div>';
+    return;
+  }
+  if(phase==="recipeReveal"||phase==="handReveal"||phase==="setupSelect"){
+    g.classList.remove("hidden");
+    g.innerHTML='<img class="setupRecipeFloat '+(phase==="recipeReveal"?"revealPop":"")+'" src="'+recipeCardPath(players[0].recipe)+'" alt="'+players[0].recipe.name+'">';
     return;
   }
   g.classList.add("hidden");
@@ -522,7 +734,7 @@ function render(){
   const d=discard.at(-1);
   $("discardPile").innerHTML=d?'<img class="discardArt" src="'+foodCardPath(d)+'" alt="'+ITEMS[d]+'"><small>すてば</small>':'<b>すてば</b>';
   $("deckStack").innerHTML=deckStackHTML();
-  $("turnText").textContent=phase==="setupSelect"?"":players[turn].name+" の ばん";
+  $("turnText").textContent=["menuSelect","recipeReveal","handReveal","setupSelect"].includes(phase)?"":players[turn].name+" の ばん";
   document.querySelector(".table").style.setProperty("--tableTurn",players[turn].color);
   $("deckBtn").disabled=!(turn===0&&phase==="draw");
   $("recipeBtn").classList.toggle("ready",recipeHintReady&&!recipeSkipActive);
@@ -538,6 +750,7 @@ function render(){
 
 function progressPillHTML(p){
   const remain=Math.max(0,6-p.placed.length);
+  if(!p.recipe)return '<span class="progressPill">あと6まい</span>';
   if(remain===1)return '<span class="progressPill finish">しあげ！</span>';
   if(remain===0)return '<span class="progressPill finish">できあがり！</span>';
   return '<span class="progressPill">あと'+remain+'まい</span>';
@@ -555,11 +768,25 @@ function cpuHandHTML(p){
 
 function renderSeat(p,i){
   const el=$("seat"+i);
-  el.classList.toggle("active",i===turn&&!["setupSelect","setupPlacing"].includes(phase));
+  el.classList.toggle("active",i===turn&&!["menuSelect","recipeReveal","handReveal","setupSelect","setupPlacing"].includes(phase));
   el.style.setProperty("--turnColor",p.color);
   el.style.setProperty("--turnBorder",p.border);
   el.style.setProperty("--turnGlow",p.glow);
   const counter=counterHTML(p,i===0);
+
+  if(i===0&&["menuSelect","recipeReveal","handReveal"].includes(phase)){
+    const reveal=phase==="handReveal";
+    const prepCards=reveal?p.hand.map((k,idx)=>prepRevealHandHTML(k,idx)).join(""):Array.from({length:6},(_,idx)=>prepHandBackHTML(idx)).join("");
+    el.innerHTML=
+      '<div class="myPlay setupPickPlay"><div class="handWrap" style="position:relative">'+
+        '<div class="prepHandBacks crowded" id="myHand">'+prepCards+'</div>'+
+      '</div></div>'+
+      '<div class="selfProgress">'+
+        '<div class="selfCharacter"><div class="selfPortraitCrop"><img class="selfStanding" src="'+standingPath(p)+'" alt="'+p.name+'"></div><div class="nameBadge selfNameBadge" style="background:'+p.color+'">'+p.name+'</div></div>'+
+        '<div class="selfCounterWrap"><div class="selfCounterPanel">'+counter+'</div><div class="selfCounterFooter"><span class="selfMenuName">'+(p.recipe?p.recipe.name:"")+'</span>'+progressPillHTML(p)+'</div></div>'+
+      '</div>';
+    return;
+  }
 
   // 準備選択中は、従来どおり「レシピと手札」に集中させる。
   if(i===0&&phase==="setupSelect"){
@@ -572,7 +799,7 @@ function renderSeat(p,i){
       '</div></div>'+
       '<div class="selfProgress">'+
         '<div class="selfCharacter"><div class="selfPortraitCrop"><img class="selfStanding" src="'+standingPath(p)+'" alt="'+p.name+'"></div><div class="nameBadge selfNameBadge" style="background:'+p.color+'">'+p.name+'</div></div>'+
-        '<div class="selfCounterWrap"><div class="selfCounterPanel setupCounterPanel">'+counter+'<button type="button" class="setupReadyBtn" onclick="confirmSetupSelection()">じゅんびOK！</button></div><div class="selfCounterFooter"><span class="selfMenuName">'+p.recipe.name+'</span>'+progressPillHTML(p)+'</div></div>'+
+        '<div class="selfCounterWrap"><div class="selfCounterPanel setupCounterPanel">'+counter+'<button type="button" class="setupReadyBtn" onclick="confirmSetupSelection()">じゅんびOK！</button></div><div class="selfCounterFooter"><span class="selfMenuName">'+(p.recipe?p.recipe.name:"")+'</span>'+progressPillHTML(p)+'</div></div>'+
       '</div>';
     return;
   }
@@ -584,7 +811,7 @@ function renderSeat(p,i){
       '</div></div></div>'+
       '<div class="selfProgress">'+
         '<div class="selfCharacter"><div class="selfPortraitCrop"><img class="selfStanding" src="'+standingPath(p)+'" alt="'+p.name+'"></div><div class="nameBadge selfNameBadge" style="background:'+p.color+'">'+p.name+'</div></div>'+
-        '<div class="selfCounterWrap"><div class="selfCounterPanel">'+counter+'</div><div class="selfCounterFooter"><span class="selfMenuName">'+p.recipe.name+'</span>'+progressPillHTML(p)+'</div></div>'+
+        '<div class="selfCounterWrap"><div class="selfCounterPanel">'+counter+'</div><div class="selfCounterFooter"><span class="selfMenuName">'+(p.recipe?p.recipe.name:"")+'</span>'+progressPillHTML(p)+'</div></div>'+
       '</div>';
   }else{
     el.innerHTML=
@@ -599,7 +826,10 @@ function renderSeat(p,i){
 }
 
 function counterHTML(p,isMe){
-  const prePlacement=phase==="setupSelect";
+  const prePlacement=phase==="setupSelect"||phase==="menuSelect"||phase==="recipeReveal"||phase==="handReveal";
+  if(!p.recipe){
+    return '<div class="counter '+(isMe?'selfCounter':'cpuCounter')+'">'+Array.from({length:6},()=>'<div class="slot empty"></div>').join("")+'</div>';
+  }
   return '<div class="counter '+(isMe?'selfCounter':'cpuCounter')+'" '+(isMe&&!prePlacement?'onclick="humanCounterTap()"':'')+'>'+p.recipe.need.map(k=>{
     const x=p.placed.find(q=>q.card===k);
 
@@ -687,6 +917,13 @@ function setupHandTap(i){
   setupToast="";
   setStatus("つかえるしょくざいがあったら、えらんでOKをおそう！");
   render();
+}
+
+function prepHandBackHTML(i){
+  return '<div class="prepBackCard" style="'+handStyle(i)+'"><img src="'+CARD_BACK+'" alt="うらむきカード"></div>';
+}
+function prepRevealHandHTML(k,i){
+  return '<div class="prepRevealCard" style="'+handStyle(i)+';--flip-delay:'+(i*110)+'ms"><div class="prepRevealInner"><img class="prepRevealFace" src="'+CARD_BACK+'" alt="うらむきカード"><img class="prepRevealFace prepRevealFront" src="'+foodCardPath(k)+'" alt="'+ITEMS[k]+'"></div></div>';
 }
 
 function handCardHTML(k,i){
@@ -913,7 +1150,7 @@ function checkWin(pid,delay=300){
   const p=players[pid];if(p.placed.length<6)return false;gameOver=true;beep("win");
   const others=players.filter((_,i)=>i!==pid);
   $("resultEmoji").innerHTML=
-    '<div class="resultWinner"><img class="resultWinnerChar" src="'+charPath(p,"happy")+'" alt="'+p.name+'"><div class="resultWinnerName">'+p.name+' の かち！</div><img class="resultWinnerDish" src="'+recipeDishPath(p.recipe)+'" alt="'+p.recipe.name+'"><div class="resultWinnerMenu">'+p.recipe.name+'</div></div>'+
+    '<div class="resultWinner"><img class="resultWinnerChar" src="'+charPath(p,"happy")+'" alt="'+p.name+'"><div class="resultWinnerName">'+p.name+' の かち！</div><img class="resultWinnerDish" src="'+recipeDishPath(p.recipe)+'" alt="'+(p.recipe?p.recipe.name:"")+'"><div class="resultWinnerMenu">'+(p.recipe?p.recipe.name:"")+'</div></div>'+
     '<div class="resultOthers">'+others.map(o=>'<div class="resultLoser"><img class="resultLoserChar" src="'+charPath(o,"sad")+'" alt="'+o.name+'"><img class="resultLoserDish" src="'+recipeDishPath(o.recipe)+'" alt="'+o.recipe.name+'"><div><div class="resultLoserName">'+o.name+'</div><div class="resultLoserMenu">'+o.recipe.name+'</div></div></div>').join("")+'</div>';
   $("resultTitle").textContent="できあがり！";
   $("resultText").textContent="みんなが つくっていた りょうりも みてみよう！";
