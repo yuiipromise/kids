@@ -661,6 +661,13 @@ function setupHandTap(i){
     return;
   }
 
+  // 準備中はレシピに使えるカードだけ選べるようにする。
+  if(!canUse(p,card)){
+    beep("error");
+    flashSetupNotice("これは まだつかわないよ！");
+    return;
+  }
+
   // 同じ食材は1枚だけ。2枚目を押した時だけ、短く案内する。
   const sameAlready=[...setupSelected].some(idx=>p.hand[idx]===card);
   if(sameAlready){
