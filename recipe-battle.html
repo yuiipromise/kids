@@ -165,6 +165,7 @@ const COMS=[
 ];
 
 let easy=true,players=[],deck=[],discard=[],turn=0,phase="idle",pending=null,gameOver=false,selectedIndex=null,initialDeckCount=1;
+let claimSeq=0;
 let turnEpoch=0;
 let recipeHintTimer=null,recipeHintReady=false;
 let recipePenaltyArmed=false,recipeSkipActive=false;
@@ -250,6 +251,7 @@ function showRecipePick(){
 }
 
 function chooseRecipe(i){
+  claimSeq++; pending=null; clearRecipeHint();
   const shuffledRecipes=shuffle([...RECIPES]),mine=shuffledRecipes[i],rest=shuffledRecipes.filter((_,x)=>x!==i);
   const opponents=shuffle([...COMS]).slice(0,2);
   players=[USER,...opponents].map((p,idx)=>({...p,id:idx,recipe:null,hand:[],placed:[]}));
@@ -477,11 +479,11 @@ function clearRecipeHint(){
   recipeHintTimer=null;
   recipeHintReady=false;
 }
-function scheduleRecipeHint(from,card){
+function scheduleRecipeHint(from,card,claimId){
   clearRecipeHint();
   if(from===0||!canUse(players[0],card))return;
   recipeHintTimer=setTimeout(()=>{
-    if(gameOver||!pending||pending.from!==from||pending.card!==card)return;
+    if(gameOver||!pending||pending.id!==claimId||pending.from!==from||pending.card!==card)return;
     if(!canUse(players[0],card))return;
     recipeHintReady=true;
     render();
@@ -753,7 +755,7 @@ function discardFrom(pid,i){
   const to=$("discardPile");
   phase="animating";setStatus(p.name+" が カードを すてます。");
   flyCard(ITEMS[card],from,to,()=>{
-    p.hand.splice(i,1);discard.push(card);pending={from:pid,card};beep("discard");
+    p.hand.splice(i,1);discard.push(card);pending={from:pid,card,id:++claimSeq};const claimId=pending.id;beep("discard");
     if(pid!==0&&recipePenaltyArmed){
       recipePenaltyArmed=false;
       recipeSkipActive=true;
@@ -766,14 +768,15 @@ function discardFrom(pid,i){
       setStatus(p.name+" が "+ITEMS[card]+" を すてた！");
     }
     render();flashEl($("discardPile"));
-    if(!recipeSkipActive)scheduleRecipeHint(pid,card);
-    setTimeout(()=>resolveClaims(pid,card),520)
+    if(!recipeSkipActive)scheduleRecipeHint(pid,card,claimId);
+    setTimeout(()=>resolveClaims(pid,card,claimId),520)
   })
 }
 
-function resolveClaims(from,card){
+function resolveClaims(from,card,claimId){
   if(gameOver)return;
-  if(waitForCutin(()=>resolveClaims(from,card)))return;
+  const claimEpoch=turnEpoch;
+  if(waitForCutin(()=>resolveClaims(from,card,claimId)))return;
   const order=[];for(let s=1;s<players.length;s++)order.push((from+s)%players.length);
 
   // 自分が捨てた直後は、山札操作を止めない。
@@ -785,14 +788,14 @@ function resolveClaims(from,card){
   // CPUも即決しない。少し考えてから判断する。
   // 人間のレシピ！は時間では締め切らない。次の人が自分の捨て札を選ぶまで pending を残す。
   setTimeout(()=>{
-    if(gameOver||!pending||pending.from!==from||pending.card!==card)return;
+    if(gameOver||!pending||pending.id!==claimId||pending.from!==from||pending.card!==card)return;
     for(const id of order){
       if(id===0)continue;
       const p=players[id];
-      if(canUse(p,card)&&Math.random()<p.skill){takeDiscard(id,card,from);return}
+      if(canUse(p,card)&&Math.random()<p.skill){takeDiscard(id,card,from,claimId);return}
     }
     // COMの通常処理だけここから山札へ進める。人間はすでに引ける状態。
-    if(from!==0&&turn===from&&phase==="claim")finishClaimWindow(from)
+    if(from!==0&&turn===from&&turnEpoch===claimEpoch&&phase==="claim")finishClaimWindow(from,claimEpoch)
   },950+rand(650))
 }
 
@@ -810,16 +813,17 @@ function humanRecipe(){
     return;
   }
 
-  const card=pending.card,from=pending.from;
+  const card=pending.card,from=pending.from,claimId=pending.id;
   clearRecipeHint();
-  takeDiscard(0,card,from)
+  takeDiscard(0,card,from,claimId)
 }
 
-function takeDiscard(pid,card,from){
+function takeDiscard(pid,card,from,claimId){
   // 最初に「いただき！」を成立させた1人だけが取れる。
-  if(!pending||pending.from!==from||pending.card!==card)return false;
+  if(!pending||pending.id!==claimId||pending.from!==from||pending.card!==card)return false;
 
   const fromEl=$("discardPile"),toEl=$("seat"+pid);
+  const claimEpoch=turnEpoch;
   const claimWasBlockingTurn=(turn===from&&phase==="claim");
   const sadLoser=players.find((p,i)=>i!==pid&&i!==from&&canUse(p,card))||null;
 
@@ -850,14 +854,15 @@ function takeDiscard(pid,card,from){
     if(claimWasBlockingTurn){
       setTimeout(()=>{
         if(gameOver)return;
-        if(turn===from&&phase==="claim")finishClaimWindow(from);
+        if(turn===from&&turnEpoch===claimEpoch&&phase==="claim")finishClaimWindow(from,claimEpoch);
       },2550);
     }
   });
   return true;
 }
 
-function finishClaimWindow(from){
+function finishClaimWindow(from,expectedEpoch=turnEpoch){
+  if(gameOver||turn!==from||turnEpoch!==expectedEpoch||phase!=="claim")return;
   turn=from;phase="draw";const p=players[turn];
   setStatus(p.human?"やまふだから 1まい ひいてね。":p.name+" が やまふだから ひきます。");render();
   if(!p.human){const epoch=turnEpoch,currentTurn=turn;setTimeout(()=>drawFor(currentTurn,epoch),cpuThinkDelay(p,900,650))}
