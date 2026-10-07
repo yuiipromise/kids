@@ -367,7 +367,12 @@ function confirmSetupSelection(){
 
   const missing=needed.some(k=>!chosenKeys.includes(k));
   const extra=chosenKeys.some(k=>!needed.includes(k));
-  if(missing||extra||chosenKeys.length!==needed.length){
+  if(extra){
+    beep("error");
+    setStatus("あれれ？つかわないざいりょうを えらんでるよ。");
+    return;
+  }
+  if(missing||chosenKeys.length!==needed.length){
     beep("error");
     setStatus("まだあるよ！");
     return;
@@ -661,13 +666,8 @@ function setupHandTap(i){
     return;
   }
 
-  // 準備中はレシピに使えるカードだけ選べるようにする。
-  if(!canUse(p,card)){
-    beep("error");
-    flashSetupNotice("これは まだつかわないよ！");
-    return;
-  }
-
+  // 準備中は、使わない材料も一度は選べる。
+  // OK時にまとめて「あれれ？」と気づかせる。
   // 同じ食材は1枚だけ。2枚目を押した時だけ、短く案内する。
   const sameAlready=[...setupSelected].some(idx=>p.hand[idx]===card);
   if(sameAlready){
