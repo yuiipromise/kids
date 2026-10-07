@@ -152,31 +152,32 @@ h1{font-size:24px;margin:4px 0 3px}
 
 .resultTag{
   position:absolute;
-  right:-18px;
   top:50%;
-  width:32px;height:32px;
+  width:40px;height:40px;
   display:flex;align-items:center;justify-content:center;
   border-radius:50%;
   background:#fffdfb;
   border:3px solid #fff;
-  box-shadow:0 3px 9px #5f46352c;
-  font-size:13px;
+  box-shadow:0 3px 10px #5f463538;
+  font-size:16px;
   font-weight:1000;
   opacity:0;
   transform:translateY(-50%) scale(.7);
   transition:opacity .18s,transform .22s cubic-bezier(.2,1.4,.3,1);
 }
+.cat .resultTag,.you .resultTag{left:-22px;right:auto}
+.sister .resultTag,.chef .resultTag{right:-22px;left:auto}
 .stage.done .resultTag{opacity:1;transform:translateY(-50%) scale(1)}
-.char.resting img{filter:sepia(.82) saturate(.48) brightness(.96);opacity:.72}
-.char.resting .name{filter:sepia(.75) saturate(.45);opacity:.72}
+.char.resting img{filter:brightness(.78) saturate(.72) drop-shadow(0 3px 4px #5f463522)}
+.char.resting .name{filter:brightness(.86) saturate(.72)}
 .restWash{
   position:absolute;inset:0;border-radius:50%;
   pointer-events:none;z-index:0;
 }
-.colorWheel.rest-0 .restWash{background:conic-gradient(from 0deg,rgba(150,113,74,.34) 0 25%,transparent 25% 100%)}
-.colorWheel.rest-1 .restWash{background:conic-gradient(from 0deg,transparent 0 25%,rgba(150,113,74,.34) 25% 50%,transparent 50% 100%)}
-.colorWheel.rest-2 .restWash{background:conic-gradient(from 0deg,transparent 0 50%,rgba(150,113,74,.34) 50% 75%,transparent 75% 100%)}
-.colorWheel.rest-3 .restWash{background:conic-gradient(from 0deg,transparent 0 75%,rgba(150,113,74,.34) 75% 100%)}
+.colorWheel.rest-0 .restWash{background:conic-gradient(from 0deg,rgba(78,66,60,.18) 0 25%,transparent 25% 100%)}
+.colorWheel.rest-1 .restWash{background:conic-gradient(from 0deg,transparent 0 25%,rgba(78,66,60,.18) 25% 50%,transparent 50% 100%)}
+.colorWheel.rest-2 .restWash{background:conic-gradient(from 0deg,transparent 0 50%,rgba(78,66,60,.18) 50% 75%,transparent 75% 100%)}
+.colorWheel.rest-3 .restWash{background:conic-gradient(from 0deg,transparent 0 75%,rgba(78,66,60,.18) 75% 100%)}
 
 .controls{display:flex;justify-content:center;gap:10px;margin-top:6px}
 button{
