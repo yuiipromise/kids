@@ -153,20 +153,21 @@ h1{font-size:24px;margin:4px 0 3px}
 .resultTag{
   position:absolute;
   top:50%;
-  width:40px;height:40px;
+  width:42px;height:42px;
   display:flex;align-items:center;justify-content:center;
   border-radius:50%;
-  background:#fffdfb;
-  border:3px solid #fff;
-  box-shadow:0 3px 10px #5f463538;
-  font-size:16px;
+  background:#f3e4cf;
+  border:2px solid #cdb79e;
+  box-shadow:0 3px 8px #6a4d3c2b, inset 0 1px 0 #fff8;
+  color:#684d3e;
+  font-size:17px;
   font-weight:1000;
   opacity:0;
   transform:translateY(-50%) scale(.7);
   transition:opacity .18s,transform .22s cubic-bezier(.2,1.4,.3,1);
 }
-.cat .resultTag,.you .resultTag{left:-22px;right:auto}
-.sister .resultTag,.chef .resultTag{right:-22px;left:auto}
+.cat .resultTag,.you .resultTag{left:-34px;right:auto}
+.sister .resultTag,.chef .resultTag{right:-34px;left:auto}
 .stage.done .resultTag{opacity:1;transform:translateY(-50%) scale(1)}
 .char.resting img{filter:brightness(.78) saturate(.72) drop-shadow(0 3px 4px #5f463522)}
 .char.resting .name{filter:brightness(.86) saturate(.72)}
@@ -299,10 +300,13 @@ function clearResultState(){
   stage.classList.remove("done");
   colorWheel.classList.remove("rest-0","rest-1","rest-2","rest-3");
   charEls.forEach(el=>el.classList.remove("resting"));
-  resultEls.forEach(el=>el.textContent="");
+  resultEls.forEach(el=>{el.textContent="";el.style.display="flex";});
 }
 function showResults(finalBySector){
-  finalBySector.forEach((v,i)=>{ resultEls[i].textContent=badgeText(v); });
+  finalBySector.forEach((v,i)=>{
+    resultEls[i].textContent=v==="おやすみ"?"":badgeText(v);
+    resultEls[i].style.display=v==="おやすみ"?"none":"flex";
+  });
   const restIndex=finalBySector.indexOf("おやすみ");
   if(restIndex>=0){
     colorWheel.classList.add("rest-"+restIndex);
