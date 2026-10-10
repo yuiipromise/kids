@@ -814,6 +814,17 @@ function cpuHandHTML(p){
   return '<span class="cpuMiniHand" role="img" aria-label="てふだ '+count+'まい" style="width:'+width+'px;--cpuHandColor:'+p.color+'">'+cards+'</span>';
 }
 
+// Shared player progress structure: one DOM hierarchy across setup and battle phases.
+// setup changes only the inner panel class and the confirmation button.
+function selfProgressHTML(p,counter,setup=false){
+  const panelClass=setup?' setupCounterPanel':'';
+  const readyButton=setup?'<button type="button" class="setupReadyBtn" onclick="confirmSetupSelection()">じゅんびOK！</button>':'';
+  return '<div class="selfProgress">'+
+    '<div class="selfCharacter"><div class="selfPortraitCrop"><img class="selfStanding" src="'+standingPath(p)+'" alt="'+p.name+'"></div><div class="nameBadge selfNameBadge" style="background:'+p.color+'">'+p.name+'</div></div>'+
+    '<div class="selfCounterWrap"><div class="selfCounterPanel'+panelClass+'">'+counter+readyButton+'</div><div class="selfCounterFooter"><span class="selfMenuName">'+(p.recipe?p.recipe.name:"")+'</span>'+progressPillHTML(p)+'</div></div>'+
+  '</div>';
+}
+
 function renderSeat(p,i){
   const el=$("seat"+i);
   el.classList.toggle("active",i===turn&&!["menuSelect","recipeReveal","handReveal","setupSelect","setupPlacing"].includes(phase));
@@ -829,10 +840,7 @@ function renderSeat(p,i){
       '<div class="myPlay setupPickPlay"><div class="handWrap" style="position:relative">'+
         '<div class="prepHandBacks crowded" id="myHand">'+prepCards+'</div>'+
       '</div></div>'+
-      '<div class="selfProgress">'+
-        '<div class="selfCharacter"><div class="selfPortraitCrop"><img class="selfStanding" src="'+standingPath(p)+'" alt="'+p.name+'"></div><div class="nameBadge selfNameBadge" style="background:'+p.color+'">'+p.name+'</div></div>'+
-        '<div class="selfCounterWrap"><div class="selfCounterPanel">'+counter+'</div><div class="selfCounterFooter"><span class="selfMenuName">'+(p.recipe?p.recipe.name:"")+'</span>'+progressPillHTML(p)+'</div></div>'+
-      '</div>';
+      selfProgressHTML(p,counter);
     return;
   }
 
@@ -845,10 +853,7 @@ function renderSeat(p,i){
         '</div>'+
         (setupToast?'<div class="setupHandToast">'+setupToast+'</div>':'')+
       '</div></div>'+
-      '<div class="selfProgress">'+
-        '<div class="selfCharacter"><div class="selfPortraitCrop"><img class="selfStanding" src="'+standingPath(p)+'" alt="'+p.name+'"></div><div class="nameBadge selfNameBadge" style="background:'+p.color+'">'+p.name+'</div></div>'+
-        '<div class="selfCounterWrap"><div class="selfCounterPanel setupCounterPanel">'+counter+'<button type="button" class="setupReadyBtn" onclick="confirmSetupSelection()">じゅんびOK！</button></div><div class="selfCounterFooter"><span class="selfMenuName">'+(p.recipe?p.recipe.name:"")+'</span>'+progressPillHTML(p)+'</div></div>'+
-      '</div>';
+      selfProgressHTML(p,counter,true);
     return;
   }
 
@@ -857,10 +862,7 @@ function renderSeat(p,i){
       '<div class="myPlay"><div class="handWrap"><div class="hand '+(p.hand.length>=7?"veryCrowded":p.hand.length>=5?"crowded":"")+'" id="myHand">'+
         p.hand.map((k,idx)=>handCardHTML(k,idx)).join("")+
       '</div></div></div>'+
-      '<div class="selfProgress">'+
-        '<div class="selfCharacter"><div class="selfPortraitCrop"><img class="selfStanding" src="'+standingPath(p)+'" alt="'+p.name+'"></div><div class="nameBadge selfNameBadge" style="background:'+p.color+'">'+p.name+'</div></div>'+
-        '<div class="selfCounterWrap"><div class="selfCounterPanel">'+counter+'</div><div class="selfCounterFooter"><span class="selfMenuName">'+(p.recipe?p.recipe.name:"")+'</span>'+progressPillHTML(p)+'</div></div>'+
-      '</div>';
+      selfProgressHTML(p,counter);
   }else{
     el.innerHTML=
       '<div class="cpuLayout">'+
